@@ -44,7 +44,6 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 var response = NotesApi.retrofitService.getMaterialeFisico()
-                //var response = NotesApi.retrofitService.getStr()
                 Log.d("MainActivity", "*************************Response: $response")
                 findViewById<TextView>(R.id.tvProva).text = response
 

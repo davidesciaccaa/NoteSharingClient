@@ -23,8 +23,6 @@ interface NoteSharingApi{
     suspend fun getMaterialeFisico(): String //penso deve essere implementato nel server oppure è la func da usare qua dentro nel client
     //essndo suspend diventa asincrono e non blocca il thread chiamante
 
-    @GET("prova") //specifico landpoint nel server, senza il /???
-    suspend fun getStr(): String
 }
 
 
