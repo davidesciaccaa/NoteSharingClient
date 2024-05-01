@@ -1,9 +1,9 @@
-package com.example.clientnotesharing.data
-//import kotlinx.serialization.Serializable
+package data
+import kotlinx.serialization.Serializable
 
 
-//@Serializable
-class Annuncio (
+@Serializable
+data class Annuncio (
     val id: String,
     var data: String, //la data di creazione dell'annuncio
     var descrizioneAnnuncio: String,

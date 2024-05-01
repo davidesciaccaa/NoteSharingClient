@@ -1,14 +1,19 @@
 package com.example.clientnotesharing
 
-import com.example.clientnotesharing.data.MaterialeFisico
 import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import data.MaterialeFisico
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 
-const val BASE_URL = "http://192.168.153.58:8080"//"http://10.0.2.2:8080" //del server ovviamente
+
+const val BASE_URL = "http://10.0.2.2:8080"
 private val retrofit = Retrofit.Builder()
-    .addConverterFactory(ScalarsConverterFactory.create())
     .baseUrl(BASE_URL)
+    .addConverterFactory(
+        Json.asConverterFactory(
+            "application/json; charset=UTF8".toMediaType()))
     .build()
 object NotesApi{
     val retrofitService : NoteSharingApi by lazy {
@@ -19,9 +24,9 @@ object NotesApi{
      */
 }
 interface NoteSharingApi{
-    @GET("materiale") //specifico landpoint nel server, senza il /???
-    suspend fun getMaterialeFisico(): String //penso deve essere implementato nel server oppure è la func da usare qua dentro nel client
-    //essndo suspend diventa asincrono e non blocca il thread chiamante
+    @GET("materiale")
+    suspend fun getMaterialeFisico(): MaterialeFisico
+    //essendo suspend diventa asincrono e non blocca il thread chiamante
 
 }
 

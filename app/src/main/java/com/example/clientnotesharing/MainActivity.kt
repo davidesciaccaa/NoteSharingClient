@@ -10,7 +10,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.clientnotesharing.data.MaterialeFisico
 import com.example.clientnotesharing.databinding.ActivityMainBinding
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -43,9 +42,9 @@ class MainActivity : AppCompatActivity() {
         // Call the API method inside a coroutine scope. 'E una sorta di thread
         lifecycleScope.launch {
             try {
-                var response = NotesApi.retrofitService.getMaterialeFisico()
+                val response = NotesApi.retrofitService.getMaterialeFisico()
                 Log.d("MainActivity", "*************************Response: $response")
-                findViewById<TextView>(R.id.tvProva).text = response
+                findViewById<TextView>(R.id.tvProva).text = response.descrizioneMateriale
 
             } catch (e: HttpException) {
                 Log.e("MainActivity", "HTTP Exception: ${e.message()}")

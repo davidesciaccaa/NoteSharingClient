@@ -1,9 +1,9 @@
-package com.example.clientnotesharing.data
+package data
 
-//import kotlinx.serialization.Serializable
+import kotlinx.serialization.Serializable
 
-//@Serializable
-class MaterialeFisico(
+@Serializable
+data class MaterialeFisico(
     var costo: Int,
     var annoRiferimento: Int,
     var nomeCorso: String,
@@ -13,5 +13,5 @@ class MaterialeFisico(
     var via: String,
     var cap: Int
 ) {
-    //in kotlin ci sono in automatico i getters e setters
+
 }
