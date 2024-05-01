@@ -3,12 +3,12 @@ package com.example.clientnotesharing
 import retrofit2.Retrofit
 import retrofit2.http.GET
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import data.MaterialeFisico
+import com.example.clientnotesharing.data.MaterialeFisico
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 
 
-const val BASE_URL = "http://10.0.2.2:8080"
+const val BASE_URL = "http://192.168.153.58:8080"
 private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .addConverterFactory(

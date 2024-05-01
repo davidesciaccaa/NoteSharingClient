@@ -1,4 +1,4 @@
-package data
+package com.example.clientnotesharing.data
 import kotlinx.serialization.Serializable
 
 
