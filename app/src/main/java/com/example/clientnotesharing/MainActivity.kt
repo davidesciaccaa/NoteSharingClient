@@ -11,7 +11,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.clientnotesharing.data.MaterialeFisico
-import com.example.clientnotesharing.data.NotesApi
 import com.example.clientnotesharing.databinding.ActivityMainBinding
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -39,52 +38,30 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        /*
-        setContent{
-            showResult()
-        }
-         */
-        var response:MaterialeFisico = MaterialeFisico()
-        updateTextView("Prova")
+
+
         // Call the API method inside a coroutine scope. 'E una sorta di thread
         lifecycleScope.launch {
             try {
-                response = NotesApi.retrofitService.getMaterialeFisico()
+                var response = NotesApi.retrofitService.getMaterialeFisico()
+                //var response = NotesApi.retrofitService.getStr()
                 Log.d("MainActivity", "*************************Response: $response")
-                updateTextView(response.descrizioneMateriale)
-                //findViewById<TextView>(R.id.tvProva).text = response.descrizioneMateriale
+                findViewById<TextView>(R.id.tvProva).text = response
 
             } catch (e: HttpException) {
-                // Exception thrown for an HTTP error response (e.g., 404, 500).
-                // You can access the error response with e.response().
+                Log.e("MainActivity", "HTTP Exception: ${e.message()}")
+                e.printStackTrace()
             } catch (e: IOException) {
-                // Exception thrown for a network error (e.g., Timeout, No connectivity).
+                Log.e("MainActivity", "IO Exception: ${e.message}")
+                e.printStackTrace()
             } catch (e: Exception) {
-                // Other unexpected exceptions.
+                Log.e("MainActivity", "Exception: ${e.message}")
+                e.printStackTrace()
             }
         }
 
     }
 
-    private fun updateTextView(s: String) {
-        // Make sure the response is not null and the TextView exists
-        if (s != null) {
-            findViewById<TextView>(R.id.tvProva)?.text = s
-        }
-    }
 
-    /*
-    fun getNotes() {
-        val listResult = NotesApi.retrofitService.getMaterialeFisico()
-    }
-    //se uso jetpackCompose
-    @Composable
-    fun showResult(){
 
-        val viewModel: NotesViewModel = viewModel()
-        val result = viewModel.notesUiState
-        BasicText(text = result.descrizioneMateriale)
-    }
-
-     */
 }

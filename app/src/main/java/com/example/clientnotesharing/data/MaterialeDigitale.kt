@@ -1,5 +1,7 @@
 package com.example.clientnotesharing.data
+//import kotlinx.serialization.Serializable
 
+//@Serializable
 class MaterialeDigitale(
     var annoRiferimento: Int,
     var nomeCorso: String,

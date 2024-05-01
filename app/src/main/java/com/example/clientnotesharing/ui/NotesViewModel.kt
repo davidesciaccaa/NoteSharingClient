@@ -14,7 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.launch
 import androidx.lifecycle.viewModelScope
-import com.example.clientnotesharing.data.MaterialeFisico
+import data.MaterialeFisico
 import com.example.clientnotesharing.data.NotesApi
 
 class NotesViewModel: ViewModel(){
