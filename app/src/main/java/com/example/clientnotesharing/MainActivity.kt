@@ -1,7 +1,9 @@
 package com.example.clientnotesharing
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.ListView
 import android.widget.SimpleAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -12,6 +14,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.clientnotesharing.databinding.ActivityMainBinding
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -61,6 +64,13 @@ class MainActivity : AppCompatActivity() {
             arrayOf("Tittle", "Date"),
             intArrayOf(R.id.textViewTittle, R.id.textViewData)  //si chiaano cosi quelli di simple_list_item_2
         )
+
+
+        //bottone +
+        findViewById<FloatingActionButton>(R.id.addbtn).setOnClickListener{
+            val intent = Intent(this, nuovo_annuncio::class.java)
+            startActivity(intent)
+        }
 
 
         // Call the API method inside a coroutine scope. 'E una sorta di thread

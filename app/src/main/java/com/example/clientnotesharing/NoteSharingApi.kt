@@ -8,7 +8,7 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 
 
-const val BASE_URL = "http://192.168.32.90:8080"
+const val BASE_URL = "http://10.0.2.2:8080"
 private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .addConverterFactory(
