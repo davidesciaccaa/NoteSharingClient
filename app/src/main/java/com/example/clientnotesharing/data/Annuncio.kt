@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Annuncio (
     val id: String,
+    val titolo: String,
     var data: String, //la data di creazione dell'annuncio
     var descrizioneAnnuncio: String,
     var idProprietario: String,
