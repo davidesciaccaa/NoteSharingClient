@@ -6,6 +6,11 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import com.example.clientnotesharing.data.MaterialeFisico
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.ResponseBody
+import retrofit2.http.Multipart
+import retrofit2.http.POST
+import retrofit2.http.Part
 
 
 const val BASE_URL = "http://10.0.2.2:8080"
@@ -28,6 +33,9 @@ interface NoteSharingApi{
     suspend fun getMaterialeFisico(): MaterialeFisico
     //essendo suspend diventa asincrono e non blocca il thread chiamante
 
+    @Multipart
+    @POST("upload")
+    suspend fun uploadPdf(@Part file: MultipartBody.Part): ResponseBody
 }
 
 

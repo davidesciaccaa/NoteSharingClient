@@ -1,20 +1,31 @@
 package com.example.clientnotesharing
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 
 class Nuovo_annuncio: AppCompatActivity() {
     private val pickPdfFiles = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         // Handle the returned Uri
         if (uri != null) {
-            // Do something with the Uri
-            println("Selected file: $uri")
+            val file = File(uri.path) // convert Uri to File
+            val requestFile = file.asRequestBody("application/pdf".toMediaType())
+            val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
+            lifecycleScope.launch {
+                NotesApi.retrofitService.uploadPdf(body)
+
+            }
         } else {
             println("No file selected")
         }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
