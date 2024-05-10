@@ -3,7 +3,6 @@ package com.example.clientnotesharing
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
 import android.widget.ListView
 import android.widget.SimpleAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -68,7 +67,7 @@ class MainActivity : AppCompatActivity() {
 
         //bottone +
         findViewById<FloatingActionButton>(R.id.addbtn).setOnClickListener{
-            val intent = Intent(this, nuovo_annuncio::class.java)
+            val intent = Intent(this, Nuovo_annuncio::class.java)
             startActivity(intent)
         }
 
