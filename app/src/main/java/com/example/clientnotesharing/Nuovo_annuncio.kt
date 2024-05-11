@@ -52,9 +52,20 @@ class Nuovo_annuncio: AppCompatActivity() {
 
     private fun uriToFilePath(context: Context, uri: Uri): String? {
         return try {
+            // Query the ContentResolver for the file's display name
+            val cursor = context.contentResolver.query(uri, null, null, null, null)
+            val nameIndex = cursor?.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            val fileName = if (cursor?.moveToFirst() == true) {
+                nameIndex?.let { cursor.getString(it) }
+            } else {
+                null
+            }
+            cursor?.close()
+
+            // Use the file's display name to create a new File object
             val inputStream = context.contentResolver.openInputStream(uri)
-            val file = File(context.cacheDir, "temp_file")
-            if (inputStream != null) {
+            if (inputStream != null && fileName != null) {
+                val file = File(context.cacheDir, fileName)
                 file.outputStream().use { outputStream ->
                     inputStream.copyTo(outputStream)
                 }
@@ -67,6 +78,7 @@ class Nuovo_annuncio: AppCompatActivity() {
             null
         }
     }
+
 
 
 }
