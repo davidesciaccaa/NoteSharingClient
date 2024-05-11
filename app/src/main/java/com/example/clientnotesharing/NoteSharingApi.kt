@@ -34,7 +34,7 @@ interface NoteSharingApi{
     //essendo suspend diventa asincrono e non blocca il thread chiamante
 
     @Multipart
-    @POST("upload")
+    @POST("uploadPdf")
     suspend fun uploadPdf(@Part file: MultipartBody.Part): ResponseBody
 }
 
