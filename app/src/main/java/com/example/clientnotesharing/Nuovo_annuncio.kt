@@ -5,16 +5,27 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
 import android.widget.Button
+import android.widget.EditText
+import android.widget.Switch
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.clientnotesharing.data.Annuncio
+import com.example.clientnotesharing.data.MaterialeDigitale
+import com.example.clientnotesharing.data.MaterialeFisico
+import com.google.android.material.switchmaterial.SwitchMaterial
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
+import java.time.LocalDate
+import java.util.UUID
 
 class Nuovo_annuncio: AppCompatActivity() {
+    private val usernameUtenteLoggato = "usernameUtenteLoggato" // Replace with your actual username
+
     private val pickPdfFiles = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         println("****************** uri: $uri")
         // Handle the returned Uri
@@ -44,7 +55,41 @@ class Nuovo_annuncio: AppCompatActivity() {
         findViewById<Button>(R.id.buttonSelezionaPDF).setOnClickListener {
             pickPdfFiles.launch("application/pdf") //per selezionare solo pdf
         }
+        val editTextNomeAnnuncio = findViewById<EditText>(R.id.editTextNomeAnnuncio)
+        val editTextMultiLineDescrizioneAnnuncio = findViewById<EditText>(R.id.editTextMultiLineDescrizioneAnnuncio)
+        val switchMateriale = findViewById<Switch>(R.id.switchMateriale)
+        val buttonSelezionaPDF = findViewById<Button>(R.id.buttonSelezionaPDF)
+        val TextViewCountPDF = findViewById<TextView>(R.id.TextViewCountPDF)
+        val editTextNumberAnnoMD = findViewById<EditText>(R.id.editTextNumberAnnoMD)
+        val TextMultiLineDescrizioneMD = findViewById<EditText>(R.id.TextMultiLineDescrizioneMD)
+        val editTextNomeCorsoMD = findViewById<EditText>(R.id.editTextNomeCorsoMD)
+        val editTextAnnoMF = findViewById<EditText>(R.id.editTextAnnoMF)
+        val MultiLineDescrizioneMF = findViewById<EditText>(R.id.MultiLineDescrizioneMF)
+        val editTextNomeCorsoMF = findViewById<EditText>(R.id.editTextNomeCorsoMF)
+        val editTextNumberDecimalCostoMF = findViewById<EditText>(R.id.editTextNumberDecimalCostoMF)
+        val editTextNumberNumeroCivico = findViewById<EditText>(R.id.editTextNumberNumeroCivico)
+        val editTextViaRitiro = findViewById<EditText>(R.id.editTextViaRitiro)
+        val editTextProvinciaRitiro = findViewById<EditText>(R.id.editTextProvinciaRitiro)
+        val editTextComuneRitiro = findViewById<EditText>(R.id.editTextComuneRitiro)
+        val editTextNumberCAP = findViewById<EditText>(R.id.editTextNumberCAP)
+        val buttonConferma = findViewById<Button>(R.id.buttonConferma)
+        // TO DO: sistemare lo Switch
 
+        val materialeDigitale: MaterialeDigitale? = null
+        val materialeFisico: MaterialeFisico? = null
+
+        buttonConferma.setOnClickListener{
+            val ID: UUID = UUID.randomUUID()
+            Annuncio(
+                ID.toString(),
+                editTextNomeAnnuncio.text.toString(),
+                LocalDate.now().toString(),
+                editTextMultiLineDescrizioneAnnuncio.text.toString(),
+                usernameUtenteLoggato,
+                materialeDigitale,
+                materialeFisico
+                )
+        }
     }
 
     private fun uriToFilePath(context: Context, uri: Uri): String? {

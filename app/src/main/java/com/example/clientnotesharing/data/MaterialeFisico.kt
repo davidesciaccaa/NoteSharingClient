@@ -13,5 +13,4 @@ data class MaterialeFisico(
     var via: String,
     var cap: Int
 ) {
-
 }
