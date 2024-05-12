@@ -26,7 +26,7 @@
             app:layout_constraintTop_toBottomOf="@+id/editTextNumberAnnoMD" />
 
         <EditText
-            android:id="@+id/editTextAnnoMF"
+            android:id="@+id/editTextNumberAnnoMF"
             android:layout_width="347dp"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -78,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Inserisci informazioni del materiale fisico"
-            app:layout_constraintBottom_toTopOf="@+id/editTextAnnoMF"
+            app:layout_constraintBottom_toTopOf="@+id/editTextNumberAnnoMF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -109,7 +109,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextAnnoMF" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextNumberAnnoMF" />
 
         <EditText
             android:id="@+id/editTextNumberDecimalCostoMF"

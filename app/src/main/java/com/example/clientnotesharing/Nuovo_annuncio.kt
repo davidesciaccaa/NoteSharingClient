@@ -14,7 +14,6 @@ import androidx.lifecycle.lifecycleScope
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.data.MaterialeDigitale
 import com.example.clientnotesharing.data.MaterialeFisico
-import com.google.android.material.switchmaterial.SwitchMaterial
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -63,7 +62,7 @@ class Nuovo_annuncio: AppCompatActivity() {
         val editTextNumberAnnoMD = findViewById<EditText>(R.id.editTextNumberAnnoMD)
         val TextMultiLineDescrizioneMD = findViewById<EditText>(R.id.TextMultiLineDescrizioneMD)
         val editTextNomeCorsoMD = findViewById<EditText>(R.id.editTextNomeCorsoMD)
-        val editTextAnnoMF = findViewById<EditText>(R.id.editTextAnnoMF)
+        val editTextNumberAnnoMF = findViewById<EditText>(R.id.editTextNumberAnnoMF)
         val MultiLineDescrizioneMF = findViewById<EditText>(R.id.MultiLineDescrizioneMF)
         val editTextNomeCorsoMF = findViewById<EditText>(R.id.editTextNomeCorsoMF)
         val editTextNumberDecimalCostoMF = findViewById<EditText>(R.id.editTextNumberDecimalCostoMF)
@@ -74,6 +73,32 @@ class Nuovo_annuncio: AppCompatActivity() {
         val editTextNumberCAP = findViewById<EditText>(R.id.editTextNumberCAP)
         val buttonConferma = findViewById<Button>(R.id.buttonConferma)
         // TO DO: sistemare lo Switch
+
+        MultiLineDescrizioneMF.isEnabled = false
+        editTextNomeCorsoMF.isEnabled = false
+        editTextNumberAnnoMF.isEnabled = false
+        editTextNumberDecimalCostoMF.isEnabled = false
+        editTextNumberNumeroCivico.isEnabled = false
+        editTextViaRitiro.isEnabled = false
+        editTextProvinciaRitiro.isEnabled = false
+        editTextComuneRitiro.isEnabled = false
+        editTextNumberCAP.isEnabled = false
+
+        switchMateriale.setOnCheckedChangeListener { buttonView, isChecked ->
+            editTextNumberAnnoMD.isEnabled = !isChecked
+            TextMultiLineDescrizioneMD.isEnabled = !isChecked
+            editTextNomeCorsoMD.isEnabled = !isChecked
+            buttonSelezionaPDF.isEnabled = !isChecked
+            MultiLineDescrizioneMF.isEnabled = isChecked
+            editTextNomeCorsoMF.isEnabled = isChecked
+            editTextNumberAnnoMF.isEnabled = isChecked
+            editTextNumberDecimalCostoMF.isEnabled = isChecked
+            editTextNumberNumeroCivico.isEnabled = isChecked
+            editTextViaRitiro.isEnabled = isChecked
+            editTextProvinciaRitiro.isEnabled = isChecked
+            editTextComuneRitiro.isEnabled = isChecked
+            editTextNumberCAP.isEnabled = isChecked
+        }
 
         val materialeDigitale: MaterialeDigitale? = null
         val materialeFisico: MaterialeFisico? = null
@@ -88,7 +113,7 @@ class Nuovo_annuncio: AppCompatActivity() {
                 usernameUtenteLoggato,
                 materialeDigitale,
                 materialeFisico
-                )
+            )
         }
     }
 
