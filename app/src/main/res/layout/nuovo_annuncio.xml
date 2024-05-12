@@ -12,14 +12,14 @@
         android:layout_height="match_parent">
 
         <EditText
-            android:id="@+id/TextMultiLineDescMD"
+            android:id="@+id/TextMultiLineDescrizioneMD"
             android:layout_width="347dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:gravity="start|top"
             android:hint="Inserisci la descrizione del PDF"
             android:inputType="textMultiLine"
-            app:layout_constraintBottom_toTopOf="@+id/editTextCorsoMD"
+            app:layout_constraintBottom_toTopOf="@+id/editTextNomeCorsoMD"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -32,14 +32,14 @@
             android:ems="10"
             android:hint="Inserisci l'anno di creazione del materiale"
             android:inputType="number"
-            app:layout_constraintBottom_toTopOf="@+id/MultiLineDescMF"
+            app:layout_constraintBottom_toTopOf="@+id/MultiLineDescrizioneMF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
         <EditText
-            android:id="@+id/editTextCorsoMF"
+            android:id="@+id/editTextNomeCorsoMF"
             android:layout_width="347dp"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -49,7 +49,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/MultiLineDescMF" />
+            app:layout_constraintTop_toBottomOf="@+id/MultiLineDescrizioneMF" />
 
         <TextView
             android:id="@+id/textView3"
@@ -60,10 +60,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextNumber4" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextNumberCAP" />
 
         <TextView
-            android:id="@+id/tvStatoPDF"
+            android:id="@+id/TextViewCountPDF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Stato Upload"
@@ -71,7 +71,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonSelectPDF" />
+            app:layout_constraintTop_toBottomOf="@+id/buttonSelezionaPDF" />
 
         <TextView
             android:id="@+id/textView6"
@@ -82,7 +82,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextCorsoMD" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextNomeCorsoMD" />
 
         <EditText
             android:id="@+id/editTextNumberAnnoMD"
@@ -91,21 +91,21 @@
             android:ems="10"
             android:hint="Inserisci l'anno di creazione del materiale"
             android:inputType="number"
-            app:layout_constraintBottom_toTopOf="@+id/TextMultiLineDescMD"
+            app:layout_constraintBottom_toTopOf="@+id/TextMultiLineDescrizioneMD"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvStatoPDF" />
+            app:layout_constraintTop_toBottomOf="@+id/TextViewCountPDF" />
 
         <EditText
-            android:id="@+id/MultiLineDescMF"
+            android:id="@+id/MultiLineDescrizioneMF"
             android:layout_width="347dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:gravity="start|top"
             android:hint="Inserisci la descrizione del materiale fisico"
             android:inputType="textMultiLine"
-            app:layout_constraintBottom_toTopOf="@+id/editTextCorsoMF"
+            app:layout_constraintBottom_toTopOf="@+id/editTextNomeCorsoMF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -118,66 +118,66 @@
             android:ems="10"
             android:hint="Costo del materiale"
             android:inputType="numberDecimal"
-            app:layout_constraintBottom_toTopOf="@+id/editTextNumber2"
+            app:layout_constraintBottom_toTopOf="@+id/editTextNumberNumeroCivico"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextCorsoMF" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextNomeCorsoMF" />
 
         <EditText
-            android:id="@+id/editTextText5"
+            android:id="@+id/editTextViaRitiro"
             android:layout_width="347dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Via di ritiro"
             android:inputType="text"
-            app:layout_constraintBottom_toTopOf="@+id/editTextText6"
+            app:layout_constraintBottom_toTopOf="@+id/editTextProvinciaRitiro"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextNumber2" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextNumberNumeroCivico" />
 
         <EditText
-            android:id="@+id/editTextNumber2"
+            android:id="@+id/editTextNumberNumeroCivico"
             android:layout_width="347dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Numero civico per il ritiro"
             android:inputType="number"
-            app:layout_constraintBottom_toTopOf="@+id/editTextText5"
+            app:layout_constraintBottom_toTopOf="@+id/editTextViaRitiro"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextNumberDecimalCostoMF" />
 
         <EditText
-            android:id="@+id/editTextText6"
+            android:id="@+id/editTextProvinciaRitiro"
             android:layout_width="347dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Provincia di ritiro"
             android:inputType="text"
-            app:layout_constraintBottom_toTopOf="@+id/editTextText7"
+            app:layout_constraintBottom_toTopOf="@+id/editTextComuneRitiro"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextText5" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextViaRitiro" />
 
         <EditText
-            android:id="@+id/editTextText7"
+            android:id="@+id/editTextComuneRitiro"
             android:layout_width="347dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Comune di ritiro"
             android:inputType="text"
-            app:layout_constraintBottom_toTopOf="@+id/editTextNumber4"
+            app:layout_constraintBottom_toTopOf="@+id/editTextNumberCAP"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextText6" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextProvinciaRitiro" />
 
         <EditText
-            android:id="@+id/editTextNumber4"
+            android:id="@+id/editTextNumberCAP"
             android:layout_width="347dp"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -187,7 +187,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextText7" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextComuneRitiro" />
 
         <TextView
             android:id="@+id/textView2"
@@ -195,41 +195,41 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Nuovo annuncio"
-            app:layout_constraintBottom_toTopOf="@+id/editTextText"
+            app:layout_constraintBottom_toTopOf="@+id/editTextNomeAnnuncio"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:id="@+id/editTextText"
+            android:id="@+id/editTextNomeAnnuncio"
             android:layout_width="347dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Inserisci il nome dell'annuncio"
             android:inputType="text"
-            app:layout_constraintBottom_toTopOf="@+id/editTextTextMultiLine"
+            app:layout_constraintBottom_toTopOf="@+id/editTextMultiLineDescrizioneAnnuncio"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
         <EditText
-            android:id="@+id/editTextTextMultiLine"
+            android:id="@+id/editTextMultiLineDescrizioneAnnuncio"
             android:layout_width="347dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:gravity="start|top"
             android:hint="Inserisci la descrizione dell'annuncio"
             android:inputType="textMultiLine"
-            app:layout_constraintBottom_toTopOf="@+id/switch1"
+            app:layout_constraintBottom_toTopOf="@+id/switchMateriale"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextText" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextNomeAnnuncio" />
 
         <Switch
-            android:id="@+id/switch1"
+            android:id="@+id/switchMateriale"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Materiale fisico"
@@ -237,25 +237,25 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextMultiLineDescrizioneAnnuncio" />
 
         <TextView
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Inserisci informazioni del materiale digitale"
-            app:layout_constraintBottom_toTopOf="@+id/buttonSelectPDF"
+            app:layout_constraintBottom_toTopOf="@+id/buttonSelezionaPDF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/switch1" />
+            app:layout_constraintTop_toBottomOf="@+id/switchMateriale" />
 
         <Button
-            android:id="@+id/buttonSelectPDF"
+            android:id="@+id/buttonSelezionaPDF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Seleziona PDF"
-            app:layout_constraintBottom_toTopOf="@+id/tvStatoPDF"
+            app:layout_constraintBottom_toTopOf="@+id/TextViewCountPDF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -273,7 +273,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
         <EditText
-            android:id="@+id/editTextCorsoMD"
+            android:id="@+id/editTextNomeCorsoMD"
             android:layout_width="347dp"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -283,7 +283,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/TextMultiLineDescMD" />
+            app:layout_constraintTop_toBottomOf="@+id/TextMultiLineDescrizioneMD" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

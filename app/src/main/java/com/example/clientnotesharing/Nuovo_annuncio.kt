@@ -1,11 +1,8 @@
 package com.example.clientnotesharing
 
 import android.content.Context
-import android.content.Intent
-import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
-import android.provider.DocumentsContract
 import android.provider.OpenableColumns
 import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
@@ -44,7 +41,7 @@ class Nuovo_annuncio: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.nuovo_annuncio)
 
-        findViewById<Button>(R.id.buttonSelectPDF).setOnClickListener {
+        findViewById<Button>(R.id.buttonSelezionaPDF).setOnClickListener {
             pickPdfFiles.launch("application/pdf") //per selezionare solo pdf
         }
 
