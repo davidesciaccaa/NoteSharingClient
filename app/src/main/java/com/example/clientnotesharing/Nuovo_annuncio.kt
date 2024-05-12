@@ -84,7 +84,11 @@ class Nuovo_annuncio: AppCompatActivity() {
         editTextComuneRitiro.isEnabled = false
         editTextNumberCAP.isEnabled = false
 
+        var materialeDigitale: MaterialeDigitale? = null
+        var materialeFisico: MaterialeFisico? = null
+        var statoSwitch = false
         switchMateriale.setOnCheckedChangeListener { buttonView, isChecked ->
+            statoSwitch = true
             editTextNumberAnnoMD.isEnabled = !isChecked
             TextMultiLineDescrizioneMD.isEnabled = !isChecked
             editTextNomeCorsoMD.isEnabled = !isChecked
@@ -98,14 +102,32 @@ class Nuovo_annuncio: AppCompatActivity() {
             editTextProvinciaRitiro.isEnabled = isChecked
             editTextComuneRitiro.isEnabled = isChecked
             editTextNumberCAP.isEnabled = isChecked
+
         }
 
-        val materialeDigitale: MaterialeDigitale? = null
-        val materialeFisico: MaterialeFisico? = null
 
         buttonConferma.setOnClickListener{
+            if(statoSwitch){ // gestire dopo i casi in cui sono vuoti quelli che prendono int altrimenti non funziona la conversione
+                materialeFisico = MaterialeFisico(
+                    editTextNumberDecimalCostoMF.text.toString().toInt(),
+                    editTextNumberAnnoMF.text.toString().toInt(),
+                    editTextNomeCorsoMF.text.toString(),
+                    MultiLineDescrizioneMF.text.toString(),
+                    editTextComuneRitiro.text.toString(),
+                    editTextProvinciaRitiro.text.toString(),
+                    editTextViaRitiro.text.toString(),
+                    editTextNumberCAP.text.toString().toInt()
+                )
+            }else{
+                materialeDigitale = MaterialeDigitale(
+                    editTextNumberAnnoMD.text.toString().toInt(),
+                    editTextNomeCorsoMD.text.toString(),
+                    TextMultiLineDescrizioneMD.text.toString()
+                )
+            }
+
             val ID: UUID = UUID.randomUUID()
-            Annuncio(
+            val nuovoA = Annuncio(
                 ID.toString(),
                 editTextNomeAnnuncio.text.toString(),
                 LocalDate.now().toString(),
@@ -114,6 +136,12 @@ class Nuovo_annuncio: AppCompatActivity() {
                 materialeDigitale,
                 materialeFisico
             )
+            lifecycleScope.launch {
+                NotesApi.retrofitService.uploadAnnuncio(nuovoA)
+            }
+
+            //to do: chiudere la pagina Nuovo annuncio
+            //to do: controllo che non sono rimasti vuoti
         }
     }
 

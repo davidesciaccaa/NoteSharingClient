@@ -1,5 +1,6 @@
 package com.example.clientnotesharing
 
+import com.example.clientnotesharing.data.Annuncio
 import retrofit2.Retrofit
 import retrofit2.http.GET
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -8,12 +9,13 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
+import retrofit2.http.Body
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 
 
-const val BASE_URL = "http://192.168.55.90:8080"   //"http://10.0.2.2:8080"
+const val BASE_URL = "http://192.168.153.58:8080"   //"http://10.0.2.2:8080"
 private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .addConverterFactory(
@@ -36,6 +38,9 @@ interface NoteSharingApi{
     @Multipart
     @POST("uploadPdf")
     suspend fun uploadPdf(@Part file: MultipartBody.Part): ResponseBody
+
+    @POST("uploadAnnuncio")
+    suspend fun uploadAnnuncio(@Body annuncio: Annuncio)
 }
 
 
