@@ -132,9 +132,7 @@ class Nuovo_annuncio: AppCompatActivity() {
                 editTextNomeAnnuncio.text.toString(),
                 LocalDate.now().toString(),
                 editTextMultiLineDescrizioneAnnuncio.text.toString(),
-                usernameUtenteLoggato,
-                materialeDigitale,
-                materialeFisico
+                usernameUtenteLoggato
             )
             lifecycleScope.launch {
                 NotesApi.retrofitService.uploadAnnuncio(nuovoA)
