@@ -1,6 +1,7 @@
 package com.example.clientnotesharing
 
 import com.example.clientnotesharing.data.Annuncio
+import com.example.clientnotesharing.data.MaterialeDigitale
 import retrofit2.Retrofit
 import retrofit2.http.GET
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -41,6 +42,12 @@ interface NoteSharingApi{
 
     @POST("uploadAnnuncio")
     suspend fun uploadAnnuncio(@Body annuncio: Annuncio)
+
+    @POST("uploadMD")
+    suspend fun uploadMaterialeDigitale(@Body annuncio: MaterialeDigitale)
+
+    @POST("uploadMF")
+    suspend fun uploadMaterialeFsico(@Body annuncio: MaterialeFisico)
 }
 
 
