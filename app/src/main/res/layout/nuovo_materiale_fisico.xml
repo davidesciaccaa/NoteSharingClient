@@ -28,7 +28,7 @@
         android:ems="10"
         android:hint="CAP di ritiro"
         android:inputType="number"
-        app:layout_constraintBottom_toTopOf="@+id/btnIndientro"
+        app:layout_constraintBottom_toTopOf="@+id/btnIndietro"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editNNumeroCivico" />
@@ -134,7 +134,7 @@
         app:layout_constraintTop_toBottomOf="@+id/editTComuneRitiro" />
 
     <Button
-        android:id="@+id/btnIndientro"
+        android:id="@+id/btnIndietro"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -156,6 +156,6 @@
         android:text="Crea Annuncio"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btnIndientro"
-        app:layout_constraintTop_toTopOf="@+id/btnIndientro" />
+        app:layout_constraintStart_toEndOf="@+id/btnIndietro"
+        app:layout_constraintTop_toTopOf="@+id/btnIndietro" />
 </androidx.constraintlayout.widget.ConstraintLayout>

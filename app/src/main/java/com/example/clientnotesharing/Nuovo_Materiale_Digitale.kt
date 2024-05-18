@@ -13,14 +13,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.data.MaterialeDigitale
-import com.example.clientnotesharing.data.MaterialeFisico
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
-import java.util.UUID
 
 class Nuovo_Materiale_Digitale: AppCompatActivity() {
     private var nrPdfCaricati = 0
@@ -35,7 +33,7 @@ class Nuovo_Materiale_Digitale: AppCompatActivity() {
         val editMultilineDescr = findViewById<EditText>(R.id.editTextTextMultiLineDescrizione)
         val editTCorso = findViewById<EditText>(R.id.editTextCorso)
         val buttonConferma = findViewById<Button>(R.id.btnCreaNuovoA)
-        val buttonIndientro = findViewById<Button>(R.id.btnIndientro)
+        val buttonIndietro = findViewById<Button>(R.id.btnIndietro)
 
         btnSelezionaPDF.setOnClickListener {
             pickPdfFiles.launch("application/pdf") //per selezionare solo pdf
@@ -46,9 +44,10 @@ class Nuovo_Materiale_Digitale: AppCompatActivity() {
                 Json.decodeFromString<Annuncio>(it!!)
             }
             val nuovoMD = MaterialeDigitale(
-                editTAnno.toString().toInt(),
-                editTCorso.toString(),
-                editMultilineDescr.toString()
+                nuovoA.id,
+                editTAnno.text.toString().toInt(),
+                editTCorso.text.toString(),
+                editMultilineDescr.text.toString()
             )
             lifecycleScope.launch {
                 NotesApi.retrofitService.uploadAnnuncio(nuovoA)

@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MaterialeFisico(
+    var id: String,
     var costo: Int,
     var annoRiferimento: Int,
     var nomeCorso: String,
@@ -11,6 +12,7 @@ data class MaterialeFisico(
     var comune: String,
     var provincia: String,
     var via: String,
+    var numeroCivico: Int,
     var cap: Int
 ) {
 }

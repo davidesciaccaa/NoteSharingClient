@@ -7,12 +7,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.clientnotesharing.data.Annuncio
-import com.example.clientnotesharing.data.MaterialeDigitale
 import com.example.clientnotesharing.data.MaterialeFisico
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import java.time.LocalDate
-import java.util.UUID
 
 class Nuovo_Materiale_Fisico: AppCompatActivity() {
 
@@ -31,21 +28,23 @@ class Nuovo_Materiale_Fisico: AppCompatActivity() {
         val editTextComuneRitiro = findViewById<EditText>(R.id.editTComuneRitiro)
         val editTextNumberCAP = findViewById<EditText>(R.id.editNCAP)
         val buttonConferma = findViewById<Button>(R.id.btnCreaNuovoA)
-        val buttonIndientro = findViewById<Button>(R.id.btnIndientro)
+        val buttonIndietro = findViewById<Button>(R.id.btnIndietro)
 
         buttonConferma.setOnClickListener{
             val nuovoA = intent.getStringExtra("nuovoA").let {
                 Json.decodeFromString<Annuncio>(it!!)
             }
             val nuovoMf = MaterialeFisico(
-                editTextNumberDecimalCostoMF.toString().toInt(),
-                editTextNumberAnnoMF.toString().toInt(),
-                editTextNomeCorsoMF.toString(),
-                multiLineDescrizioneMF.toString(),
-                editTextComuneRitiro.toString(),
-                editTextProvinciaRitiro.toString(),
-                editTextViaRitiro.toString(),
-                editTextNumberCAP.toString().toInt()
+                nuovoA.id,
+                editTextNumberDecimalCostoMF.text.toString().toInt(),
+                editTextNumberAnnoMF.text.toString().toInt(),
+                editTextNomeCorsoMF.text.toString(),
+                multiLineDescrizioneMF.text.toString(),
+                editTextComuneRitiro.text.toString(),
+                editTextProvinciaRitiro.text.toString(),
+                editTextViaRitiro.text.toString(),
+                editTextNumberNumeroCivico.text.toString().toInt(),
+                editTextNumberCAP.text.toString().toInt()
                 )
             lifecycleScope.launch {
                 NotesApi.retrofitService.uploadAnnuncio(nuovoA)
