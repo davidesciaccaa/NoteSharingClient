@@ -68,21 +68,32 @@ class Nuovo_annuncio: AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         buttonConferma.setOnClickListener{
             val ID: UUID = UUID.randomUUID()
-            val nuovoA = Annuncio(
-                ID.toString(),
-                editTextNomeAnnuncio.text.toString(),
-                LocalDate.now().toString(),
-                editTextMultiLineDescrizioneAnnuncio.text.toString(),
-                usernameUtenteLoggato
-            )
 
             if (itemSelez.equals("Materiale Fisico")) {
+                val nuovoA = Annuncio(
+                    ID.toString(),
+                    editTextNomeAnnuncio.text.toString(),
+                    LocalDate.now().toString(),
+                    editTextMultiLineDescrizioneAnnuncio.text.toString(),
+                    true, //è un materiale fisico
+                    usernameUtenteLoggato
+                )
+
                 val intent = Intent(this, Nuovo_Materiale_Fisico::class.java)
                 val jsonString = Json.encodeToString(Annuncio.serializer(), nuovoA)
                 intent.putExtra("nuovoA", jsonString)
                 startActivity(intent)
             }else{
                 if (itemSelez.equals("Materiale Digitale")) {
+                    val nuovoA = Annuncio(
+                        ID.toString(),
+                        editTextNomeAnnuncio.text.toString(),
+                        LocalDate.now().toString(),
+                        editTextMultiLineDescrizioneAnnuncio.text.toString(),
+                        false, //è un materiale digitale
+                        usernameUtenteLoggato
+                    )
+
                     val intent = Intent(this, Nuovo_Materiale_Digitale::class.java)
                     val jsonString = Json.encodeToString(Annuncio.serializer(), nuovoA)
                     intent.putExtra("nuovoA", jsonString)

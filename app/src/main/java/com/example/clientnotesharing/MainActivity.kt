@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         }
          */
 
+        /*
         val data = ArrayList<HashMap<String, Any>>()
         for (i in 1..100){
             val hm = HashMap<String, Any>()
@@ -66,6 +67,8 @@ class MainActivity : AppCompatActivity() {
             intArrayOf(R.id.textViewTittle, R.id.textViewData)  //si chiaano cosi quelli di simple_list_item_2
         )
 
+
+         */
 
         //bottone +
         findViewById<FloatingActionButton>(R.id.addbtn).setOnClickListener{
