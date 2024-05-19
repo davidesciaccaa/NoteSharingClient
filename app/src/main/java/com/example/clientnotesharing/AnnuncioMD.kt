@@ -17,7 +17,7 @@ class AnnuncioMD: AppCompatActivity() {
         val AnnuncioSelezionato = intent.getStringExtra("AnunncioSelezionato").let {
             Json.decodeFromString<Annuncio>(it!!)
         }
-        val MaterialeFisicoAssociato = intent.getStringExtra("MaterialeFisicoAssociato").let {
+        val MaterialeFisicoAssociato = intent.getStringExtra("MaterialeAssociato").let {
             Json.decodeFromString<MaterialeFisico>(it!!)
         }
 
