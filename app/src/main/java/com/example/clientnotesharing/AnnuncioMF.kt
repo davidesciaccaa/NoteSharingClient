@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import retrofit2.HttpException
 import java.io.IOException
+import java.time.LocalDate
 
 
 class AnnuncioMF: AppCompatActivity() {
@@ -38,9 +39,9 @@ class AnnuncioMF: AppCompatActivity() {
 
         this.title = AnnuncioSelezionato.titolo //cambio il titolo dell'app bar della view aperta
 
-        tvDataAnnuncio.text = ""//data corrente
+        tvDataAnnuncio.text = AnnuncioSelezionato.data//LocalDate.now().toString() //data corrente
         tvDescrAnnuncio.text = AnnuncioSelezionato.descrizioneAnnuncio
-        tvEmail.text = AnnuncioSelezionato.idProprietario //devo avere 1 metodo che mi recupera la mail di quetso utente
+        tvEmail.text = AnnuncioSelezionato.idProprietario //devo avere 1 metodo che mi recupera la mail di quetso utente ************************
         tvCosto.text = MaterialeFisicoAssociato.costo.toString()
         tvAnnoMateriale.text = MaterialeFisicoAssociato.annoRiferimento.toString()
         tvDescrMateriale.text = MaterialeFisicoAssociato.descrizioneMateriale

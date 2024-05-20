@@ -31,7 +31,7 @@ import java.time.LocalDate
 import java.util.UUID
 
 class Nuovo_annuncio: AppCompatActivity(), AdapterView.OnItemSelectedListener {
-    private val usernameUtenteLoggato = "pippo"
+    private val usernameUtenteLoggato = "ilibr"
     private var itemSelez = ""
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {

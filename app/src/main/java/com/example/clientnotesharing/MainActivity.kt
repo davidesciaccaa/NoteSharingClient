@@ -48,27 +48,7 @@ class MainActivity : AppCompatActivity() {
         if (!isLoggedIn()) {
             goToLoginActivity()
         }
-         */
-
-        /*
-        val data = ArrayList<HashMap<String, Any>>()
-        for (i in 1..100){
-            val hm = HashMap<String, Any>()
-            hm["Tittle"] = "Tittle Annuncio $i"
-            hm["Date"] = "$i"
-            data.add(hm)
-        }
-        val listView = findViewById<ListView>(R.id.listViewAnnunci)
-        listView.adapter = SimpleAdapter(
-            this,
-            data,
-            R.layout.listlayout,
-            arrayOf("Tittle", "Date"),
-            intArrayOf(R.id.textViewTittle, R.id.textViewData)  //si chiaano cosi quelli di simple_list_item_2
-        )
-
-
-         */
+        */
 
         //bottone +
         findViewById<FloatingActionButton>(R.id.addbtn).setOnClickListener{

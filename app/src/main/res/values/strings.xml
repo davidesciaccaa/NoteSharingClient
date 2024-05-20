@@ -7,5 +7,21 @@
         <item>Materiale Digitale</item>
         <item>Materiale Fisico</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="downloadMD">Scarica il materiale digitale</string>
+    <string name="hintComuneRitiro">Comune di ritiro</string>
+    <string name="hintCapRitiro">CAP di ritiro</string>
+    <string name="hintAnnoCreazioneNuovo">Inserisci l\'anno di creazione del materiale</string>
+    <string name="hintNomeCorsoRiferimento">Nome del corso di riferimento</string>
+    <string name="hintDescrizioneMF">Inserisci la descrizione del materiale fisico</string>
+    <string name="hintCostoMateriale">Costo del materiale</string>
+    <string name="hintNrCivicoRitiro">Numero civico per il ritiro</string>
+    <string name="hintProvinciaRitiro">Provincia di ritiro</string>
+    <string name="indietro">Indientro</string>
+    <string name="creaAnnuncio">Crea Annuncio</string>
+    <string name="hintDescrPDF">Inserisci la descrizione del PDF</string>
+    <string name="selezionaPDF">Seleziona PDF</string>
+    <string name="hintNomeAnnuncio">Inserisci il nome dell\'annuncio</string>
+    <string name="avanti">Avanti</string>
+    <string name="hintDescrAnnuncio">Inserisci la descrizione dell\'annuncio</string>
+    <string name="hintViaRitiro">Inserisci la via di ritiro</string>
 </resources>
