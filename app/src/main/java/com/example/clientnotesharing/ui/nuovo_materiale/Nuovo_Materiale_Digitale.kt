@@ -1,9 +1,10 @@
-package com.example.clientnotesharing
+package com.example.clientnotesharing.ui.nuovo_materiale
 
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -11,6 +12,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.clientnotesharing.NotesApi
+import com.example.clientnotesharing.R
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.data.MaterialeDigitale
 import kotlinx.coroutines.launch
@@ -27,6 +30,12 @@ class Nuovo_Materiale_Digitale: AppCompatActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.nuovo_materiale_digitale)
+        // Access the SupportActionBar
+        supportActionBar?.apply {
+            title = getString(R.string.titolo_appbar_nuovo_materiale_digitale)
+            setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.arrow_back_20dp)
+        }
 
         val btnSelezionaPDF = findViewById<Button>(R.id.btnSelezionaPDF)
         val editTAnno = findViewById<EditText>(R.id.editTextNumberAnno)
@@ -56,6 +65,9 @@ class Nuovo_Materiale_Digitale: AppCompatActivity() {
 
             //to do: chiudere la pagina Nuovo annuncio
             //to do: controllo che non sono rimasti vuoti
+        }
+        buttonIndietro.setOnClickListener{
+            onBackPressedDispatcher.onBackPressed() //clicca il back button
         }
     }
 
@@ -110,5 +122,15 @@ class Nuovo_Materiale_Digitale: AppCompatActivity() {
             e.printStackTrace()
             null
         }
+    }
+    //implementazione back arrow button nell'app bar
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressedDispatcher.onBackPressed()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

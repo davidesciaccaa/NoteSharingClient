@@ -3,8 +3,6 @@ package com.example.clientnotesharing
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.ListView
-import android.widget.SimpleAdapter
 import androidx.activity.enableEdgeToEdge
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +12,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.clientnotesharing.databinding.ActivityMainBinding
+import com.example.clientnotesharing.ui.nuovo_materiale.Nuovo_annuncio
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 import retrofit2.HttpException

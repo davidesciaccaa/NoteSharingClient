@@ -1,18 +1,15 @@
-package com.example.clientnotesharing
+package com.example.clientnotesharing.ui.visualizza_materiale
 
 import android.os.Bundle
-import android.util.Log
+import android.view.MenuItem
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
+import com.example.clientnotesharing.R
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.data.MaterialeFisico
-import kotlinx.coroutines.launch
+import com.google.android.gms.maps.MapView
 import kotlinx.serialization.json.Json
-import retrofit2.HttpException
-import java.io.IOException
-import java.time.LocalDate
 
 
 class AnnuncioMF: AppCompatActivity() {
@@ -28,6 +25,13 @@ class AnnuncioMF: AppCompatActivity() {
             Json.decodeFromString<MaterialeFisico>(it!!)
         }
 
+        //appbar
+        supportActionBar?.apply {
+            title = AnnuncioSelezionato.titolo
+            setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.arrow_back_20dp)
+        }
+
         val tvDataAnnuncio = findViewById<TextView>(R.id.tvData)
         val tvDescrAnnuncio = findViewById<TextView>(R.id.tvDescriizioneAnnuncio)
         val tvEmail = findViewById<TextView>(R.id.tvEmailProprietario)
@@ -36,8 +40,9 @@ class AnnuncioMF: AppCompatActivity() {
         val tvDescrMateriale = findViewById<TextView>(R.id.tvDescMateriale)
         val tvCorso = findViewById<TextView>(R.id.tvCorso)
         val tvIndirizzo = findViewById<TextView>(R.id.tvIndirizzo)
+        val map = findViewById<MapView>(R.id.mapView)
 
-        this.title = AnnuncioSelezionato.titolo //cambio il titolo dell'app bar della view aperta
+        //this.title = AnnuncioSelezionato.titolo //cambio il titolo dell'app bar della view aperta
 
         tvDataAnnuncio.text = AnnuncioSelezionato.data//LocalDate.now().toString() //data corrente
         tvDescrAnnuncio.text = AnnuncioSelezionato.descrizioneAnnuncio
@@ -48,5 +53,16 @@ class AnnuncioMF: AppCompatActivity() {
         tvCorso.text = MaterialeFisicoAssociato.nomeCorso
         tvIndirizzo.text = MaterialeFisicoAssociato.provincia + " " + MaterialeFisicoAssociato.comune + " " + MaterialeFisicoAssociato.via  + " " + MaterialeFisicoAssociato.numeroCivico.toString()
 
+
+    }
+    //implementazione back arrow button nell'app bar
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressedDispatcher.onBackPressed()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

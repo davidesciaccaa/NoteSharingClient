@@ -21,7 +21,11 @@
     <string name="hintDescrPDF">Inserisci la descrizione del PDF</string>
     <string name="selezionaPDF">Seleziona PDF</string>
     <string name="hintNomeAnnuncio">Inserisci il nome dell\'annuncio</string>
-    <string name="avanti">Avanti</string>
+    <string name="avanti">Continua</string>
+    <string name="cancella">Cancella</string>
     <string name="hintDescrAnnuncio">Inserisci la descrizione dell\'annuncio</string>
     <string name="hintViaRitiro">Inserisci la via di ritiro</string>
+    <string name="titolo_appbar_nuovo_materiale_digitale">Nuovo Materiale Digitale</string>
+    <string name="titolo_appbar_nuovo_materiale_fisico">Nuovo Materiale Fisico</string>
+    <string name="titolo_appbar_nuovo_annuncio">Nuovo Annuncio</string>
 </resources>

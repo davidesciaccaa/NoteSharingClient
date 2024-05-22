@@ -11,6 +11,7 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -38,7 +39,7 @@ interface NoteSharingApi{
     @POST("uploadPdf")
     suspend fun uploadPdf(@Part file: MultipartBody.Part): ResponseBody
     @GET("getPDFs")
-    suspend fun getPDFs(idAnnuncio: String): MultipartBody.Part
+    suspend fun getPDFs(@Query("idAnnuncio") idAnnuncio: String): MultipartBody.Part //deve esserer Response<...>
     @POST("uploadAnnuncio")
     suspend fun uploadAnnuncio(@Body annuncio: Annuncio)
     @POST("uploadMD")
@@ -50,9 +51,9 @@ interface NoteSharingApi{
     @GET("listaAnnunci")
     suspend fun getAnnunci(): ArrayList<Annuncio> //restituisce tutti gli annunci. Forse deve essere multipart???
     @GET("materialeFisicoAssociatoAnnuncio")
-    suspend fun getMaterialeFisicoAnnuncio(@Query("idAnnuncio") idAnnuncio: String): MaterialeFisico
+    suspend fun getMaterialeFisicoAnnuncio(@Query("idAnnuncio") idAnnuncio: String): Response<MaterialeFisico>
     @GET("materialeDigitaleAssociatoAnnuncio")
-    suspend fun getMaterialeDigitaleAnnuncio(@Query("idAnnuncio") idAnnuncio: String): MaterialeDigitale
+    suspend fun getMaterialeDigitaleAnnuncio(@Query("idAnnuncio") idAnnuncio: String): Response<MaterialeDigitale>
 }
 
 

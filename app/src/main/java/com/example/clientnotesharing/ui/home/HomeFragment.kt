@@ -6,15 +6,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListView
 import android.widget.SimpleAdapter
-import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.example.clientnotesharing.AnnuncioMD
-import com.example.clientnotesharing.AnnuncioMF
+import com.example.clientnotesharing.ui.visualizza_materiale.AnnuncioMD
+import com.example.clientnotesharing.ui.visualizza_materiale.AnnuncioMF
 import com.example.clientnotesharing.NotesApi
 import com.example.clientnotesharing.R
 import com.example.clientnotesharing.data.Annuncio
@@ -106,18 +103,29 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             try {
                 if(annuncioSelezionato.tipoMateriale){ //materiale fisico
-                    materialeFisicoAssociato = NotesApi.retrofitService.getMaterialeFisicoAnnuncio(annuncioSelezionato.id)
-                    //materialeFisicoAssociato = MaterialeFisico("id2r43", 2, 2024, "algotitmi", "descriione: At its core, the operating system is known as the Android Open Source Project (AOSP)[5] and is free and open-source software (FOSS) primarily licensed under the Apache License. However, most devices run on the proprietary Android version developed by Google", "Varese", "Varese", "Viale Aguggiari", 169, 21100)
+                    val response = NotesApi.retrofitService.getMaterialeFisicoAnnuncio(annuncioSelezionato.id)
+                    if(response.isSuccessful){
+                        materialeFisicoAssociato = response.body()
+                    }else{
+                        // Error occurred
+                        val errorMessage = response.message()
+                        // Handle error message...
+                    }
                 }else{
-                    materialeDigitaleAssociato = NotesApi.retrofitService.getMaterialeDigitaleAnnuncio(annuncioSelezionato.id)
-                    //materialeFisicoAssociato = MaterialeFisico("id2r43", 2, 2024, "algotitmi", "descriione: At its core, the operating system is known as the Android Open Source Project (AOSP)[5] and is free and open-source software (FOSS) primarily licensed under the Apache License. However, most devices run on the proprietary Android version developed by Google", "Varese", "Varese", "Viale Aguggiari", 169, 21100)
+                    val response = NotesApi.retrofitService.getMaterialeDigitaleAnnuncio(annuncioSelezionato.id)
+                    if (response.isSuccessful){
+                        materialeDigitaleAssociato = response.body()
+                    }else{
+                        // Error occurred
+                        val errorMessage = response.message()
+                        // Handle error message...
+                    }
                 }
-
-
 
             } catch (e: HttpException) {
                 Log.e("MainActivity", "HTTP Exception: ${e.message()}")
                 e.printStackTrace()
+                //DA GESTIRE!!!!!
             } catch (e: IOException) {
                 Log.e("MainActivity", "IO Exception: ${e.message}")
                 e.printStackTrace()

@@ -1,15 +1,19 @@
-package com.example.clientnotesharing
+package com.example.clientnotesharing.ui.visualizza_materiale
 
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.clientnotesharing.NotesApi
+import com.example.clientnotesharing.R
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.data.MaterialeFisico
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
+import okhttp3.MultipartBody
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -26,6 +30,13 @@ class AnnuncioMD: AppCompatActivity() {
             Json.decodeFromString<MaterialeFisico>(it!!)
         }
 
+        //appbar
+        supportActionBar?.apply {
+            title = AnnuncioSelezionato.titolo //cambio il titolo dell'app bar della view aperta
+            setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.arrow_back_20dp)
+        }
+
         val tvDataAn = findViewById<TextView>(R.id.tvDataAnnuncio)
         val vtDescrizioneAnnuncioMD = findViewById<TextView>(R.id.vtDescrizioneAnnuncioMD)
         val tvEmailProprietarioMD = findViewById<TextView>(R.id.tvEmailProprietarioMD)
@@ -34,7 +45,7 @@ class AnnuncioMD: AppCompatActivity() {
         val tvDescrMaterialeD = findViewById<TextView>(R.id.tvDescrMaterialeD)
         val btnScaricaPDFs = findViewById<TextView>(R.id.btnDownloadPDFs)
 
-        this.title = AnnuncioSelezionato.titolo //cambio il titolo dell'app bar della view aperta
+        //this.title = AnnuncioSelezionato.titolo //cambio il titolo dell'app bar della view aperta
 
         tvDataAn.text = AnnuncioSelezionato.data
         vtDescrizioneAnnuncioMD.text = AnnuncioSelezionato.descrizioneAnnuncio
@@ -43,10 +54,11 @@ class AnnuncioMD: AppCompatActivity() {
         tvNomeCorsoMD.text = MaterialeDigitaleAssociato.nomeCorso
         tvDescrMaterialeD.text = MaterialeDigitaleAssociato.descrizioneMateriale
 
+        var response: MultipartBody.Part? = null
         btnScaricaPDFs.setOnClickListener{
             lifecycleScope.launch {
                 try {
-                    NotesApi.retrofitService.getPDFs(AnnuncioSelezionato.id)
+                    response = NotesApi.retrofitService.getPDFs(AnnuncioSelezionato.id)
                 } catch (e: HttpException) {
                     Log.e("MainActivity", "HTTP Exception: ${e.message()}")
                     e.printStackTrace()
@@ -58,9 +70,22 @@ class AnnuncioMD: AppCompatActivity() {
                     e.printStackTrace()
                 }
             }.invokeOnCompletion {
-                //TO DO: FARE QUALCOSA UNA VOLTA SCARICATI
+                if(response != null){
+
+                }
+
             }
         }
 
+    }
+    //implementazione back arrow button nell'app bar
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressedDispatcher.onBackPressed()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

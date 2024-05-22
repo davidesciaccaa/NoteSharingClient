@@ -1,32 +1,20 @@
-package com.example.clientnotesharing
+package com.example.clientnotesharing.ui.nuovo_materiale
 
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.OpenableColumns
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
-import android.widget.Switch
-import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
+import com.example.clientnotesharing.R
 import com.example.clientnotesharing.data.Annuncio
-import com.example.clientnotesharing.data.MaterialeDigitale
-import com.example.clientnotesharing.data.MaterialeFisico
-import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import java.io.File
 import java.time.LocalDate
 import java.util.UUID
 
@@ -48,10 +36,17 @@ class Nuovo_annuncio: AppCompatActivity(), AdapterView.OnItemSelectedListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.nuovo_annuncio)
 
+        supportActionBar?.apply {
+            title = getString(R.string.titolo_appbar_nuovo_annuncio)
+            setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.arrow_back_20dp)
+        }
+
         val editTextNomeAnnuncio = findViewById<EditText>(R.id.editTextNomeAnnuncio)
         val editTextMultiLineDescrizioneAnnuncio = findViewById<EditText>(R.id.editTextMultiLineDescrizioneAnnuncio)
         val spinner = findViewById<Spinner>(R.id.spinner)
         val buttonConferma = findViewById<Button>(R.id.btnAvanti)
+        val buttonCancella = findViewById<Button>(R.id.btnCancella)
 
         // Per lo spinner
         ArrayAdapter.createFromResource(
@@ -101,10 +96,20 @@ class Nuovo_annuncio: AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 }
             }
         }
+        buttonCancella.setOnClickListener{
+            finish()
+        }
     }
-
-
-
+    //implementazione back arrow button nell'app bar
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressedDispatcher.onBackPressed()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
 
 }
