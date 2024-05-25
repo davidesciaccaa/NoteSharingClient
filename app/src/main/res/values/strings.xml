@@ -3,6 +3,11 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="login">Entra</string>
+    <string name="signup">Registrati</string>
+    <string name="signupGoogle">Registrati con Google</string>
+    <string name="hintUsername">Username</string>
+    <string name="hintPassword">Password</string>
     <string-array name="spinner_options">
         <item>Materiale Digitale</item>
         <item>Materiale Fisico</item>
