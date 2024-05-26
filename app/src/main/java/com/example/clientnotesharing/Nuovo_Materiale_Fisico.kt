@@ -48,7 +48,7 @@ class Nuovo_Materiale_Fisico: AppCompatActivity() {
                 )
             lifecycleScope.launch {
                 NotesApi.retrofitService.uploadAnnuncio(nuovoA)
-                NotesApi.retrofitService.uploadMaterialeFsico(nuovoMf)
+                NotesApi.retrofitService.uploadMaterialeFisico(nuovoMf)
             }
 
             //to do: chiudere la pagina Nuovo annuncio

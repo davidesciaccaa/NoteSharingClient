@@ -23,7 +23,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <EditText
-        android:id="@+id/editT_Password"
+        android:id="@+id/editT_password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="48dp"
@@ -57,7 +57,7 @@
         android:text="@string/login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editT_Password" />
+        app:layout_constraintTop_toBottomOf="@+id/editT_password" />
 
     <Button
         android:id="@+id/btn_signup"
@@ -91,5 +91,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/MatitaLogin" />
+        app:srcCompat="@drawable/matita_login" />
 </androidx.constraintlayout.widget.ConstraintLayout>

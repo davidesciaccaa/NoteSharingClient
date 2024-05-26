@@ -28,6 +28,7 @@
         <activity android:name=".Nuovo_annuncio" />
         <activity android:name=".Nuovo_Materiale_Fisico" />
         <activity android:name=".Nuovo_Materiale_Digitale" />
+        <activity android:name=".ui.SignUpLogin.Login" />
     </application>
 
 </manifest>

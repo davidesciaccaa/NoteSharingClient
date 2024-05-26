@@ -15,4 +15,5 @@ data class MaterialeFisico(
     var numeroCivico: Int,
     var cap: Int
 ) {
+
 }

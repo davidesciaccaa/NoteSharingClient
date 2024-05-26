@@ -3,13 +3,16 @@ package com.example.clientnotesharing
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.data.MaterialeDigitale
 import retrofit2.Retrofit
-import retrofit2.http.GET
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.example.clientnotesharing.data.MaterialeFisico
+import com.example.clientnotesharing.data.MessageResponse
+import com.example.clientnotesharing.data.Persona
+import com.example.clientnotesharing.data.UserSession
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -25,10 +28,11 @@ private val retrofit = Retrofit.Builder()
     .build()
 object NotesApi{
     val retrofitService : NoteSharingApi by lazy {
-        retrofit.create(NoteSharingApi::class.java) //è l'inizializzazione di retrofitService
+        retrofit.create(NoteSharingApi::class.java) //retrofitService initialization
     }
     /*
-    You make this lazy initialization to make sure it is initialized at its first usage. Ignore the error, which you fix in the next steps.
+    You make this lazy initialization to make sure it is initialized at its first usage.
+    Ignore the error, which you fix in the next steps.
      */
 }
 interface NoteSharingApi{
@@ -43,7 +47,13 @@ interface NoteSharingApi{
     suspend fun uploadMaterialeDigitale(@Body annuncio: MaterialeDigitale)
 
     @POST("uploadMF")
-    suspend fun uploadMaterialeFsico(@Body annuncio: MaterialeFisico)
+    suspend fun uploadMaterialeFisico(@Body annuncio: MaterialeFisico)
+
+    @POST("UserLogin")
+    suspend fun uploadLogin(@Body userSession: UserSession): Response<MessageResponse>
+
+    @POST("UserSignUp")
+    suspend fun uploadSignUp(@Body persona: Persona)
 }
 
 
