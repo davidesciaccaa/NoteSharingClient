@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Username"
+        android:hint="@string/hintUsernameSignUp"
         android:inputType="text"
         tools:layout_editor_absoluteX="101dp"
         tools:layout_editor_absoluteY="50dp" />
@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Via"
+        android:hint="@string/hintViaSignUp"
         android:inputType="text"
         tools:layout_editor_absoluteX="101dp"
         tools:layout_editor_absoluteY="486dp" />
@@ -30,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="CAP"
+        android:hint="@string/hintCAPSignUp"
         android:inputType="text"
         tools:layout_editor_absoluteX="101dp"
         tools:layout_editor_absoluteY="596dp" />
@@ -40,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Password"
+        android:hint="@string/hintPasswordSignUp"
         android:inputType="textPassword"
         tools:layout_editor_absoluteX="101dp"
         tools:layout_editor_absoluteY="157dp" />
@@ -50,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Numero civico"
+        android:hint="@string/hintNumeroCivicoSignUp"
         android:inputType="number"
         tools:layout_editor_absoluteX="101dp"
         tools:layout_editor_absoluteY="543dp" />
@@ -60,7 +60,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Data di nascita"
+        android:hint="@string/hintDataDiNascitaSignUp"
         android:inputType="date"
         tools:layout_editor_absoluteX="101dp"
         tools:layout_editor_absoluteY="651dp" />
@@ -70,7 +70,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Provincia"
+        android:hint="@string/hintProvinciaSignUp"
         android:inputType="text"
         tools:layout_editor_absoluteX="101dp"
         tools:layout_editor_absoluteY="372dp" />
@@ -80,7 +80,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Nome"
+        android:hint="@string/hintNomeSignUp"
         android:inputType="text"
         tools:layout_editor_absoluteX="101dp"
         tools:layout_editor_absoluteY="265dp" />
@@ -90,7 +90,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Comune"
+        android:hint="@string/hintComuneSignUp"
         android:inputType="text"
         tools:layout_editor_absoluteX="101dp"
         tools:layout_editor_absoluteY="430dp" />
@@ -100,7 +100,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Email"
+        android:hint="@string/hintEmailSignUp"
         android:inputType="textPassword"
         tools:layout_editor_absoluteX="101dp"
         tools:layout_editor_absoluteY="105dp" />
@@ -110,7 +110,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Cognome"
+        android:hint="@string/hintCognomeSignUp"
         android:inputType="text"
         tools:layout_editor_absoluteX="101dp"
         tools:layout_editor_absoluteY="319dp" />
@@ -120,7 +120,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Codice fiscale"
+        android:hint="@string/hintCodiceFiscaleSignUp"
         android:inputType="text"
         tools:layout_editor_absoluteX="101dp"
         tools:layout_editor_absoluteY="213dp" />
@@ -129,19 +129,16 @@
         android:id="@+id/btn_conferma_registrazione"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Conferma"
+        android:text="@string/confermaSignUp"
         tools:layout_editor_absoluteX="150dp"
-        tools:layout_editor_absoluteY="782dp" />
+        tools:layout_editor_absoluteY="755dp" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/tv_errore_sign_up"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Inserisci tutti i dati"
+        android:text="@string/erroreSignUp"
         android:textColor="#FFFFFF"
-        android:textColorHighlight="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        android:textColorLink="#FFFFFF"
         tools:layout_editor_absoluteX="148dp"
         tools:layout_editor_absoluteY="712dp" />
 
