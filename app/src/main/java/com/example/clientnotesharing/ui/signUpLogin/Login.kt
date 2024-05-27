@@ -1,4 +1,4 @@
-package com.example.clientnotesharing.ui.SignUpLogin
+package com.example.clientnotesharing.ui.signUpLogin
 
 import android.content.Intent
 import android.os.Bundle

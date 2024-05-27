@@ -14,7 +14,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.clientnotesharing.databinding.ActivityMainBinding
-import com.example.clientnotesharing.ui.SignUpLogin.Login
+import com.example.clientnotesharing.ui.signUpLogin.Login
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
