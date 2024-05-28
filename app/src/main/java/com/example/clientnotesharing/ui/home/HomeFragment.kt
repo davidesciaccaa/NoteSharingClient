@@ -40,18 +40,18 @@ class HomeFragment : Fragment() {
         val root: View = binding.root
 
         val listViewAnnunci = binding.listViewAnnunci
-        var listaAnnunci = ArrayList<Annuncio>()
+        var listaAnnunci:ArrayList<Annuncio> = ArrayList<Annuncio>()
         //recupera tutta la lista degli annunci. Da vedere se ci sono problemi di performace
         lifecycleScope.launch {
             try {
-                listaAnnunci = NotesApi.retrofitService.getAnnunci()
-
-                /*
-                listaAnnunci.add(Annuncio("fevevefv", "Titolo Prova 1", "22-01-2023", "Android is a mobile operating system based on a modified version of the Linux kernel and other open-source software, designed primarily for touchscreen mobile devices such as smartphones and tablets. Android is developed by a consortium of developers known as the Open Handset Alliance, though its most widely used version is primarily developed by Google. It was unveiled in November 2007, with the first commercial Android device, the HTC Dream, being launched in September 2008.\n" +
-                        "\n" +
-                        "At its core, the operating system is known as the Android Open Source Project (AOSP)[5] and is free and open-source software (FOSS) primarily licensed under the Apache License. However, most devices run on the proprietary Android version developed by Google, which ships with additional proprietary closed-source software pre-installed,[6] most notably Google Mobile Services (GMS)[7] which includes core apps such as Google Chrome, the digital distribution platform Google Play, and the associated Google Play Services development platform. Firebase Cloud Messaging is used for push notifications. While AOSP is free, the name and logo are trademarks of Google, which imposes standards to restrict the use of Android branding by devices outside their ecosystem.", true, "email@chfbv"))
-                listaAnnunci.add(Annuncio("fevevefv", "Titolo Prova 2", "12-01-2025", "ddescrizionehjfbhvbfbvhfe", true,"email@chfbv"))
-                */
+                var response = NotesApi.retrofitService.getAnnunci()
+                if(response.isSuccessful && response.body()!=null){
+                    listaAnnunci = response.body()!!
+                }else{
+                    // Error occurred
+                    val errorMessage = response.message()
+                    // Handle error message...
+                }
             } catch (e: HttpException) {
                 Log.e("MainActivity", "HTTP Exception: ${e.message()}")
                 e.printStackTrace()
@@ -78,7 +78,7 @@ class HomeFragment : Fragment() {
                 data,
                 R.layout.listlayout,
                 arrayOf("Tittle", "Date"),
-                intArrayOf(R.id.textViewTittle, R.id.textViewData)  //si chiaano cosi quelli di simple_list_item_2
+                intArrayOf(R.id.textViewTittle, R.id.textViewData)  //si chiamano cosi quelli di simple_list_item_2
             )
 
             // listener per i click degli elementi della lista
@@ -135,22 +135,15 @@ class HomeFragment : Fragment() {
             }
         }.invokeOnCompletion {
             val intent = if (annuncioSelezionato.tipoMateriale) {
-                Log.d("clickMateriale", "Creating Intent for AnnuncioMF")
                 Intent(requireContext(), AnnuncioMF::class.java)
             } else {
-                Log.d("clickMateriale", "Creating Intent for AnnuncioMD")
                 Intent(requireContext(), AnnuncioMD::class.java)
             }
-            val jsonStringA = if (annuncioSelezionato.tipoMateriale) {
-                Json.encodeToString(Annuncio.serializer(), annuncioSelezionato)
-            } else {
-                Json.encodeToString(Annuncio.serializer(), annuncioSelezionato)
-            }
+            val jsonStringA = Json.encodeToString(Annuncio.serializer(), annuncioSelezionato)
+
             val jsonStringM = if (annuncioSelezionato.tipoMateriale) {
-                Log.d("clickMateriale", "encode materiale fisico********************")
                 Json.encodeToString(MaterialeFisico.serializer(), materialeFisicoAssociato!!) //non saraà null perchè finirà prima lo thread
             } else {
-                Log.d("clickMateriale", "encode materiale digitale*********************")
                 Json.encodeToString(MaterialeDigitale.serializer(), materialeDigitaleAssociato!!) //non saraà null perchè finirà prima lo thread
             }
             intent.putExtra("AnunncioSelezionato", jsonStringA)

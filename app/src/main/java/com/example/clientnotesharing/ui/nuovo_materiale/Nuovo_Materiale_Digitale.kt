@@ -62,7 +62,7 @@ class Nuovo_Materiale_Digitale: AppCompatActivity() {
                 NotesApi.retrofitService.uploadAnnuncio(nuovoA)
                 NotesApi.retrofitService.uploadMaterialeDigitale(nuovoMD)
             }
-
+            finish()
             //to do: chiudere la pagina Nuovo annuncio
             //to do: controllo che non sono rimasti vuoti
         }

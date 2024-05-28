@@ -19,7 +19,7 @@ import retrofit2.http.Part
 import retrofit2.http.Query
 
 
-const val BASE_URL = "http://10.0.2.2:8080"//"http://192.168.153.58:8080"//
+const val BASE_URL = "http://192.168.153.58:8080" //"http://10.0.2.2:8080"
 private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .addConverterFactory(
@@ -39,17 +39,16 @@ interface NoteSharingApi{
     @POST("uploadPdf")
     suspend fun uploadPdf(@Part file: MultipartBody.Part): ResponseBody
     @GET("getPDFs")
-    suspend fun getPDFs(@Query("idAnnuncio") idAnnuncio: String): MultipartBody.Part //deve esserer Response<...>
+    suspend fun getPDFs(@Query("idAnnuncio") idAnnuncio: String): Response<MultipartBody.Part> //deve esserer Response<...>
     @POST("uploadAnnuncio")
     suspend fun uploadAnnuncio(@Body annuncio: Annuncio)
     @POST("uploadMD")
     suspend fun uploadMaterialeDigitale(@Body annuncio: MaterialeDigitale)
     @POST("uploadMF")
-    suspend fun uploadMaterialeFsico(@Body annuncio: MaterialeFisico)
-    @POST("persona")
-    suspend fun registraNuovaPersona(@Body persona: Persona)
+    suspend fun uploadMaterialeFisico(@Body annuncio: MaterialeFisico)
+
     @GET("listaAnnunci")
-    suspend fun getAnnunci(): ArrayList<Annuncio> //restituisce tutti gli annunci. Forse deve essere multipart???
+    suspend fun getAnnunci(): Response<ArrayList<Annuncio>> //restituisce tutti gli annunci.
     @GET("materialeFisicoAssociatoAnnuncio")
     suspend fun getMaterialeFisicoAnnuncio(@Query("idAnnuncio") idAnnuncio: String): Response<MaterialeFisico>
     @GET("materialeDigitaleAssociatoAnnuncio")

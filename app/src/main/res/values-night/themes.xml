@@ -6,7 +6,7 @@
     </style>
     <style name="StyleAnnuncioNormalText">
         <item name="android:textColor">#FFFFFF</item> <!-- Black text color -->
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">18sp</item>
     </style>
     <style name="Theme.ClientNoteSharing" parent="Theme.Material3.DayNight">
         <item name="colorPrimary">@color/md_theme_primary</item>
@@ -14,7 +14,7 @@
         <item name="colorPrimaryContainer">@color/md_theme_primaryContainer</item>
         <item name="colorOnPrimaryContainer">@color/md_theme_onPrimaryContainer</item>
         <item name="colorSecondary">@color/md_theme_secondary</item>
-        <item name="colorOnSecondary">@color/md_theme_onSecondary</item>
+        <item name="colorOnSecondary">@color/md_theme_background</item>
         <item name="colorSecondaryContainer">@color/md_theme_secondaryContainer</item>
         <item name="colorOnSecondaryContainer">@color/md_theme_onSecondaryContainer</item>
         <item name="colorTertiary">@color/md_theme_tertiary</item>

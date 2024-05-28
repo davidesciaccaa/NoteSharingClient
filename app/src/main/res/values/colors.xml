@@ -1,5 +1,6 @@
 <resources>
     <color name="back_arrow_icon_color">#000000</color>
+
     <color name="md_theme_primary">#445E91</color>
     <color name="md_theme_onPrimary">#FFFFFF</color>
     <color name="md_theme_primaryContainer">#D8E2FF</color>

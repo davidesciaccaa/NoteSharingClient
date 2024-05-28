@@ -54,11 +54,18 @@ class AnnuncioMD: AppCompatActivity() {
         tvNomeCorsoMD.text = MaterialeDigitaleAssociato.nomeCorso
         tvDescrMaterialeD.text = MaterialeDigitaleAssociato.descrizioneMateriale
 
-        var response: MultipartBody.Part? = null
+        var multipartPDF: MultipartBody.Part? = null
         btnScaricaPDFs.setOnClickListener{
             lifecycleScope.launch {
                 try {
-                    response = NotesApi.retrofitService.getPDFs(AnnuncioSelezionato.id)
+                    var response = NotesApi.retrofitService.getPDFs(AnnuncioSelezionato.id)
+                    if(response.isSuccessful){
+                        multipartPDF = response.body()
+                    }else{
+                        // Error occurred
+                        val errorMessage = response.message()
+                        // Handle error message...
+                    }
                 } catch (e: HttpException) {
                     Log.e("MainActivity", "HTTP Exception: ${e.message()}")
                     e.printStackTrace()
@@ -70,7 +77,17 @@ class AnnuncioMD: AppCompatActivity() {
                     e.printStackTrace()
                 }
             }.invokeOnCompletion {
-                if(response != null){
+                if(multipartPDF != null){
+                    multipartPDF?.let{ part ->
+                        //GESTISCI LE PARTI
+                        val headers = part.headers
+                        val contentDisposition = headers?.get("Content-Disposition")
+                        //val fileName = contentDisposition?.let { parseFileName(it) }
+
+                        val filename = contentDisposition?.substringAfter("filename=\"")?.substringBefore("\"")
+
+                        //val contenutoFile = part.body.bytes()
+                    }
 
                 }
 

@@ -2,6 +2,7 @@ package com.example.clientnotesharing.ui.visualizza_materiale
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.TableLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -43,16 +44,15 @@ class AnnuncioMF: AppCompatActivity() {
         val map = findViewById<MapView>(R.id.mapView)
 
         //this.title = AnnuncioSelezionato.titolo //cambio il titolo dell'app bar della view aperta
-
+        //Il modo corretto è scrivere il testo in strings, avendo dei placeholder che vengono passati qua:
         tvDataAnnuncio.text = AnnuncioSelezionato.data//LocalDate.now().toString() //data corrente
         tvDescrAnnuncio.text = AnnuncioSelezionato.descrizioneAnnuncio
-        tvEmail.text = AnnuncioSelezionato.idProprietario //devo avere 1 metodo che mi recupera la mail di quetso utente ************************
-        tvCosto.text = MaterialeFisicoAssociato.costo.toString()
-        tvAnnoMateriale.text = MaterialeFisicoAssociato.annoRiferimento.toString()
+        tvEmail.text = getString(R.string.proprietarioEmail, AnnuncioSelezionato.idProprietario) //devo avere 1 metodo che mi recupera la mail di quetso utente ************************
+        tvCosto.text = getString(R.string.costo, MaterialeFisicoAssociato.costo)
+        tvAnnoMateriale.text = getString(R.string.anno_riferimento, MaterialeFisicoAssociato.annoRiferimento)
         tvDescrMateriale.text = MaterialeFisicoAssociato.descrizioneMateriale
-        tvCorso.text = MaterialeFisicoAssociato.nomeCorso
-        tvIndirizzo.text = MaterialeFisicoAssociato.provincia + " " + MaterialeFisicoAssociato.comune + " " + MaterialeFisicoAssociato.via  + " " + MaterialeFisicoAssociato.numeroCivico.toString()
-
+        tvCorso.text = getString(R.string.corso_riferimento, MaterialeFisicoAssociato.nomeCorso)
+        tvIndirizzo.text = getString(R.string.indirizzo_ritiro, MaterialeFisicoAssociato.provincia, MaterialeFisicoAssociato.comune, MaterialeFisicoAssociato.via, MaterialeFisicoAssociato.numeroCivico)
 
     }
     //implementazione back arrow button nell'app bar

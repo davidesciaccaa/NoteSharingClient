@@ -2,7 +2,6 @@ package com.example.clientnotesharing.ui.nuovo_materiale
 
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
@@ -59,7 +58,7 @@ class Nuovo_Materiale_Fisico: AppCompatActivity() {
             lifecycleScope.launch {
                 //invio al server
                 NotesApi.retrofitService.uploadAnnuncio(nuovoA)
-                NotesApi.retrofitService.uploadMaterialeFsico(nuovoMf)
+                NotesApi.retrofitService.uploadMaterialeFisico(nuovoMf)
                 //forse conviene avere exceptions per gestirle qua??
             }
             finish() //chiude la view
