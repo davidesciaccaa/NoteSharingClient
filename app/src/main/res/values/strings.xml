@@ -33,4 +33,5 @@
     <string name="anno_riferimento">Anno di riferimento: %1$d</string>
     <string name="corso_riferimento">Corso di riferimento: %1$s</string>
     <string name="indirizzo_ritiro">Indirizzo di ritiro: %1$s %2$s %3$s %4$d</string>
+    <string name="cerca_annuncio">Cerca un annuncio</string>
 </resources>

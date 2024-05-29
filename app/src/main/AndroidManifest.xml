@@ -17,6 +17,7 @@
         tools:targetApi="31">
         <activity
             android:name=".MainActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="true"
             android:label="@string/app_name">
             <intent-filter>
@@ -28,8 +29,6 @@
         <activity android:name=".ui.nuovo_materiale.Nuovo_annuncio" />
         <activity android:name=".ui.nuovo_materiale.Nuovo_Materiale_Fisico" />
         <activity android:name=".ui.nuovo_materiale.Nuovo_Materiale_Digitale" />
-        <activity android:name=".Login" />
-        <activity android:name=".SignUp" />
         <activity android:name=".ui.visualizza_materiale.AnnuncioMF" />
         <activity android:name=".ui.visualizza_materiale.AnnuncioMD" />
     </application>
