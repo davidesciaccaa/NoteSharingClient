@@ -53,7 +53,7 @@ interface NoteSharingApi{
     suspend fun uploadLogin(@Body userSession: UserSession): Response<MessageResponse>
 
     @POST("UserSignUp")
-    suspend fun uploadSignUp(@Body persona: Persona)
+    suspend fun uploadSignUp(@Body persona: Persona): Response<MessageResponse>
 }
 
 

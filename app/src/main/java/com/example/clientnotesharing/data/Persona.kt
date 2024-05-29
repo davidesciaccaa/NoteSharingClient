@@ -13,6 +13,6 @@ data class Persona(
     val comune: String,
     val via: String,
     val nrCivico: Int,
-    val cap: String,
+    val cap: Int,
     val dataN: String //la data è string perchè nessuno dei tipi di DATE supportano la serializzazione
 )

@@ -1,145 +1,223 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background">
+    android:orientation="vertical"
+    tools:context=".ui.nuovo_materiale.Nuovo_Materiale_Digitale">
 
-    <EditText
-        android:id="@+id/editT_username_signup"
-        android:layout_width="wrap_content"
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/editT_username_signup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="16dp"
+            android:ems="10"
+            android:hint="@string/hintUsernameSignUp"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/editT_password_signup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:ems="10"
+            android:hint="@string/hintPasswordSignUp"
+            android:inputType="textPassword"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editT_email_signup" />
+
+        <EditText
+            android:id="@+id/editT_email_signup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:ems="10"
+            android:hint="@string/hintEmailSignUp"
+            android:inputType="textPassword"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editT_username_signup" />
+
+        <EditText
+            android:id="@+id/editT_codice_fiscale"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:ems="10"
+            android:hint="@string/hintCodiceFiscaleSignUp"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editT_password_signup" />
+
+        <EditText
+            android:id="@+id/editT_numero_civico"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:ems="10"
+            android:hint="@string/hintNumeroCivicoSignUp"
+            android:inputType="number"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="660dp" />
+
+        <EditText
+            android:id="@+id/editT_data_di_nascita"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:ems="10"
+            android:hint="@string/hintDataDiNascitaSignUp"
+            android:inputType="date"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editT_cap" />
+
+
+        <TextView
+            android:id="@+id/tv_errore_sign_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/erroreSignUp"
+            android:textColor="#000000"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editT_data_di_nascita" />
+
+        <EditText
+            android:id="@+id/editT_provincia"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:ems="10"
+            android:hint="@string/hintProvinciaSignUp"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editT_cognome" />
+
+        <EditText
+            android:id="@+id/editT_nome"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:ems="10"
+            android:hint="@string/hintNomeSignUp"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editT_codice_fiscale" />
+
+        <EditText
+            android:id="@+id/editT_comune"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:ems="10"
+            android:hint="@string/hintComuneSignUp"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editT_provincia" />
+
+        <EditText
+            android:id="@+id/editT_cognome"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:ems="10"
+            android:hint="@string/hintCognomeSignUp"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editT_nome" />
+
+        <EditText
+            android:id="@+id/editT_via"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:ems="10"
+            android:hint="@string/hintViaSignUp"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editT_comune" />
+
+            <EditText
+                android:id="@+id/editT_cap"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:ems="10"
+                android:hint="@string/hintCAPSignUp"
+                android:inputType="number"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editT_numero_civico" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/hintUsernameSignUp"
-        android:inputType="text"
-        tools:layout_editor_absoluteX="101dp"
-        tools:layout_editor_absoluteY="50dp" />
+        android:minHeight="90dp">
 
-    <EditText
-        android:id="@+id/editT_via"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/hintViaSignUp"
-        android:inputType="text"
-        tools:layout_editor_absoluteX="101dp"
-        tools:layout_editor_absoluteY="486dp" />
+        <Button
+            android:id="@+id/btn_conferma_registrazione"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="32dp"
+            android:text="@string/confermaSignUp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <EditText
-        android:id="@+id/editT_cap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/hintCAPSignUp"
-        android:inputType="text"
-        tools:layout_editor_absoluteX="101dp"
-        tools:layout_editor_absoluteY="596dp" />
-
-    <EditText
-        android:id="@+id/editT_password_signup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/hintPasswordSignUp"
-        android:inputType="textPassword"
-        tools:layout_editor_absoluteX="101dp"
-        tools:layout_editor_absoluteY="157dp" />
-
-    <EditText
-        android:id="@+id/editT_numero_civico"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/hintNumeroCivicoSignUp"
-        android:inputType="number"
-        tools:layout_editor_absoluteX="101dp"
-        tools:layout_editor_absoluteY="543dp" />
-
-    <EditText
-        android:id="@+id/editT_data_di_nascita"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/hintDataDiNascitaSignUp"
-        android:inputType="date"
-        tools:layout_editor_absoluteX="101dp"
-        tools:layout_editor_absoluteY="651dp" />
-
-    <EditText
-        android:id="@+id/editT_provincia"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/hintProvinciaSignUp"
-        android:inputType="text"
-        tools:layout_editor_absoluteX="101dp"
-        tools:layout_editor_absoluteY="372dp" />
-
-    <EditText
-        android:id="@+id/editT_nome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/hintNomeSignUp"
-        android:inputType="text"
-        tools:layout_editor_absoluteX="101dp"
-        tools:layout_editor_absoluteY="265dp" />
-
-    <EditText
-        android:id="@+id/editT_comune"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/hintComuneSignUp"
-        android:inputType="text"
-        tools:layout_editor_absoluteX="101dp"
-        tools:layout_editor_absoluteY="430dp" />
-
-    <EditText
-        android:id="@+id/editT_email_signup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/hintEmailSignUp"
-        android:inputType="textPassword"
-        tools:layout_editor_absoluteX="101dp"
-        tools:layout_editor_absoluteY="105dp" />
-
-    <EditText
-        android:id="@+id/editT_cognome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/hintCognomeSignUp"
-        android:inputType="text"
-        tools:layout_editor_absoluteX="101dp"
-        tools:layout_editor_absoluteY="319dp" />
-
-    <EditText
-        android:id="@+id/editT_codice_fiscale"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/hintCodiceFiscaleSignUp"
-        android:inputType="text"
-        tools:layout_editor_absoluteX="101dp"
-        tools:layout_editor_absoluteY="213dp" />
-
-    <Button
-        android:id="@+id/btn_conferma_registrazione"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/confermaSignUp"
-        tools:layout_editor_absoluteX="150dp"
-        tools:layout_editor_absoluteY="755dp" />
-
-    <TextView
-        android:id="@+id/tv_errore_sign_up"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/erroreSignUp"
-        android:textColor="#FFFFFF"
-        tools:layout_editor_absoluteX="148dp"
-        tools:layout_editor_absoluteY="712dp" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
