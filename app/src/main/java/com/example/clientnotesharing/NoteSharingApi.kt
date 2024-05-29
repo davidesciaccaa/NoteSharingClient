@@ -6,7 +6,9 @@ import retrofit2.Retrofit
 import retrofit2.http.GET
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.example.clientnotesharing.data.MaterialeFisico
-import com.example.data.Persona
+import com.example.clientnotesharing.data.MessageResponse
+import com.example.clientnotesharing.data.Persona
+import com.example.clientnotesharing.data.UserSession
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -53,6 +55,11 @@ interface NoteSharingApi{
     suspend fun getMaterialeFisicoAnnuncio(@Query("idAnnuncio") idAnnuncio: String): Response<MaterialeFisico>
     @GET("materialeDigitaleAssociatoAnnuncio")
     suspend fun getMaterialeDigitaleAnnuncio(@Query("idAnnuncio") idAnnuncio: String): Response<MaterialeDigitale>
+    @POST("UserLogin")
+    suspend fun uploadLogin(@Body userSession: UserSession): Response<MessageResponse>
+
+    @POST("UserSignUp")
+    suspend fun uploadSignUp(@Body persona: Persona): Response<MessageResponse>
 }
 
 

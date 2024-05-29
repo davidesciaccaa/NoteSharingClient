@@ -31,6 +31,8 @@
         <activity android:name=".ui.nuovo_materiale.Nuovo_Materiale_Digitale" />
         <activity android:name=".ui.visualizza_materiale.AnnuncioMF" />
         <activity android:name=".ui.visualizza_materiale.AnnuncioMD" />
+        <activity android:name=".ui.signUpLogin.Login" />
+        <activity android:name=".ui.signUpLogin.SignUp" />
     </application>
 
 </manifest>
