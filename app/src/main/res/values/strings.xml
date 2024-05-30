@@ -57,4 +57,5 @@
     <string name="hintDataDiNascitaSignUp">Data di nascita</string>
     <string name="erroreSignUp">Inserisci tutti i dati</string>
     <string name="confermaSignUp">Conferma</string>
+    <string name="nomeApp">NoteSharig</string>
 </resources>

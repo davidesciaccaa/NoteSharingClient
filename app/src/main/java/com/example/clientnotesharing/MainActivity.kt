@@ -34,10 +34,12 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        if (!isLoggedIn()) {
+            redirectToLogin()
+            return
+        }
         setContentView(binding.root)
-
         val navView: BottomNavigationView = binding.navView
-
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -49,41 +51,23 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-
-        //login
-        val intent = Intent(this, Login::class.java)
-        startActivity(intent)
-
-
-        //bottone +
+        //bottone per creare nuovi annunci
         findViewById<FloatingActionButton>(R.id.addbtn).setOnClickListener{
             val intent = Intent(this, Nuovo_annuncio::class.java)
             startActivity(intent)
         }
 
-
-        // Call the API method inside a coroutine scope. 'E una sorta di thread
-        lifecycleScope.launch {
-            try {
-                //val response = NotesApi.retrofitService.getMaterialeFisico()
-                //Log.d("MainActivity", "*************************Response: $response")
-                //findViewById<TextView>(R.id.tvProva).text = response.descrizioneMateriale
-
-            } catch (e: HttpException) {
-                Log.e("MainActivity", "HTTP Exception: ${e.message()}")
-                e.printStackTrace()
-            } catch (e: IOException) {
-                Log.e("MainActivity", "IO Exception: ${e.message}")
-                e.printStackTrace()
-            } catch (e: Exception) {
-                Log.e("MainActivity", "Exception: ${e.message}")
-                e.printStackTrace()
-            }
-        }
-
     }
-
-    //deve essere messo in HomeFragment visto che lì è la listView
+    private fun isLoggedIn(): Boolean {
+        val sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
+        return sharedPreferences.getBoolean("isLoggedIn", false)
+    }
+    private fun redirectToLogin() {
+        val intent = Intent(this, Login::class.java)
+        startActivity(intent)
+        finish() //così non rimane nel backstack
+    }
+    //deve essere messo in HomeFragment visto che lì è la listView????? 'E la ricerca
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.search_menu, menu)
 
@@ -111,8 +95,6 @@ class MainActivity : AppCompatActivity() {
 
         return super.onCreateOptionsMenu(menu)
     }
-
-
 
 
 }

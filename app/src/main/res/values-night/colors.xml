@@ -1,6 +1,6 @@
 <resources>
     <color name="back_arrow_icon_color">#FFFFFF</color>
-    <color name="icon_color">#000000</color>
+    <color name="icon_color">#FFFFFF</color>
 
     <color name="md_theme_primary">#ADC6FF</color>
     <color name="md_theme_onPrimary">#102F60</color>
