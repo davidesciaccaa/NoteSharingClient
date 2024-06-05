@@ -58,4 +58,5 @@
     <string name="erroreSignUp">Inserisci tutti i dati</string>
     <string name="confermaSignUp">Conferma</string>
     <string name="nomeApp">NoteSharig</string>
+    <string name="searchHint">Cerca</string>
 </resources>

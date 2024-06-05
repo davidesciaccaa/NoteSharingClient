@@ -8,14 +8,20 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ListView
 import android.widget.SimpleAdapter
+import androidx.lifecycle.lifecycleScope
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.example.clientnotesharing.MyAdapter
 import com.example.clientnotesharing.ui.visualizza_materiale.AnnuncioMD
 import com.example.clientnotesharing.ui.visualizza_materiale.AnnuncioMF
 import com.example.clientnotesharing.NotesApi
@@ -24,6 +30,7 @@ import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.data.MaterialeDigitale
 import com.example.clientnotesharing.data.MaterialeFisico
 import com.example.clientnotesharing.databinding.FragmentHomeBinding
+import com.example.clientnotesharing.dbLocale.dbHelper
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import retrofit2.HttpException
@@ -32,10 +39,10 @@ import java.io.IOException
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
+    private lateinit var adapter: MyAdapter
+    private var listaAnnunci: ArrayList<Annuncio> = ArrayList()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,57 +52,76 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val listViewAnnunci = binding.listViewAnnunci
-        var listaAnnunci:ArrayList<Annuncio> = ArrayList<Annuncio>()
-        //recupera tutta la lista degli annunci. Da vedere se ci sono problemi di performace
+        adapter = MyAdapter(requireContext())
+        binding.listViewAnnunci.adapter = adapter
+
+        fetchAnnunciFromServer()
+
+        binding.listViewAnnunci.setOnItemClickListener { _, _, position, _ ->
+            val clickedAnnuncio = listaAnnunci[position]
+            clickMateriale(clickedAnnuncio)
+        }
+
+        // Add MenuProvider to handle search functionality
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.search_menu, menu)
+                val searchManager = requireActivity().getSystemService(Context.SEARCH_SERVICE) as SearchManager
+                val searchItem = menu.findItem(R.id.action_search)
+                val searchView = searchItem.actionView as SearchView
+                searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().componentName))
+
+                searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        searchView.clearFocus()
+                        searchView.setQuery("", false)
+                        searchView.isIconified = true
+                        Toast.makeText(requireContext(), "Looking for $query", Toast.LENGTH_LONG).show()
+                        return true
+                    }
+
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        adapter.filter.filter(newText)
+                        return true
+                    }
+                })
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                // Handle other menu item selections if needed
+                return false
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+
+        return root
+    }
+
+    private fun fetchAnnunciFromServer() {
         lifecycleScope.launch {
             try {
-                var response = NotesApi.retrofitService.getAnnunci()
-                if(response.isSuccessful && response.body()!=null){
+                val response = NotesApi.retrofitService.getAnnunci()
+                if (response.isSuccessful && response.body() != null) {
                     listaAnnunci = response.body()!!
-                }else{
-                    // Error occurred
+                    adapter.updateData(listaAnnunci)
+                } else {
                     val errorMessage = response.message()
-                    // Handle error message...
+                    Log.e("HomeFragment", "Error: $errorMessage")
                 }
             } catch (e: HttpException) {
-                Log.e("MainActivity", "HTTP Exception: ${e.message()}")
+                Log.e("HomeFragment", "HTTP Exception: ${e.message()}")
                 e.printStackTrace()
             } catch (e: IOException) {
-                Log.e("MainActivity", "IO Exception: ${e.message}")
+                Log.e("HomeFragment", "IO Exception: ${e.message}")
                 e.printStackTrace()
             } catch (e: Exception) {
-                Log.e("MainActivity", "Exception: ${e.message}")
+                Log.e("HomeFragment", "Exception: ${e.message}")
                 e.printStackTrace()
             }
         }.invokeOnCompletion {
-            //visualizzazione degli annunci nella listView
-            val data = ArrayList<HashMap<String, Any>>()
-            if (listaAnnunci.isNotEmpty()) {
-                for (elem in listaAnnunci) {
-                    val hm = HashMap<String, Any>()
-                    hm["Tittle"] = elem.titolo
-                    hm["Date"] = elem.data
-                    data.add(hm)
-                }
-            }// se è vuota non succede nulla
-            listViewAnnunci.adapter = SimpleAdapter(
-                requireContext(), //nelle classi normali mettiamo this
-                data,
-                R.layout.listlayout,
-                arrayOf("Tittle", "Date"),
-                intArrayOf(R.id.textViewTittle, R.id.textViewData)  //si chiamano cosi quelli di simple_list_item_2
-            )
-
-            // listener per i click degli elementi della lista
-            listViewAnnunci.setOnItemClickListener { parent, view, position, id ->
-                // Handle item click here
-                val clickedAnnuncio = listaAnnunci[position]
-                clickMateriale(clickedAnnuncio)
-            }
+            val database = dbHelper(requireContext())
+            database.insertAnnunci(listaAnnunci)
+            adapter.updateData(database.getAllData())
         }
-
-        return root
     }
 
     override fun onDestroyView() {
@@ -157,5 +183,6 @@ class HomeFragment : Fragment() {
             startActivity(intent)
         }
     }
+
 
 }
