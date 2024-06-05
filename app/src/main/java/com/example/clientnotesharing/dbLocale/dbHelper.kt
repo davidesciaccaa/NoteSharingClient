@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.clientnotesharing.data.Annuncio
 import kotlinx.serialization.json.Json
-import java.util.UUID
 
 class dbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, null, DATABASEVERTION){
     companion object { //cosi mettiamo le costanti qua al posto al di fuori della classe
@@ -15,14 +14,13 @@ class dbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, nu
         private val DATABASEVERTION = 1
         private val TABLE_NAME = "UserTable"
         private val ANNUNCIO = "annuncio"
-        //private val ID = "id"
+        private val IDANNUNCIO = "id"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL("CREATE TABLE $TABLE_NAME (" +
-                //"$ID VARCHAR PRIMARY KEY,"+
+                "$IDANNUNCIO VARCHAR PRIMARY KEY,"+ //usare l'id degli annunci
                 "$ANNUNCIO VARCHAR)") //così salviamo l'oggetto annuncio serializzato
-
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -36,8 +34,8 @@ class dbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, nu
             val jsonStringAnnuncio = Json.encodeToString(Annuncio.serializer(), annuncio)
             val data = ContentValues()
             data.put(ANNUNCIO, jsonStringAnnuncio)
-            //data.put(ID, UUID.randomUUID().toString())
-            db.insert(TABLE_NAME, null, data)
+            data.put(IDANNUNCIO, annuncio.id)
+            db.insertWithOnConflict(TABLE_NAME, null, data, SQLiteDatabase.CONFLICT_IGNORE)
         }
         db.close()
     }

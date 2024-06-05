@@ -11,9 +11,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListView
-import android.widget.SimpleAdapter
-import androidx.lifecycle.lifecycleScope
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuProvider
@@ -22,8 +19,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.clientnotesharing.MyAdapter
-import com.example.clientnotesharing.ui.visualizza_materiale.AnnuncioMD
-import com.example.clientnotesharing.ui.visualizza_materiale.AnnuncioMF
 import com.example.clientnotesharing.NotesApi
 import com.example.clientnotesharing.R
 import com.example.clientnotesharing.data.Annuncio
@@ -31,6 +26,8 @@ import com.example.clientnotesharing.data.MaterialeDigitale
 import com.example.clientnotesharing.data.MaterialeFisico
 import com.example.clientnotesharing.databinding.FragmentHomeBinding
 import com.example.clientnotesharing.dbLocale.dbHelper
+import com.example.clientnotesharing.ui.visualizza_materiale.AnnuncioMD
+import com.example.clientnotesharing.ui.visualizza_materiale.AnnuncioMF
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import retrofit2.HttpException
