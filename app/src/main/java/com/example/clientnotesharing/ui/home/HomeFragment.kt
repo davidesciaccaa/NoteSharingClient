@@ -71,9 +71,9 @@ class HomeFragment : Fragment() {
                 searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
                         searchView.clearFocus()
-                        searchView.setQuery("", false)
-                        searchView.isIconified = true
-                        Toast.makeText(requireContext(), "Looking for $query", Toast.LENGTH_LONG).show()
+                        //searchView.setQuery("", false)
+                        //searchView.isIconified = true
+                        //Non ci servono, perchè non vogliamo fare nulla quando l'utente clicca enter
                         return true
                     }
 
@@ -82,6 +82,7 @@ class HomeFragment : Fragment() {
                         return true
                     }
                 })
+
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
