@@ -5,8 +5,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
 import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,8 +27,18 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
-class Nuovo_Materiale_Digitale: AppCompatActivity() {
+class Nuovo_Materiale_Digitale: AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private var nrPdfCaricati = 0
+    //per lo spinner
+    private var itemSelez = ""
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        // An item is selected. You can retrieve the selected item using
+        // parent.getItemAtPosition(pos).
+        itemSelez = parent?.getItemAtPosition(position).toString()
+    }
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+        // Another interface callback.
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -40,9 +54,9 @@ class Nuovo_Materiale_Digitale: AppCompatActivity() {
         val btnSelezionaPDF = findViewById<Button>(R.id.btnSelezionaPDF)
         val editTAnno = findViewById<EditText>(R.id.editTextNumberAnno)
         val editMultilineDescr = findViewById<EditText>(R.id.editTextTextMultiLineDescrizione)
-        val editTCorso = findViewById<EditText>(R.id.editTextCorso)
         val buttonConferma = findViewById<Button>(R.id.btnCreaNuovoA)
         val buttonIndietro = findViewById<Button>(R.id.btnIndietro)
+        val spinnerArea = findViewById<Spinner>(R.id.spinnerArea)
 
         btnSelezionaPDF.setOnClickListener {
             pickPdfFiles.launch("application/pdf") //per selezionare solo pdf
@@ -55,7 +69,7 @@ class Nuovo_Materiale_Digitale: AppCompatActivity() {
             val nuovoMD = MaterialeDigitale(
                 nuovoA.id,
                 editTAnno.text.toString().toInt(),
-                editTCorso.text.toString(),
+                spinnerArea.selectedItemPosition,
                 editMultilineDescr.text.toString()
             )
             lifecycleScope.launch {
@@ -69,6 +83,18 @@ class Nuovo_Materiale_Digitale: AppCompatActivity() {
         buttonIndietro.setOnClickListener{
             onBackPressedDispatcher.onBackPressed() //clicca il back button
         }
+        // Per lo spinner
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.area_spinner_options,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            // Specify the layout to use when the list of choices appears.
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            // Apply the adapter to the spinner.
+            spinnerArea.adapter = adapter
+        }
+        spinnerArea.onItemSelectedListener = this
     }
 
     private val pickPdfFiles = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->

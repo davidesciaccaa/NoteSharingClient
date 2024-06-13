@@ -57,21 +57,7 @@
                 android:inputType="number"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTNomeCorso" />
-
-            <EditText
-                android:id="@+id/editTNomeCorso"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
-                android:ems="10"
-                android:hint="@string/hintNomeCorsoRiferimento"
-                android:inputType="text"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/MultiLineDescr" />
+                app:layout_constraintTop_toBottomOf="@+id/spinnerArea" />
 
             <EditText
                 android:id="@+id/MultiLineDescr"
@@ -143,6 +129,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editTComuneRitiro" />
+
+            <Spinner
+                android:id="@+id/spinnerArea"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/MultiLineDescr" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

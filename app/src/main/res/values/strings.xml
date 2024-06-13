@@ -7,11 +7,18 @@
         <item>Materiale Digitale</item>
         <item>Materiale Fisico</item>
     </string-array>
+    <string-array name="area_spinner_options">
+        <item>Area Sportiva</item>
+        <item>Area Giuridico-Economica</item>
+        <item>Area Sanitaria</item>
+        <item>Area Scientifica</item>
+        <item>Area delle Scienze Umane e Sociali</item>
+    </string-array>
     <string name="downloadMD">Scarica il materiale digitale</string>
     <string name="hintComuneRitiro">Comune di ritiro</string>
     <string name="hintCapRitiro">CAP di ritiro</string>
     <string name="hintAnnoCreazioneNuovo">Inserisci l\'anno di creazione del materiale</string>
-    <string name="hintNomeCorsoRiferimento">Nome del corso di riferimento</string>
+    <string name="hintArea">Area di riferimento</string>
     <string name="hintDescrizioneMF">Inserisci la descrizione del materiale fisico</string>
     <string name="hintCostoMateriale">Costo del materiale</string>
     <string name="hintNrCivicoRitiro">Numero civico per il ritiro</string>
