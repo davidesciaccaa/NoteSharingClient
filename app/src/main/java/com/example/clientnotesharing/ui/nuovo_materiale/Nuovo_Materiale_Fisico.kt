@@ -1,9 +1,11 @@
 package com.example.clientnotesharing.ui.nuovo_materiale
 
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ScrollView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -69,6 +71,7 @@ class Nuovo_Materiale_Fisico: AppCompatActivity() {
         buttonIndietro.setOnClickListener{
             onBackPressedDispatcher.onBackPressed() //clicca il back button
         }
+
     }
 
     //implementazione back arrow button nell'app bar

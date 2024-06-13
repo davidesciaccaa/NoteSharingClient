@@ -11,6 +11,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuProvider
@@ -18,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.clientnotesharing.MyAdapter
 import com.example.clientnotesharing.NotesApi
 import com.example.clientnotesharing.R
@@ -33,7 +35,7 @@ import kotlinx.serialization.json.Json
 import retrofit2.HttpException
 import java.io.IOException
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(){
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -49,10 +51,15 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        //Swipe for refresh
+        var swipeLayout = binding.swipeLayout
+        swipeLayout.setOnRefreshListener {
+            fetchAnnunciFromServer()
+        }
+
+        //
         adapter = MyAdapter(requireContext())
         binding.listViewAnnunci.adapter = adapter
-
-        fetchAnnunciFromServer()
 
         binding.listViewAnnunci.setOnItemClickListener { _, _, position, _ ->
             val clickedAnnuncio = listaAnnunci[position]
@@ -119,6 +126,7 @@ class HomeFragment : Fragment() {
             val database = dbHelper(requireContext())
             database.insertAnnunci(listaAnnunci)
             adapter.updateData(database.getAllData())
+            binding.swipeLayout.isRefreshing = false // Stop the refreshing animation
         }
     }
 
@@ -181,6 +189,7 @@ class HomeFragment : Fragment() {
             startActivity(intent)
         }
     }
+
 
 
 }

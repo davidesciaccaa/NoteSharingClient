@@ -25,9 +25,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.nuovo_materiale.Nuovo_annuncio" />
-        <activity android:name=".ui.nuovo_materiale.Nuovo_Materiale_Fisico" />
-        <activity android:name=".ui.nuovo_materiale.Nuovo_Materiale_Digitale" />
+        <activity android:name=".ui.nuovo_materiale.Nuovo_annuncio"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".ui.nuovo_materiale.Nuovo_Materiale_Fisico"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ui.nuovo_materiale.Nuovo_Materiale_Digitale"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ui.visualizza_materiale.AnnuncioMF" />
         <activity android:name=".ui.visualizza_materiale.AnnuncioMD" />
         <activity android:name=".ui.signUpLogin.Login" />
