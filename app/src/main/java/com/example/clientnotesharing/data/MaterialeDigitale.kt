@@ -9,13 +9,13 @@ data class MaterialeDigitale(
     var descrizioneMateriale: String
 ) {
     //in kotlin ci sono in automatico i getters e setters
-    override fun toString(): String {
+    fun AreaToString(): String {
         return when (this.areaMateriale) {
-            1 -> "Area Sportiva"
-            2 -> "Area Giuridico-Economica"
-            3 -> "Area Sanitaria"
-            4 -> "Area Scientifica"
-            5 -> "Area delle Scienze Umane e Sociali"
+            0 -> "Area Sportiva"
+            1 -> "Area Giuridico-Economica"
+            2 -> "Area Sanitaria"
+            3 -> "Area Scientifica"
+            4 -> "Area delle Scienze Umane e Sociali"
             else -> "Unknown Area"
         }
     }

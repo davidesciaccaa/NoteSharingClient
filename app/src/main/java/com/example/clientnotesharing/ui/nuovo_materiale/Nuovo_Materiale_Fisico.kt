@@ -1,5 +1,6 @@
 package com.example.clientnotesharing.ui.nuovo_materiale
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -12,6 +13,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.clientnotesharing.MainActivity
 import com.example.clientnotesharing.NotesApi
 import com.example.clientnotesharing.R
 import com.example.clientnotesharing.data.Annuncio
@@ -62,7 +64,6 @@ class Nuovo_Materiale_Fisico: AppCompatActivity(), AdapterView.OnItemSelectedLis
                 editTextNumberDecimalCostoMF.text.toString().toInt(),
                 editTextNumberAnnoMF.text.toString().toInt(),
                 spinnerArea.selectedItemPosition,
-                //1,
                 multiLineDescrizioneMF.text.toString(),
                 editTextComuneRitiro.text.toString(),
                 editTextProvinciaRitiro.text.toString(),
@@ -70,14 +71,13 @@ class Nuovo_Materiale_Fisico: AppCompatActivity(), AdapterView.OnItemSelectedLis
                 editTextNumberNumeroCivico.text.toString().toInt(),
                 editTextNumberCAP.text.toString().toInt()
                 )
-            Toast.makeText(this, "spinnerArea.selectedItemPosition", Toast.LENGTH_SHORT).show()
             lifecycleScope.launch {
                 //invio al server
                 NotesApi.retrofitService.uploadAnnuncio(nuovoA)
                 NotesApi.retrofitService.uploadMaterialeFisico(nuovoMf)
                 //forse conviene avere exceptions per gestirle qua??
             }
-            finish() //chiude la view
+            closeActivities() //chiude la view e va in Home
             //to do: controllo che non sono rimasti vuoti ***************
             //***********************************
             //************************************
@@ -109,6 +109,14 @@ class Nuovo_Materiale_Fisico: AppCompatActivity(), AdapterView.OnItemSelectedLis
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun closeActivities() {
+        // Start the new activity with flags to clear the back stack
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        finish()
     }
 
 }
