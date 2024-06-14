@@ -19,7 +19,6 @@ import java.time.LocalDate
 import java.util.UUID
 
 class Nuovo_annuncio: AppCompatActivity(), AdapterView.OnItemSelectedListener {
-    private val usernameUtenteLoggato = "ilibr"
     private var itemSelez = ""
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -71,7 +70,7 @@ class Nuovo_annuncio: AppCompatActivity(), AdapterView.OnItemSelectedListener {
                     LocalDate.now().toString(),
                     editTextMultiLineDescrizioneAnnuncio.text.toString(),
                     true, //è un materiale fisico
-                    usernameUtenteLoggato
+                    getUsername()
                 )
 
                 val intent = Intent(this, Nuovo_Materiale_Fisico::class.java)
@@ -86,7 +85,7 @@ class Nuovo_annuncio: AppCompatActivity(), AdapterView.OnItemSelectedListener {
                         LocalDate.now().toString(),
                         editTextMultiLineDescrizioneAnnuncio.text.toString(),
                         false, //è un materiale digitale
-                        usernameUtenteLoggato
+                        getUsername()
                     )
 
                     val intent = Intent(this, Nuovo_Materiale_Digitale::class.java)
@@ -110,6 +109,9 @@ class Nuovo_annuncio: AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
         return super.onOptionsItemSelected(item)
     }
-
+    private fun getUsername(): String {
+        val sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
+        return sharedPreferences.getString("username", "") ?: ""
+    }
 
 }

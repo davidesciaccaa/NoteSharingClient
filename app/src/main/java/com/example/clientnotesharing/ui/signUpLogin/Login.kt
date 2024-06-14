@@ -54,7 +54,7 @@ class Login: AppCompatActivity() {
                 if (resultLogin != null && resultLogin!!.isSuccessful) {
                     val responseBody = resultLogin!!.body()
                     if (responseBody != null && responseBody.message == "Login successful") {
-                        saveLoginState()
+                        saveLoginState(editTextUsername.text.toString())
                         redirectToMainActivity()
                     } else {
                         tvErroreLogin.text = "Credenziali errate."
@@ -71,10 +71,11 @@ class Login: AppCompatActivity() {
         }
 
     }
-    private fun saveLoginState() {
+    private fun saveLoginState(username: String) {
         val sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.putBoolean("isLoggedIn", true)
+        editor.putString("username", username)
         editor.apply()
     }
     private fun redirectToMainActivity() {
