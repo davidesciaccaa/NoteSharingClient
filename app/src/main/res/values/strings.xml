@@ -66,4 +66,10 @@
     <string name="confermaSignUp">Conferma</string>
     <string name="nomeApp">NoteSharig</string>
     <string name="searchHint">Cerca</string>
+
+    <string name="areaScientifica">Area Scientifica</string>
+    <string name="areaSportiva">Area Sportiva</string>
+    <string name="areaGiuridicoEconomica">Area Giuridico-Economica</string>
+    <string name="areaSanitaria">Area Sanitaria</string>
+    <string name="areaScienzeUmaneSociali">Area Scienze Umane-Sociali</string>
 </resources>

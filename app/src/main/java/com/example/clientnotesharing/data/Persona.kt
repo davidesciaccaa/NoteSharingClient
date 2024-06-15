@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class Persona(
-    var vausername: String,
+    var username: String,
     var email: String,
     var password: String,
     var cf: String,
