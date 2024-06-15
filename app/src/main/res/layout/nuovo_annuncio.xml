@@ -16,7 +16,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <EditText
+            <Spinner
+                android:id="@+id/spinnerArea"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTextMultiLineDescrizioneAnnuncio" />
+
+            <EditText
             android:id="@+id/editTextNomeAnnuncio"
             android:layout_width="0dp"
             android:layout_height="50dp"
@@ -40,7 +51,7 @@
                 android:entries="@array/spinner_options"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextMultiLineDescrizioneAnnuncio" />
+                app:layout_constraintTop_toBottomOf="@+id/spinnerArea" />
 
         <EditText
             android:id="@+id/editTextMultiLineDescrizioneAnnuncio"

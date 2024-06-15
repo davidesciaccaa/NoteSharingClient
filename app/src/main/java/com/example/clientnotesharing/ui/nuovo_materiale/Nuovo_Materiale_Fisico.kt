@@ -21,16 +21,18 @@ import com.example.clientnotesharing.data.MaterialeFisico
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
-class Nuovo_Materiale_Fisico: AppCompatActivity(), AdapterView.OnItemSelectedListener {
+class Nuovo_Materiale_Fisico: AppCompatActivity() {
     //per lo spinner
     private var itemSelez = ""
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        // An item is selected. You can retrieve the selected item using
-        // parent.getItemAtPosition(pos).
-        itemSelez = parent?.getItemAtPosition(position).toString()
-    }
-    override fun onNothingSelected(parent: AdapterView<*>?) {
-        // Another interface callback.
+    //implementazione back arrow button nell'app bar
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressedDispatcher.onBackPressed() //clicca il back button
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -53,7 +55,6 @@ class Nuovo_Materiale_Fisico: AppCompatActivity(), AdapterView.OnItemSelectedLis
         val editTextNumberCAP = findViewById<EditText>(R.id.editNCAP)
         val buttonConferma = findViewById<Button>(R.id.btnCreaNuovoA)
         val buttonIndietro = findViewById<Button>(R.id.btnIndietro)
-        val spinnerArea = findViewById<Spinner>(R.id.spinnerArea)
 
         buttonConferma.setOnClickListener{
             val nuovoA = intent.getStringExtra("nuovoA").let {
@@ -63,7 +64,6 @@ class Nuovo_Materiale_Fisico: AppCompatActivity(), AdapterView.OnItemSelectedLis
                 nuovoA.id,
                 editTextNumberDecimalCostoMF.text.toString().toInt(),
                 editTextNumberAnnoMF.text.toString().toInt(),
-                spinnerArea.selectedItemPosition,
                 multiLineDescrizioneMF.text.toString(),
                 editTextComuneRitiro.text.toString(),
                 editTextProvinciaRitiro.text.toString(),
@@ -85,32 +85,7 @@ class Nuovo_Materiale_Fisico: AppCompatActivity(), AdapterView.OnItemSelectedLis
         buttonIndietro.setOnClickListener{
             onBackPressedDispatcher.onBackPressed() //clicca il back button
         }
-        // Per lo spinner
-        ArrayAdapter.createFromResource(
-            this,
-            R.array.area_spinner_options,
-            android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            // Specify the layout to use when the list of choices appears.
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            // Apply the adapter to the spinner.
-            spinnerArea.adapter = adapter
-        }
-        spinnerArea.onItemSelectedListener = this
-
     }
-
-    //implementazione back arrow button nell'app bar
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                onBackPressedDispatcher.onBackPressed() //clicca il back button
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     private fun closeActivities() {
         // Start the new activity with flags to clear the back stack
         val intent = Intent(this, MainActivity::class.java)
@@ -118,5 +93,4 @@ class Nuovo_Materiale_Fisico: AppCompatActivity(), AdapterView.OnItemSelectedLis
         startActivity(intent)
         finish()
     }
-
 }

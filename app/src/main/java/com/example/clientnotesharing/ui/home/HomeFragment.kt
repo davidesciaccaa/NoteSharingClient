@@ -144,6 +144,7 @@ class HomeFragment : Fragment(){
                     val response = NotesApi.retrofitService.getMaterialeFisicoAnnuncio(annuncioSelezionato.id)
                     if(response.isSuccessful){
                         materialeFisicoAssociato = response.body()
+                        Log.d("TAG", "*****************Il nome è: ${materialeFisicoAssociato?.descrizioneMateriale}")
                     }else{
                         // Error occurred
                         val errorMessage = response.message()
@@ -180,11 +181,11 @@ class HomeFragment : Fragment(){
             val jsonStringA = Json.encodeToString(Annuncio.serializer(), annuncioSelezionato)
 
             val jsonStringM = if (annuncioSelezionato.tipoMateriale) {
-                Json.encodeToString(MaterialeFisico.serializer(), materialeFisicoAssociato!!) //non saraà null perchè finirà prima lo thread
+                Json.encodeToString(MaterialeFisico.serializer(), materialeFisicoAssociato!!) //non sarà null perchè finirà prima lo thread
             } else {
-                Json.encodeToString(MaterialeDigitale.serializer(), materialeDigitaleAssociato!!) //non saraà null perchè finirà prima lo thread
+                Json.encodeToString(MaterialeDigitale.serializer(), materialeDigitaleAssociato!!) //non sarà null perchè finirà prima lo thread
             }
-            intent.putExtra("AnunncioSelezionato", jsonStringA)
+            intent.putExtra("AnnuncioSelezionato", jsonStringA)
             intent.putExtra("MaterialeAssociato", jsonStringM)
             startActivity(intent)
         }

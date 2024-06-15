@@ -51,7 +51,7 @@ class AnnuncioMD: AppCompatActivity() {
         vtDescrizioneAnnuncioMD.text = AnnuncioSelezionato.descrizioneAnnuncio
         tvEmailProprietarioMD.text = "TO DO**************"
         tvAnnoRifMD.text = MaterialeDigitaleAssociato.annoRiferimento.toString()
-        tvNomeCorsoMD.text = MaterialeDigitaleAssociato.AreaToString()
+        tvNomeCorsoMD.text = AnnuncioSelezionato.AreaToString()
         tvDescrMaterialeD.text = MaterialeDigitaleAssociato.descrizioneMateriale
 
         var multipartPDF: MultipartBody.Part? = null

@@ -51,7 +51,7 @@ class AnnuncioMF: AppCompatActivity() {
         tvCosto.text = getString(R.string.costo, MaterialeFisicoAssociato.costo)
         tvAnnoMateriale.text = getString(R.string.anno_riferimento, MaterialeFisicoAssociato.annoRiferimento)
         tvDescrMateriale.text = MaterialeFisicoAssociato.descrizioneMateriale
-        tvCorso.text = getString(R.string.corso_riferimento, MaterialeFisicoAssociato.AreaToString())
+        tvCorso.text = getString(R.string.corso_riferimento, AnnuncioSelezionato.AreaToString())
         tvIndirizzo.text = getString(R.string.indirizzo_ritiro, MaterialeFisicoAssociato.provincia, MaterialeFisicoAssociato.comune, MaterialeFisicoAssociato.via, MaterialeFisicoAssociato.numeroCivico)
 
     }

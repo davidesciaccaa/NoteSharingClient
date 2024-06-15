@@ -44,6 +44,7 @@ class Nuovo_annuncio: AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val editTextNomeAnnuncio = findViewById<EditText>(R.id.editTextNomeAnnuncio)
         val editTextMultiLineDescrizioneAnnuncio = findViewById<EditText>(R.id.editTextMultiLineDescrizioneAnnuncio)
         val spinner = findViewById<Spinner>(R.id.spinner)
+        val spinnerArea = findViewById<Spinner>(R.id.spinnerArea)
         val buttonConferma = findViewById<Button>(R.id.btnAvanti)
         val buttonCancella = findViewById<Button>(R.id.btnCancella)
 
@@ -60,17 +61,31 @@ class Nuovo_annuncio: AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
         spinner.onItemSelectedListener = this
 
+        // Per lo spinner area dell'annuncio (scientifica, sportiva, etc)
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.area_spinner_options,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            // Specify the layout to use when the list of choices appears.
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            // Apply the adapter to the spinner.
+            spinnerArea.adapter = adapter
+        }
+        spinnerArea.onItemSelectedListener = this
+
         buttonConferma.setOnClickListener{
             val ID: UUID = UUID.randomUUID()
 
-            if (itemSelez.equals("Materiale Fisico")) {
+            if (itemSelez == "Materiale Fisico") {
                 val nuovoA = Annuncio(
                     ID.toString(),
                     editTextNomeAnnuncio.text.toString(),
                     LocalDate.now().toString(),
                     editTextMultiLineDescrizioneAnnuncio.text.toString(),
                     true, //è un materiale fisico
-                    getUsername()
+                    getUsername(),
+                    spinnerArea.selectedItemPosition
                 )
 
                 val intent = Intent(this, Nuovo_Materiale_Fisico::class.java)
@@ -78,14 +93,15 @@ class Nuovo_annuncio: AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 intent.putExtra("nuovoA", jsonString)
                 startActivity(intent)
             }else{
-                if (itemSelez.equals("Materiale Digitale")) {
+                if (itemSelez == "Materiale Digitale") {
                     val nuovoA = Annuncio(
                         ID.toString(),
                         editTextNomeAnnuncio.text.toString(),
                         LocalDate.now().toString(),
                         editTextMultiLineDescrizioneAnnuncio.text.toString(),
                         false, //è un materiale digitale
-                        getUsername()
+                        getUsername(),
+                        spinnerArea.selectedItemPosition
                     )
 
                     val intent = Intent(this, Nuovo_Materiale_Digitale::class.java)
@@ -99,6 +115,7 @@ class Nuovo_annuncio: AppCompatActivity(), AdapterView.OnItemSelectedListener {
             finish()
         }
     }
+
     //implementazione back arrow button nell'app bar
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -109,6 +126,7 @@ class Nuovo_annuncio: AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
         return super.onOptionsItemSelected(item)
     }
+
     private fun getUsername(): String {
         val sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
         return sharedPreferences.getString("username", "") ?: ""
