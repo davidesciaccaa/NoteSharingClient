@@ -11,15 +11,12 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.clientnotesharing.MyAdapter
 import com.example.clientnotesharing.NotesApi
 import com.example.clientnotesharing.R
@@ -41,6 +38,7 @@ class HomeFragment : Fragment(){
     private val binding get() = _binding!!
     private lateinit var adapter: MyAdapter
     private var listaAnnunci: ArrayList<Annuncio> = ArrayList()
+    private var statoFilter = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -97,6 +95,14 @@ class HomeFragment : Fragment(){
                 return false
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+
+        //filtraggio per area
+        binding.btnSport.setOnClickListener { setFilter("0") }
+        binding.btnGiuridicoeconomico.setOnClickListener { setFilter("1") }
+        binding.btnSanitario.setOnClickListener { setFilter("2") }
+        binding.btnScienze.setOnClickListener { setFilter("3") }
+        binding.btnUmanisticosociale.setOnClickListener { setFilter("4") }
+
 
         return root
     }
@@ -194,6 +200,16 @@ class HomeFragment : Fragment(){
         }
     }
 
+    // Filtra (e toglie il filtro) per l'area
+    private fun setFilter(filterValue: String) {
+        if (!statoFilter) {
+            adapter.filter.filter(filterValue)
+            statoFilter = true
+        } else {
+            adapter.filter.filter("")
+            statoFilter = false
+        }
+    }
 
 
 }

@@ -63,19 +63,22 @@ class MyAdapter(private val context: Context) : BaseAdapter(), Filterable {
 
         return view
     }
-
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
                 val queryString = constraint?.toString()?.lowercase(Locale.ROOT)?.trim()
                 val filterResults = FilterResults()
 
-                filterResults.values = if (queryString.isNullOrEmpty())
+                filterResults.values = if (queryString.isNullOrEmpty()) {
                     annunciList
-                else
-                    annunciList.filter {
-                        it.titolo.lowercase(Locale.ROOT).contains(queryString)
-                    } as ArrayList<Annuncio>
+                } else {
+                    val isNumber = queryString.toIntOrNull()
+                    if (isNumber != null && isNumber in 0..4) {
+                        annunciList.filter { it.areaAnnuncio == isNumber } as ArrayList<Annuncio>
+                    } else {
+                        annunciList.filter { it.titolo.lowercase(Locale.ROOT).contains(queryString) } as ArrayList<Annuncio>
+                    }
+                }
                 return filterResults
             }
 
