@@ -19,7 +19,7 @@ class AnnuncioMF: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.annuncio_mf)
 
-        val AnnuncioSelezionato = intent.getStringExtra("AnunncioSelezionato").let {
+        val AnnuncioSelezionato = intent.getStringExtra("AnnuncioSelezionato").let {
             Json.decodeFromString<Annuncio>(it!!)
         }
         val MaterialeFisicoAssociato = intent.getStringExtra("MaterialeAssociato").let {
