@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">ClientNoteSharing</string>
     <string name="title_home">Home</string>
-    <string name="title_annunci_salvati">Annunci salvati</string>
+    <string name="title_annunci_salvati">Preferiti</string>
+    <string name="title_annunci_personali">Personali</string>
     <string name="title_impostazioni">Impostazioni</string>
+
     <string-array name="spinner_options">
         <item>Materiale Digitale</item>
         <item>Materiale Fisico</item>

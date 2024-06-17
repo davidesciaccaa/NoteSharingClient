@@ -22,7 +22,7 @@ class MyAdapter(private val context: Context) : BaseAdapter(), Filterable {
 
     private fun fetchAnnunciFromDatabase() {
         val dbHelper = dbHelper(context)
-        annunciList = dbHelper.getAllData()
+        annunciList = dbHelper.getAllData("UserTable")
         filteredAnnunciList = ArrayList(annunciList)
     }
 

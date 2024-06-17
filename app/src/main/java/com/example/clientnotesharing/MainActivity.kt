@@ -1,41 +1,18 @@
 package com.example.clientnotesharing
 
-import android.app.SearchManager
-import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.AttributeSet
-import android.util.Log
-import android.view.Menu
-import android.view.View
-import android.widget.ListView
-import android.widget.SimpleAdapter
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.clientnotesharing.data.Annuncio
-import com.example.clientnotesharing.data.MaterialeDigitale
-import com.example.clientnotesharing.data.MaterialeFisico
 import com.example.clientnotesharing.databinding.ActivityMainBinding
-import com.example.clientnotesharing.dbLocale.dbHelper
 import com.example.clientnotesharing.ui.nuovo_materiale.Nuovo_annuncio
 import com.example.clientnotesharing.ui.signUpLogin.Login
-import com.example.clientnotesharing.ui.visualizza_materiale.AnnuncioMD
-import com.example.clientnotesharing.ui.visualizza_materiale.AnnuncioMF
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
-import retrofit2.HttpException
-import java.io.IOException
 
 
 class MainActivity : AppCompatActivity() {
@@ -57,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
+                R.id.navigation_home, R.id.navigation_favorites, R.id.navigation_settings
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

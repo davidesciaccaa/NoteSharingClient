@@ -7,12 +7,17 @@
         android:title="@string/title_home" />
 
     <item
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_favorites"
         android:icon="@drawable/favorite_icon"
         android:title="@string/title_annunci_salvati" />
 
     <item
-        android:id="@+id/navigation_notifications"
+        android:id="+id/navigation_annunci_personali"
+        android:icon="@drawable/settings_icon"
+        android:title="@string/title_annunci_personali" />
+
+    <item
+        android:id="@+id/navigation_settings"
         android:icon="@drawable/settings_icon"
         android:title="@string/title_impostazioni" />
 

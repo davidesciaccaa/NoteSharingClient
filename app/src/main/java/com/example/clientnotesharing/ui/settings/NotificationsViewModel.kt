@@ -1,4 +1,4 @@
-package com.example.clientnotesharing.ui.notifications
+package com.example.clientnotesharing.ui.settings
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -12,14 +12,14 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.clientnotesharing.ui.dashboard.DashboardFragment"
+        android:id="@+id/navigation_favorites"
+        android:name="com.example.clientnotesharing.ui.annunci_salvati.AnnunciSalvatiFragment"
         android:label="@string/title_annunci_salvati"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_annunci_salvati" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.clientnotesharing.ui.notifications.NotificationsFragment"
+        android:id="@+id/navigation_settings"
+        android:name="com.example.clientnotesharing.ui.settings.SettingsFragment"
         android:label="@string/title_impostazioni"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_settings" />
 </navigation>

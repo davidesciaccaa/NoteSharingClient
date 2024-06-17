@@ -12,38 +12,53 @@ class dbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, nu
         //somo inizializzate prima della creazione dell'oggetto
         private val DATABASENAME = "dbExample"
         private val DATABASEVERTION = 1
-        private val TABLE_NAME = "UserTable"
+        private val TABLE_NAME_ANNUNCIO = "UserTable" //annunci di tutti gli utenti
+        private val TABLE_NAME_ANNUNCIO_PERSONALE = "UserPersonalTable" //annunci personali (caricati)
+        private val TABLE_NAME_ANNUNCIO_PREFERITO = "UserFavoritesTable" //annunci preferiti
         private val ANNUNCIO = "annuncio"
         private val IDANNUNCIO = "id"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
-        db?.execSQL("CREATE TABLE $TABLE_NAME (" +
+        //table per tutti gli annunci
+        db?.execSQL("CREATE TABLE $TABLE_NAME_ANNUNCIO (" +
                 "$IDANNUNCIO VARCHAR PRIMARY KEY,"+ //usare l'id degli annunci
                 "$ANNUNCIO VARCHAR)") //così salviamo l'oggetto annuncio serializzato
+
+        //table per gli annunci personali di ciascun utente
+        db?.execSQL("CREATE TABLE $TABLE_NAME_ANNUNCIO_PERSONALE (" +
+                "$IDANNUNCIO VARCHAR PRIMARY KEY,"+ //usare l'id degli annunci
+                "$ANNUNCIO VARCHAR)") //così salviamo l'oggetto annuncio serializzato
+
+        //table per gli annunci preferiti di ciascun utente (quelli che salvano tra i preferiti)
+                db?.execSQL("CREATE TABLE $TABLE_NAME_ANNUNCIO_PREFERITO (" +
+                        "$IDANNUNCIO VARCHAR PRIMARY KEY,"+ //usare l'id degli annunci
+                        "$ANNUNCIO VARCHAR)") //così salviamo l'oggetto annuncio serializzato
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        db?.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
+        db?.execSQL("DROP TABLE IF EXISTS $TABLE_NAME_ANNUNCIO")
+        db?.execSQL("DROP TABLE IF EXISTS $TABLE_NAME_ANNUNCIO_PERSONALE")
+        db?.execSQL("DROP TABLE IF EXISTS $TABLE_NAME_ANNUNCIO_PREFERITO")
         onCreate(db)
     }
 
-    fun insertAnnunci(lista: ArrayList<Annuncio>){
+    fun insertAnnunci(lista: ArrayList<Annuncio>, tableName: String){
         val db = this.writableDatabase
         for (annuncio in lista){
             val jsonStringAnnuncio = Json.encodeToString(Annuncio.serializer(), annuncio)
             val data = ContentValues()
             data.put(ANNUNCIO, jsonStringAnnuncio)
             data.put(IDANNUNCIO, annuncio.id)
-            db.insertWithOnConflict(TABLE_NAME, null, data, SQLiteDatabase.CONFLICT_IGNORE)
+            db.insertWithOnConflict(tableName, null, data, SQLiteDatabase.CONFLICT_IGNORE)
         }
         db.close()
     }
 
-    fun getAllData(): ArrayList<Annuncio>{
+    fun getAllData(tableName: String): ArrayList<Annuncio>{
         var lista = ArrayList<Annuncio>()
         val db = this.readableDatabase
-        val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME", null)
+        val cursor = db.rawQuery("SELECT * FROM $tableName", null)
         if(cursor.moveToFirst()){
             do {
                 val annuncioJson = cursor.getString(cursor.getColumnIndexOrThrow(ANNUNCIO))
