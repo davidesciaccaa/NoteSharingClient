@@ -1,4 +1,4 @@
-package com.example.clientnotesharing.ui.annunci_salvati
+package com.example.clientnotesharing.ui.Personali
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.clientnotesharing.databinding.FragmentHomeBinding
+import com.example.clientnotesharing.ui.annunci_salvati.AnnunciSalvatiViewModel
 
-class AnnunciSalvatiFragment : Fragment() {
+class PersonaliFragment: Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
 
@@ -22,7 +23,7 @@ class AnnunciSalvatiFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val dashboardViewModel =
-            ViewModelProvider(this).get(AnnunciSalvatiViewModel::class.java)
+            ViewModelProvider(this)[PersonaliViewModel::class.java]
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root

@@ -5,9 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.Button
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.dbLocale.dbHelper
 import java.util.Locale
@@ -29,6 +32,8 @@ class MyAdapter(private val context: Context) : BaseAdapter(), Filterable {
     private class ViewHolder(row: View) {
         val titleTextView: TextView = row.findViewById(R.id.textViewTittle)
         val dateTextView: TextView = row.findViewById(R.id.textViewData)
+        val favouritesButton: Button = row.findViewById(R.id.buttonFavourite) // Accessing the button by its ID
+
     }
 
     override fun getCount(): Int {
@@ -61,6 +66,10 @@ class MyAdapter(private val context: Context) : BaseAdapter(), Filterable {
         viewHolder.titleTextView.text = annuncio.titolo
         viewHolder.dateTextView.text = annuncio.data
 
+        //il bottone
+        viewHolder.favouritesButton.setOnClickListener {
+            Toast.makeText(context, "Btn clicked", Toast.LENGTH_SHORT).show()
+        }
         return view
     }
     override fun getFilter(): Filter {
