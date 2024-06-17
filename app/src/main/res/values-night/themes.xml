@@ -61,4 +61,9 @@
         <item name="colorSurfaceContainerHigh">@color/md_theme_surfaceContainerHigh</item>
         <item name="colorSurfaceContainerHighest">@color/md_theme_surfaceContainerHighest</item>
     </style>
+
+    <style name="CustomButtonStyle">
+        <item name="android:background">@color/back_arrow_icon_color</item>
+    </style>
+
 </resources>

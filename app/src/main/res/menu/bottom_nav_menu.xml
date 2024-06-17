@@ -12,8 +12,8 @@
         android:title="@string/title_annunci_salvati" />
 
     <item
-        android:id="+id/navigation_annunci_personali"
-        android:icon="@drawable/settings_icon"
+        android:id="@+id/navigation_annunci_personali"
+        android:icon="@drawable/deployed_code_account_icon"
         android:title="@string/title_annunci_personali" />
 
     <item
