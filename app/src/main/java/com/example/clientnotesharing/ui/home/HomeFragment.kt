@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.example.clientnotesharing.CommandiAnnunciListView
 import com.example.clientnotesharing.MyAdapter
 import com.example.clientnotesharing.NotesApi
 import com.example.clientnotesharing.R
@@ -32,13 +33,13 @@ import kotlinx.serialization.json.Json
 import retrofit2.HttpException
 import java.io.IOException
 
-class HomeFragment : Fragment(){
+class HomeFragment: Fragment(){
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: MyAdapter
     private var listaAnnunci: ArrayList<Annuncio> = ArrayList()
-    private var statoFilter = false
+    private lateinit var commandiAnnunci: CommandiAnnunciListView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,168 +49,42 @@ class HomeFragment : Fragment(){
         val homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        adapter = MyAdapter(requireContext())
+        commandiAnnunci = CommandiAnnunciListView(requireContext(), listaAnnunci, adapter)
 
         //Swipe for refresh
         var swipeLayout = binding.swipeLayout
         swipeLayout.setOnRefreshListener {
-            fetchAnnunciFromServer()
+            // Start a coroutine to call the suspend function
+            commandiAnnunci.fetchAnnunciFromServer(swipeLayout)
         }
 
         //
-        adapter = MyAdapter(requireContext())
+
         binding.listViewAnnunci.adapter = adapter
 
         binding.listViewAnnunci.setOnItemClickListener { _, _, position, _ ->
             val clickedAnnuncio = listaAnnunci[position]
-            clickMateriale(clickedAnnuncio)
+            commandiAnnunci.clickMateriale(clickedAnnuncio)
         }
 
         // Add MenuProvider to handle search functionality
-        requireActivity().addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.search_menu, menu)
-                val searchManager = requireActivity().getSystemService(Context.SEARCH_SERVICE) as SearchManager
-                val searchItem = menu.findItem(R.id.action_search)
-                val searchView = searchItem.actionView as SearchView
-                searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().componentName))
+        commandiAnnunci.searchListView(requireActivity(), viewLifecycleOwner)
 
-                searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        searchView.clearFocus()
-                        //searchView.setQuery("", false)
-                        //searchView.isIconified = true
-                        //Non ci servono, perchè non vogliamo fare nulla quando l'utente clicca enter
-                        return true
-                    }
-
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        adapter.filter.filter(newText)
-                        return true
-                    }
-                })
-
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                // Handle other menu item selections if needed
-                return false
-            }
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-
-        //filtraggio per area
-        binding.btnSport.setOnClickListener { setFilter("0") }
-        binding.btnGiuridicoeconomico.setOnClickListener { setFilter("1") }
-        binding.btnSanitario.setOnClickListener { setFilter("2") }
-        binding.btnScienze.setOnClickListener { setFilter("3") }
-        binding.btnUmanisticosociale.setOnClickListener { setFilter("4") }
+        //filtraggio per area - possiamo usare i bottoni per cambiare area degli annunci in Home
+        binding.btnSport.setOnClickListener { commandiAnnunci.setFilter("0", false) }
+        binding.btnGiuridicoeconomico.setOnClickListener { commandiAnnunci.setFilter("1", false) }
+        binding.btnSanitario.setOnClickListener { commandiAnnunci.setFilter("2", false) }
+        binding.btnScienze.setOnClickListener { commandiAnnunci.setFilter("3", false) }
+        binding.btnUmanisticosociale.setOnClickListener { commandiAnnunci.setFilter("4", false) }
 
 
         return root
-    }
-
-    private fun fetchAnnunciFromServer() {
-        lifecycleScope.launch {
-            try {
-                val response = NotesApi.retrofitService.getAnnunci()
-                if (response.isSuccessful && response.body() != null) {
-                    listaAnnunci = response.body()!!
-                    Log.d("TAG", "*****************Il nome è: ${listaAnnunci?.get(0)}")
-                    adapter.updateData(listaAnnunci)
-                } else {
-                    val errorMessage = response.message()
-                    Log.e("HomeFragment", "Error: $errorMessage")
-                }
-            } catch (e: HttpException) {
-                Log.e("HomeFragment", "HTTP Exception: ${e.message()}")
-                e.printStackTrace()
-            } catch (e: IOException) {
-                Log.e("HomeFragment", "IO Exception: ${e.message}")
-                e.printStackTrace()
-            } catch (e: Exception) {
-                Log.e("HomeFragment", "Exception: ${e.message}")
-                e.printStackTrace()
-            }
-        }.invokeOnCompletion {
-            val database = dbHelper(requireContext())
-            database.insertAnnunci(listaAnnunci, "UserTable")
-            adapter.updateData(database.getAllData("UserTable"))
-            binding.swipeLayout.isRefreshing = false // Stop the refreshing animation
-        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-    //recupera dal server i materiali corrispondenti ed invia/apre le classi corrispondenti
-    private fun clickMateriale(annuncioSelezionato: Annuncio){
-        var materialeFisicoAssociato: MaterialeFisico? = null
-        var materialeDigitaleAssociato: MaterialeDigitale? = null
-        lifecycleScope.launch {
-            try {
-                if(annuncioSelezionato.tipoMateriale){ //materiale fisico
-                    val response = NotesApi.retrofitService.getMaterialeFisicoAnnuncio(annuncioSelezionato.id)
-                    if(response.isSuccessful){
-                        materialeFisicoAssociato = response.body()
-                        // Log.d("TAG", "***************** QUIIIIII: ${materialeFisicoAssociato?.id}")
-                    }else{
-                        // Error occurred
-                        val errorMessage = response.message()
-                        // Handle error message...
-                    }
-                }else{
-                    val response = NotesApi.retrofitService.getMaterialeDigitaleAnnuncio(annuncioSelezionato.id)
-                    if (response.isSuccessful){
-                        materialeDigitaleAssociato = response.body()
-                    }else{
-                        // Error occurred
-                        val errorMessage = response.message()
-                        // Handle error message...
-                    }
-                }
-
-            } catch (e: HttpException) {
-                Log.e("MainActivity", "HTTP Exception: ${e.message()}")
-                e.printStackTrace()
-                //DA GESTIRE!!!!!
-            } catch (e: IOException) {
-                Log.e("MainActivity", "IO Exception: ${e.message}")
-                e.printStackTrace()
-            } catch (e: Exception) {
-                Log.e("MainActivity", "Exception: ${e.message}")
-                e.printStackTrace()
-            }
-        }.invokeOnCompletion {
-            val intent = if (annuncioSelezionato.tipoMateriale) {
-                Intent(requireContext(), AnnuncioMF::class.java)
-            } else {
-                Intent(requireContext(), AnnuncioMD::class.java)
-            }
-            val jsonStringA = Json.encodeToString(Annuncio.serializer(), annuncioSelezionato)
-
-            val jsonStringM = if (annuncioSelezionato.tipoMateriale) {
-                Log.d("TAG", "***************** aaaaaa: ${materialeFisicoAssociato?.id}")
-
-                Json.encodeToString(MaterialeFisico.serializer(), materialeFisicoAssociato!!) //non sarà null perchè finirà prima lo thread
-            } else {
-                Json.encodeToString(MaterialeDigitale.serializer(), materialeDigitaleAssociato!!) //non sarà null perchè finirà prima lo thread
-            }
-            intent.putExtra("AnnuncioSelezionato", jsonStringA)
-            intent.putExtra("MaterialeAssociato", jsonStringM)
-            startActivity(intent)
-        }
-    }
-
-    // Filtra (e toglie il filtro) per l'area
-    private fun setFilter(filterValue: String) {
-        if (!statoFilter) {
-            adapter.filter.filter(filterValue)
-            statoFilter = true
-        } else {
-            adapter.filter.filter("")
-            statoFilter = false
-        }
-    }
-
 
 }
