@@ -14,9 +14,10 @@ import androidx.core.content.ContentProviderCompat.requireContext
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.dbLocale.dbHelper
 import java.util.Locale
-class MyAdapter(private val context: Context) : BaseAdapter(), Filterable {
+class MyAdapter(private val context: Context, private var filteredAnnunciList: ArrayList<Annuncio>) : BaseAdapter(), Filterable {
 
     private var annunciList: ArrayList<Annuncio> = ArrayList()
+    /*
     private var filteredAnnunciList: ArrayList<Annuncio> = ArrayList()
 
     init {
@@ -28,6 +29,7 @@ class MyAdapter(private val context: Context) : BaseAdapter(), Filterable {
         annunciList = dbHelper.getAllData("UserTable")
         filteredAnnunciList = ArrayList(annunciList)
     }
+    */
 
     private class ViewHolder(row: View) {
         val titleTextView: TextView = row.findViewById(R.id.textViewTittle)

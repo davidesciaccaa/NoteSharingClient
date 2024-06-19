@@ -61,6 +61,35 @@ class CommandiAnnunciListView (var context: Context, var listaAnnunci: ArrayList
         return listaAnnunci
     }
 
+    fun fetchAnnunciSalvatiFromServer(swipeLayout: SwipeRefreshLayout): ArrayList<Annuncio> {
+        (context as? LifecycleOwner)?.lifecycleScope?.launch {
+            try {
+                val response = NotesApi.retrofitService.getAnnunciSalvati()
+
+                //uso i dati degli annunci
+                if (response.isSuccessful) {
+                    response.body()?.let { annunci ->
+                        listaAnnunci.clear()
+                        listaAnnunci.addAll(annunci) //questa la lista contiene tutti i dati degli annunci
+                        adapter.updateData(listaAnnunci)
+
+                        val database = dbHelper(context)
+                        database.insertAnnunci(listaAnnunci, "UserFavoritesTable")
+                        adapter.updateData(database.getAllData("UserFavoritesTable"))
+                    }
+                } else {
+                    Log.e("", "Error: ${response.message()}")
+                }
+            } catch (e: Exception) {
+                handleNetworkException(e)
+            } finally {
+                swipeLayout.isRefreshing = false // Stop the refreshing animation
+            }
+
+        }
+        return listaAnnunci
+    }
+
     //recupera dal server i materiali corrispondenti all'annuncio selezionato (preso in input) ed invia/apre le classi corrispondenti
     fun clickMateriale(annuncioSelezionato: Annuncio){
         (context as? LifecycleOwner)?.lifecycleScope?.launch {

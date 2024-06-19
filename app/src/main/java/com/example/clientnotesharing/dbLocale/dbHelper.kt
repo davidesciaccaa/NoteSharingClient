@@ -14,7 +14,7 @@ class dbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, nu
         private val DATABASEVERTION = 1
         private val TABLE_NAME_ANNUNCIO = "UserTable" //annunci di tutti gli utenti
         private val TABLE_NAME_ANNUNCIO_PERSONALE = "UserPersonalTable" //annunci personali (caricati)
-        private val TABLE_NAME_ANNUNCIO_PREFERITO = "UserFavoritesTable" //annunci preferiti
+        private val TABLE_NAME_ANNUNCIO_PREFERITO = "UserFavoritesTable" //annunci salvati, preferiti
         private val ANNUNCIO = "annuncio"
         private val IDANNUNCIO = "id"
     }

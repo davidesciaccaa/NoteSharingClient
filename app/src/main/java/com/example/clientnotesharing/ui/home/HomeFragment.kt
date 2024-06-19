@@ -37,35 +37,37 @@ class HomeFragment: Fragment(){
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private lateinit var adapter: MyAdapter
-    private var listaAnnunci: ArrayList<Annuncio> = ArrayList()
-    private lateinit var commandiAnnunci: CommandiAnnunciListView
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        var listaAnnunci: ArrayList<Annuncio> = ArrayList()
+
         val homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        adapter = MyAdapter(requireContext())
-        commandiAnnunci = CommandiAnnunciListView(requireContext(), listaAnnunci, adapter)
+
+        val adapter = MyAdapter(requireContext(), fetchAnnunciFromDatabase())
+        val commandiAnnunci = CommandiAnnunciListView(requireContext(), listaAnnunci, adapter)
 
         //Swipe for refresh
-        var swipeLayout = binding.swipeLayout
+        val swipeLayout = binding.swipeLayout
         swipeLayout.setOnRefreshListener {
             // Start a coroutine to call the suspend function
             commandiAnnunci.fetchAnnunciFromServer(swipeLayout)
         }
 
-        //
-
         binding.listViewAnnunci.adapter = adapter
 
         binding.listViewAnnunci.setOnItemClickListener { _, _, position, _ ->
-            val clickedAnnuncio = listaAnnunci[position]
-            commandiAnnunci.clickMateriale(clickedAnnuncio)
+            if(listaAnnunci.isNotEmpty()){
+                val clickedAnnuncio = listaAnnunci[position]
+                commandiAnnunci.clickMateriale(clickedAnnuncio)
+            } else {
+                Log.d("TAG", "I: Lista vuota")
+            }
         }
 
         // Add MenuProvider to handle search functionality
@@ -85,6 +87,11 @@ class HomeFragment: Fragment(){
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun fetchAnnunciFromDatabase(): ArrayList<Annuncio> {
+        val dbHelper = dbHelper(requireContext())
+        return ArrayList(dbHelper.getAllData("UserTable"))
     }
 
 }

@@ -50,13 +50,14 @@ interface NoteSharingApi{
     suspend fun uploadMaterialeFisico(@Body annuncio: MaterialeFisico)
     @GET("listaAnnunci")
     suspend fun getAnnunci(): Response<ArrayList<Annuncio>> //restituisce tutti gli annunci.
+    @GET("listaAnnunciSalvati")
+    suspend fun getAnnunciSalvati(): Response<ArrayList<Annuncio>> //restituisce gli annunci salvati
     @GET("materialeFisicoAssociatoAnnuncio")
     suspend fun getMaterialeFisicoAnnuncio(@Query("idAnnuncio") idAnnuncio: String): Response<MaterialeFisico>
     @GET("materialeDigitaleAssociatoAnnuncio")
     suspend fun getMaterialeDigitaleAnnuncio(@Query("idAnnuncio") idAnnuncio: String): Response<MaterialeDigitale>
     @POST("UserLogin")
     suspend fun uploadLogin(@Body userSession: UserSession): Response<MessageResponse>
-
     @POST("UserSignUp")
     suspend fun uploadSignUp(@Body persona: Persona): Response<MessageResponse>
 }
