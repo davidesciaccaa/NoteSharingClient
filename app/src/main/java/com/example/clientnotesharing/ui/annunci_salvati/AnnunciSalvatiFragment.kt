@@ -1,6 +1,7 @@
 package com.example.clientnotesharing.ui.annunci_salvati
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,18 +35,26 @@ class AnnunciSalvatiFragment : Fragment() {
         var listaAnnunci: ArrayList<Annuncio> = ArrayList()
         val adapter = MyAdapter(requireContext(), fetchAnnunciFromDatabase())
 
-        val commandiAnnunci = CommandiAnnunciListView(requireContext(), listaAnnunci, adapter)
+        val commandiAnnunci = CommandiAnnunciListView(requireContext(), adapter)
         //Swipe for refresh
         var swipeLayout = binding.swipeLayout
         swipeLayout.setOnRefreshListener {
-            // Start a coroutine to call the suspend function
-            commandiAnnunci.fetchAnnunciSalvatiFromServer(swipeLayout)
+            listaAnnunci = commandiAnnunci.fetchAnnunciSalvatiFromServer(swipeLayout, listaAnnunci) //aggiorno la lista degli annunci
+
         }
 
         binding.listViewAnnunci.adapter = adapter
         binding.listViewAnnunci.setOnItemClickListener { _, _, position, _ ->
-            val clickedAnnuncio = listaAnnunci[position]
-            commandiAnnunci.clickMateriale(clickedAnnuncio)
+            if(listaAnnunci.isNotEmpty()){
+                Log.d("TAG", "A: +++++++++++++++++++++++ ${listaAnnunci.get(0)}")
+                val clickedAnnuncio = listaAnnunci[position]
+                commandiAnnunci.clickMateriale(clickedAnnuncio)
+            } else {
+                listaAnnunci = fetchAnnunciFromDatabase() //vengono presi dal db locale
+                Log.d("TAG", "O: +++++++++++++++++++++++ ${listaAnnunci.get(0)}")
+                val clickedAnnuncio = listaAnnunci[position]
+                commandiAnnunci.clickMateriale(clickedAnnuncio)
+            }
         }
 
         // Add MenuProvider to handle search functionality

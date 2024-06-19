@@ -19,8 +19,8 @@
 
     <fragment
         android:id="@+id/navigation_annunci_personali"
-        android:name="com.example.clientnotesharing.ui.annunci_salvati.AnnunciSalvatiFragment"
-        android:label="@string/title_annunci_salvati"
+        android:name="com.example.clientnotesharing.ui.annunci_personali.AnnunciPersonaliFragment"
+        android:label="@string/title_annunci_personali"
         />
 
     <fragment

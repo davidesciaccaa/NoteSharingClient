@@ -7,11 +7,11 @@ import android.database.sqlite.SQLiteOpenHelper
 import com.example.clientnotesharing.data.Annuncio
 import kotlinx.serialization.json.Json
 
-class dbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, null, DATABASEVERTION){
+class dbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, null, DATABASEVERSION){
     companion object { //cosi mettiamo le costanti qua al posto al di fuori della classe
         //somo inizializzate prima della creazione dell'oggetto
         private val DATABASENAME = "dbExample"
-        private val DATABASEVERTION = 1
+        private val DATABASEVERSION = 1
         private val TABLE_NAME_ANNUNCIO = "UserTable" //annunci di tutti gli utenti
         private val TABLE_NAME_ANNUNCIO_PERSONALE = "UserPersonalTable" //annunci personali (caricati)
         private val TABLE_NAME_ANNUNCIO_PREFERITO = "UserFavoritesTable" //annunci salvati, preferiti
@@ -66,6 +66,9 @@ class dbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, nu
             }while (cursor.moveToNext())
         }
         return lista
+    }
+    fun deleteDatabase() {
+        context.deleteDatabase(DATABASENAME)
     }
 
 }

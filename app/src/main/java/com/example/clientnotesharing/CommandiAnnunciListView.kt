@@ -30,9 +30,9 @@ import kotlinx.serialization.json.Json
 import retrofit2.HttpException
 import java.io.IOException
 
-class CommandiAnnunciListView (var context: Context, var listaAnnunci: ArrayList<Annuncio>, var adapter: MyAdapter){
-
-    fun fetchAnnunciFromServer(swipeLayout: SwipeRefreshLayout): ArrayList<Annuncio> {
+class CommandiAnnunciListView (var context: Context, var adapter: MyAdapter){
+    private val database = dbHelper(context)
+    fun fetchAnnunciFromServer(swipeLayout: SwipeRefreshLayout, listaAnnunci: ArrayList<Annuncio>): ArrayList<Annuncio> {
         (context as? LifecycleOwner)?.lifecycleScope?.launch {
             try {
                 val response = NotesApi.retrofitService.getAnnunci()
@@ -44,7 +44,6 @@ class CommandiAnnunciListView (var context: Context, var listaAnnunci: ArrayList
                         listaAnnunci.addAll(annunci) //questa la lista contiene tutti i dati degli annunci
                         adapter.updateData(listaAnnunci)
 
-                        val database = dbHelper(context)
                         database.insertAnnunci(listaAnnunci, "UserTable")
                         adapter.updateData(database.getAllData("UserTable"))
                     }
@@ -61,7 +60,7 @@ class CommandiAnnunciListView (var context: Context, var listaAnnunci: ArrayList
         return listaAnnunci
     }
 
-    fun fetchAnnunciSalvatiFromServer(swipeLayout: SwipeRefreshLayout): ArrayList<Annuncio> {
+    fun fetchAnnunciSalvatiFromServer(swipeLayout: SwipeRefreshLayout, listaAnnunci: ArrayList<Annuncio>): ArrayList<Annuncio> {
         (context as? LifecycleOwner)?.lifecycleScope?.launch {
             try {
                 val response = NotesApi.retrofitService.getAnnunciSalvati()
@@ -69,13 +68,16 @@ class CommandiAnnunciListView (var context: Context, var listaAnnunci: ArrayList
                 //uso i dati degli annunci
                 if (response.isSuccessful) {
                     response.body()?.let { annunci ->
+                        Log.d("TAG", "AnnunciSalvatiFromServer: +++++++++++++++++++++++ ${annunci.get(0)}")
                         listaAnnunci.clear()
                         listaAnnunci.addAll(annunci) //questa la lista contiene tutti i dati degli annunci
                         adapter.updateData(listaAnnunci)
 
-                        val database = dbHelper(context)
                         database.insertAnnunci(listaAnnunci, "UserFavoritesTable")
                         adapter.updateData(database.getAllData("UserFavoritesTable"))
+                        //var list = database.getAllData("UserFavoritesTable")
+                        //Log.d("TAG", "I: +++++++++++++++++++++++ ${listaAnnunci.get(0)}")
+
                     }
                 } else {
                     Log.e("", "Error: ${response.message()}")
@@ -92,10 +94,12 @@ class CommandiAnnunciListView (var context: Context, var listaAnnunci: ArrayList
 
     //recupera dal server i materiali corrispondenti all'annuncio selezionato (preso in input) ed invia/apre le classi corrispondenti
     fun clickMateriale(annuncioSelezionato: Annuncio){
+        Log.d("TAG", "onclick${annuncioSelezionato}")
         (context as? LifecycleOwner)?.lifecycleScope?.launch {
             try {
                 if(annuncioSelezionato.tipoMateriale){ //materiale fisico
                     val response = NotesApi.retrofitService.getMaterialeFisicoAnnuncio(annuncioSelezionato.id)
+                    Log.d("TAG", "I: onclick ${response.body()}")
                     if(response.isSuccessful){
                         var materialeFisicoAssociato = response.body()
 
@@ -104,7 +108,7 @@ class CommandiAnnunciListView (var context: Context, var listaAnnunci: ArrayList
                             val intent = Intent(context, AnnuncioMF::class.java)
                             val jsonStringA = Json.encodeToString(Annuncio.serializer(), annuncioSelezionato)
                             val jsonStringM = Json.encodeToString(MaterialeFisico.serializer(), materialeFisicoAssociato)
-
+                            //Log.d("TAG", "I: +++++++++++++++++++++++ $materialeFisicoAssociato")
                             intent.putExtra("AnnuncioSelezionato", jsonStringA)
                             intent.putExtra("MaterialeAssociato", jsonStringM)
                             // Switch to the main thread before starting the activity
@@ -115,6 +119,7 @@ class CommandiAnnunciListView (var context: Context, var listaAnnunci: ArrayList
 
                     }else{
                         // Error occurred
+                        Log.d("ComandiAnnunciListView, fun clickMateriale", "ComandiAnnunciListView, fun clickMateriale: Response from server unuccessful")
                         val errorMessage = response.message()
                         // Handle error message...
                     }
