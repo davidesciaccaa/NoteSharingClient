@@ -56,6 +56,8 @@ interface NoteSharingApi{
     suspend fun salvaAnnuncioComePreferito(@Body idAnnuncio: String)
     @POST("eliminaAnnuncioComePreferito")
     suspend fun eliminaAnnuncioComePreferito(@Body idAnnuncio: String)
+    @POST("eliminaAnnuncio")
+    suspend fun eliminaAnnuncio(@Body idAnnuncio: String)
     @GET("materialeFisicoAssociatoAnnuncio")
     suspend fun getMaterialeFisicoAnnuncio(@Query("idAnnuncio") idAnnuncio: String): Response<MaterialeFisico>
     @GET("materialeDigitaleAssociatoAnnuncio")
@@ -64,6 +66,8 @@ interface NoteSharingApi{
     suspend fun uploadLogin(@Body userSession: UserSession): Response<MessageResponse>
     @POST("UserSignUp")
     suspend fun uploadSignUp(@Body persona: Persona): Response<MessageResponse>
+    @GET("myAnnunci")
+    suspend fun getMyAnnunci(@Query("username") username: String): Response<ArrayList<Annuncio>>
 }
 
 

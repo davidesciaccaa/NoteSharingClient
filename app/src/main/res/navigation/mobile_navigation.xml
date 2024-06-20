@@ -21,6 +21,7 @@
         android:id="@+id/navigation_annunci_personali"
         android:name="com.example.clientnotesharing.ui.annunci_personali.AnnunciPersonaliFragment"
         android:label="@string/title_annunci_personali"
+        tools:layout="@layout/fragment_personali"
         />
 
     <fragment

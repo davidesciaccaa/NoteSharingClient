@@ -1,37 +1,16 @@
 package com.example.clientnotesharing.ui.home
 
-import android.app.SearchManager
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.SearchView
-import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.example.clientnotesharing.CommandiAnnunciListView
-import com.example.clientnotesharing.MyAdapter
-import com.example.clientnotesharing.NotesApi
-import com.example.clientnotesharing.R
+import com.example.clientnotesharing.adapter.MyAdapter
 import com.example.clientnotesharing.data.Annuncio
-import com.example.clientnotesharing.data.MaterialeDigitale
-import com.example.clientnotesharing.data.MaterialeFisico
 import com.example.clientnotesharing.databinding.FragmentHomeBinding
 import com.example.clientnotesharing.dbLocale.dbHelper
-import com.example.clientnotesharing.ui.visualizza_materiale.AnnuncioMD
-import com.example.clientnotesharing.ui.visualizza_materiale.AnnuncioMF
-import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
-import retrofit2.HttpException
-import java.io.IOException
 
 class HomeFragment: Fragment(){
 
@@ -48,7 +27,7 @@ class HomeFragment: Fragment(){
         val root: View = binding.root
 
         var listaAnnunci: ArrayList<Annuncio> = ArrayList()
-        val adapter = MyAdapter(requireContext(), fetchAnnunciFromDatabase())
+        val adapter = MyAdapter(requireContext(), fetchAnnunciFromLocalDb())
         val commandiAnnunci = CommandiAnnunciListView(requireContext(), adapter, false)
 
         //Swipe for refresh
@@ -65,7 +44,7 @@ class HomeFragment: Fragment(){
                 commandiAnnunci.clickMateriale(clickedAnnuncio)
             } else {
                 //Log.d("TAG", "I: Lista vuota")
-                listaAnnunci = fetchAnnunciFromDatabase() //vengono presi dal db locale
+                listaAnnunci = fetchAnnunciFromLocalDb() //vengono presi dal db locale
                 val clickedAnnuncio = listaAnnunci[position]
                 commandiAnnunci.clickMateriale(clickedAnnuncio)
             }
@@ -90,7 +69,7 @@ class HomeFragment: Fragment(){
         _binding = null
     }
 
-    private fun fetchAnnunciFromDatabase(): ArrayList<Annuncio> {
+    private fun fetchAnnunciFromLocalDb(): ArrayList<Annuncio> {
         val dbHelper = dbHelper(requireContext())
         return ArrayList(dbHelper.getAllData("UserTable"))
     }

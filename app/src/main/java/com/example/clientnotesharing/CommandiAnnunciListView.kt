@@ -14,6 +14,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.clientnotesharing.adapter.MyAdapter
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.data.MaterialeDigitale
 import com.example.clientnotesharing.data.MaterialeFisico

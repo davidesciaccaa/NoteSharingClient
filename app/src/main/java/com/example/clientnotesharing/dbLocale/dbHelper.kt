@@ -132,5 +132,33 @@ class dbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, nu
         }
         db.update(TABLE_NAME_ANNUNCIO_PERSONALE, contentValues, "$ID_ANNUNCIO = ?", arrayOf(idA))
     }
+    fun getMyData():ArrayList<Annuncio>{
+        var lista = ArrayList<Annuncio>()
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME_ANNUNCIO WHERE idProprietarioPersona= ${getUsername()}", null)
+        if(cursor.moveToFirst()){
+            do {
+                do {
+                    val id = cursor.getString(cursor.getColumnIndexOrThrow(ID_ANNUNCIO))
+                    val titolo = cursor.getString(cursor.getColumnIndexOrThrow(TITOLO_ANNUNCIO))
+                    val data = cursor.getString(cursor.getColumnIndexOrThrow(DATA_ANNUNCIO))
+                    val desc = cursor.getString(cursor.getColumnIndexOrThrow(DESC_ANNUNCIO))
+                    val tipoM = cursor.getInt(cursor.getColumnIndexOrThrow(TIPOMATERIALE_ANNUNCIO))
+                    val proprietario = cursor.getString(cursor.getColumnIndexOrThrow(PROPRIETARIO_ANNUNCIO))
+                    val area = cursor.getInt(cursor.getColumnIndexOrThrow(AREA_ANNUNCIO))
+                    val preferito = cursor.getInt(cursor.getColumnIndexOrThrow(PREFERITO_ANNUNCIO))
+                    lista.add(Annuncio(id, titolo, data, desc, if(tipoM==1) true else false, proprietario, area, if(preferito==1) true else false))
+                }while (cursor.moveToNext())
+            }while (cursor.moveToNext())
+        }
+        return lista
+    }
+    private fun getUsername(): String {
+        val sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+        var username = sharedPreferences.getString("username", null)
+        if(username != null){
+            return username
+        }else return ""
+    }
 
 }

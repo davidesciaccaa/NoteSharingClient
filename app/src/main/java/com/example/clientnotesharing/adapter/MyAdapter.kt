@@ -1,4 +1,4 @@
-package com.example.clientnotesharing
+package com.example.clientnotesharing.adapter
 
 import android.content.Context
 import android.util.Log
@@ -10,10 +10,10 @@ import android.widget.Button
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import com.example.clientnotesharing.NotesApi
+import com.example.clientnotesharing.R
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.dbLocale.dbHelper
 import kotlinx.coroutines.launch

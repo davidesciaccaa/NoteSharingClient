@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.clientnotesharing.CommandiAnnunciListView
-import com.example.clientnotesharing.MyAdapter
+import com.example.clientnotesharing.adapter.MyAdapter
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.databinding.FragmentHomeBinding
 import com.example.clientnotesharing.dbLocale.dbHelper
@@ -35,7 +35,7 @@ class AnnunciSalvatiFragment : Fragment() {
         val root: View = binding.root
 
         var listaAnnunci: ArrayList<Annuncio> = ArrayList()
-        val adapter = MyAdapter(requireContext(), fetchAnnunciPreferitiFromDatabase())
+        val adapter = MyAdapter(requireContext(), fetchAnnunciPreferitiFromLocalDb())
 
         val commandiAnnunci = CommandiAnnunciListView(requireContext(), adapter, false)
         //Swipe for refresh
@@ -52,7 +52,7 @@ class AnnunciSalvatiFragment : Fragment() {
                 val clickedAnnuncio = listaAnnunci[position]
                 commandiAnnunci.clickMateriale(clickedAnnuncio)
             } else {
-                listaAnnunci = fetchAnnunciPreferitiFromDatabase() //vengono presi dal db locale
+                listaAnnunci = fetchAnnunciPreferitiFromLocalDb() //vengono presi dal db locale
                 Log.d("TAG", "O: +++++++++++++++++++++++ ${listaAnnunci.get(0)}")
                 val clickedAnnuncio = listaAnnunci[position]
                 commandiAnnunci.clickMateriale(clickedAnnuncio)
@@ -78,7 +78,7 @@ class AnnunciSalvatiFragment : Fragment() {
         _binding = null
     }
 
-    private fun fetchAnnunciPreferitiFromDatabase(): ArrayList<Annuncio> {
+    private fun fetchAnnunciPreferitiFromLocalDb(): ArrayList<Annuncio> {
         val dbHelper = dbHelper(requireContext())
         return ArrayList(dbHelper.getAnnunciPreferiti())
     }
