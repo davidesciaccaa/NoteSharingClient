@@ -28,67 +28,9 @@ import kotlinx.serialization.json.Json
 import retrofit2.HttpException
 import java.io.IOException
 
-class CommandiAnnunciListView (var context: Context, var adapter: MyAdapter, var statoFilter: Boolean){
+class CommandiAnnunciListView (var context: Context){
     private val database = dbHelper(context)
-    fun fetchAnnunciFromServer(swipeLayout: SwipeRefreshLayout, listaAnnunci: ArrayList<Annuncio>): ArrayList<Annuncio> {
-        (context as? LifecycleOwner)?.lifecycleScope?.launch {
-            try {
-                val response = NotesApi.retrofitService.getAnnunci()
 
-                //uso i dati degli annunci
-                if (response.isSuccessful) {
-                    response.body()?.let { annunci ->
-                        listaAnnunci.clear()
-                        listaAnnunci.addAll(annunci) //questa la lista contiene tutti i dati degli annunci
-                        adapter.updateData(listaAnnunci)
-
-                        database.insertAnnunci(listaAnnunci, "UserTable")
-                        adapter.updateData(database.getAllData("UserTable"))
-                    }
-                } else {
-                    Log.e("HomeFragment", "Error: ${response.message()}")
-                }
-            } catch (e: Exception) {
-                handleNetworkException(e)
-            } finally {
-                swipeLayout.isRefreshing = false // Stop the refreshing animation
-            }
-
-        }
-        return listaAnnunci
-    }
-
-    fun fetchAnnunciPreferitiFromServer(username:String, swipeLayout: SwipeRefreshLayout, listaAnnunci: ArrayList<Annuncio>): ArrayList<Annuncio> {
-        (context as? LifecycleOwner)?.lifecycleScope?.launch {
-            try {
-                val response = NotesApi.retrofitService.getAnnunciSalvati(username)
-
-                //uso i dati degli annunci
-                if (response.isSuccessful) {
-                    response.body()?.let { annunci ->
-                        Log.d("TAG", "AnnunciSalvatiFromServer: +++++++++++++++++++++++ ${annunci.get(0)}")
-                        listaAnnunci.clear()
-                        listaAnnunci.addAll(annunci) //questa la lista contiene tutti i dati degli annunci
-                        adapter.updateData(listaAnnunci)
-
-                        database.insertAnnunci(listaAnnunci, "UserFavoritesTable")
-                        adapter.updateData(database.getAllData("UserFavoritesTable"))
-                        //var list = database.getAllData("UserFavoritesTable")
-                        //Log.d("TAG", "I: +++++++++++++++++++++++ ${listaAnnunci.get(0)}")
-
-                    }
-                } else {
-                    Log.e("", "Error: ${response.message()}")
-                }
-            } catch (e: Exception) {
-                handleNetworkException(e)
-            } finally {
-                swipeLayout.isRefreshing = false // Stop the refreshing animation
-            }
-
-        }
-        return listaAnnunci
-    }
 
     //recupera dal server i materiali corrispondenti all'annuncio selezionato (preso in input) ed invia/apre le classi corrispondenti
     fun clickMateriale(annuncioSelezionato: Annuncio){
@@ -158,23 +100,9 @@ class CommandiAnnunciListView (var context: Context, var adapter: MyAdapter, var
         }
     }
 
-    // gestione delle eccezioni
-    private fun handleNetworkException(e: Exception) {
-        when (e) {
-            is HttpException -> {
-                Log.e("HomeFragment", "HTTP Exception: ${e.message()}")
-            }
-            is IOException -> {
-                Log.e("HomeFragment", "IO Exception: ${e.message}")
-            }
-            else -> {
-                Log.e("HomeFragment", "Exception: ${e.message}")
-            }
-        }
-        e.printStackTrace()
-    }
 
-    fun searchListView(fragmentActivity: FragmentActivity, viewLifecycleOwner: LifecycleOwner){
+
+    fun searchListView(fragmentActivity: FragmentActivity, viewLifecycleOwner: LifecycleOwner, adapter: MyAdapter){
         // Add MenuProvider to handle search functionality
         fragmentActivity.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -208,15 +136,6 @@ class CommandiAnnunciListView (var context: Context, var adapter: MyAdapter, var
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    // Filtra (e toglie il filtro) per l'area
-    fun setFilter(filterValue: String) {
-        if (!statoFilter) {
-            adapter.filter.filter(filterValue)
-            statoFilter = true
-        } else {
-            adapter.filter.filter("")
-            statoFilter = false
-        }
-    }
+
 
 }
