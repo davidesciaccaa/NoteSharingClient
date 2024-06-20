@@ -21,7 +21,7 @@ import retrofit2.http.Part
 import retrofit2.http.Query
 
 
-const val BASE_URL = "http://192.168.206.58:8080" // "http://10.0.2.2:8080"
+const val BASE_URL =  "http://192.168.206.58:8080"  // "http://10.0.2.2:8080" //
 private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .addConverterFactory(
@@ -51,7 +51,11 @@ interface NoteSharingApi{
     @GET("listaAnnunci")
     suspend fun getAnnunci(): Response<ArrayList<Annuncio>> //restituisce tutti gli annunci.
     @GET("listaAnnunciSalvati")
-    suspend fun getAnnunciSalvati(): Response<ArrayList<Annuncio>> //restituisce gli annunci salvati
+    suspend fun getAnnunciSalvati(@Query("username") username: String): Response<ArrayList<Annuncio>> //restituisce gli annunci salvati
+    @POST("salvaAnnuncioComePreferito")
+    suspend fun salvaAnnuncioComePreferito(@Body idAnnuncio: String)
+    @POST("eliminaAnnuncioComePreferito")
+    suspend fun eliminaAnnuncioComePreferito(@Body idAnnuncio: String)
     @GET("materialeFisicoAssociatoAnnuncio")
     suspend fun getMaterialeFisicoAnnuncio(@Query("idAnnuncio") idAnnuncio: String): Response<MaterialeFisico>
     @GET("materialeDigitaleAssociatoAnnuncio")

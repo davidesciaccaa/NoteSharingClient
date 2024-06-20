@@ -10,7 +10,8 @@ data class Annuncio (
     var descrizioneAnnuncio: String,
     var tipoMateriale: Boolean, //se true e di tipo materiale fisico
     var idProprietario: String,
-    var areaAnnuncio: Int
+    var areaAnnuncio: Int,
+    var preferito: Boolean
 ) { //la data è string perchè nessuno dei tipi di DATE supportano la serializzazione
     //in kotlin ci sono in automatico i getters e setters
     fun AreaToString(): String {

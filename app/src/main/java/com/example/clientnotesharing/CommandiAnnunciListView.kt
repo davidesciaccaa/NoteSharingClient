@@ -8,8 +8,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
@@ -23,14 +21,13 @@ import com.example.clientnotesharing.dbLocale.dbHelper
 import com.example.clientnotesharing.ui.visualizza_materiale.AnnuncioMD
 import com.example.clientnotesharing.ui.visualizza_materiale.AnnuncioMF
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import retrofit2.HttpException
 import java.io.IOException
 
-class CommandiAnnunciListView (var context: Context, var adapter: MyAdapter){
+class CommandiAnnunciListView (var context: Context, var adapter: MyAdapter, var statoFilter: Boolean){
     private val database = dbHelper(context)
     fun fetchAnnunciFromServer(swipeLayout: SwipeRefreshLayout, listaAnnunci: ArrayList<Annuncio>): ArrayList<Annuncio> {
         (context as? LifecycleOwner)?.lifecycleScope?.launch {
@@ -60,10 +57,10 @@ class CommandiAnnunciListView (var context: Context, var adapter: MyAdapter){
         return listaAnnunci
     }
 
-    fun fetchAnnunciSalvatiFromServer(swipeLayout: SwipeRefreshLayout, listaAnnunci: ArrayList<Annuncio>): ArrayList<Annuncio> {
+    fun fetchAnnunciPreferitiFromServer(username:String, swipeLayout: SwipeRefreshLayout, listaAnnunci: ArrayList<Annuncio>): ArrayList<Annuncio> {
         (context as? LifecycleOwner)?.lifecycleScope?.launch {
             try {
-                val response = NotesApi.retrofitService.getAnnunciSalvati()
+                val response = NotesApi.retrofitService.getAnnunciSalvati(username)
 
                 //uso i dati degli annunci
                 if (response.isSuccessful) {
@@ -211,13 +208,13 @@ class CommandiAnnunciListView (var context: Context, var adapter: MyAdapter){
     }
 
     // Filtra (e toglie il filtro) per l'area
-    fun setFilter(filterValue: String, statoFilter: Boolean): Boolean {
+    fun setFilter(filterValue: String) {
         if (!statoFilter) {
             adapter.filter.filter(filterValue)
-            return true
+            statoFilter = true
         } else {
             adapter.filter.filter("")
-            return false
+            statoFilter = false
         }
     }
 

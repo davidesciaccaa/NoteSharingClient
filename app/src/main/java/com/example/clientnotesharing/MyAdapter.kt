@@ -1,6 +1,7 @@
 package com.example.clientnotesharing
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +12,11 @@ import android.widget.Filterable
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.dbLocale.dbHelper
+import kotlinx.coroutines.launch
 import java.util.Locale
 class MyAdapter(private val context: Context, private var filteredAnnunciList: ArrayList<Annuncio>) : BaseAdapter(), Filterable {
 
@@ -64,13 +68,52 @@ class MyAdapter(private val context: Context, private var filteredAnnunciList: A
             viewHolder = view.tag as ViewHolder
         }
 
-        val annuncio = filteredAnnunciList[position]
+        val btnPreferiti = viewHolder.favouritesButton
+        var annuncio = filteredAnnunciList[position]
         viewHolder.titleTextView.text = annuncio.titolo
         viewHolder.dateTextView.text = annuncio.data
+        if(annuncio.preferito){
+            //cambio l'icona del btn
+            btnPreferiti.setBackgroundResource(R.drawable.favorite_icon)
+            notifyDataSetChanged() // Refresh the list to reflect changes
+        }
 
         //il bottone
-        viewHolder.favouritesButton.setOnClickListener {
-            Toast.makeText(context, "Btn clicked", Toast.LENGTH_SHORT).show()
+        btnPreferiti.setOnClickListener {
+            //Toast.makeText(context, "Btn clicked", Toast.LENGTH_SHORT).show()
+            if(!annuncio.preferito){
+                //dico al server di aggiornare l'attributo preferito dell'annuncio
+                (context as? LifecycleOwner)?.lifecycleScope?.launch {
+                    try {
+                        NotesApi.retrofitService.salvaAnnuncioComePreferito(annuncio.id)
+                        notifyDataSetChanged() // Refresh the list to reflect changes
+                    } catch (e: Exception) {
+                        Log.d("TAG", "MyAdapter ${e.printStackTrace()}")
+                    }
+                }
+                //aggiorno lo stato del dblocale
+                val db = dbHelper(context)
+                db.setPreferiti(annuncio.id, true)
+                //aggiorno anche qua lo stato
+                annuncio.preferito = true
+                //cambio l'icona del btn
+                btnPreferiti.setBackgroundResource(R.drawable.favorite_icon)
+            }else{
+                //dico al server di aggiornare l'attributo preferito dell'annuncio
+                (context as? LifecycleOwner)?.lifecycleScope?.launch {
+                    try {
+                        NotesApi.retrofitService.eliminaAnnuncioComePreferito(annuncio.id)
+                        notifyDataSetChanged() // Refresh the list to reflect changes
+                    } catch (e: Exception) {
+                        Log.d("TAG", "MyAdapter ${e.printStackTrace()}")
+                    }
+                }
+                //aggiorno anche qua lo stato
+                annuncio.preferito = false
+                //cambio l'icona del btn
+                btnPreferiti.setBackgroundResource(R.drawable.heart_plus_icon)
+            }
+
         }
         return view
     }

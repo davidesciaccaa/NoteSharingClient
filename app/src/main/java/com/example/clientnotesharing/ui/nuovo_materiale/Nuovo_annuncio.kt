@@ -85,7 +85,8 @@ class Nuovo_annuncio: AppCompatActivity(), AdapterView.OnItemSelectedListener {
                     editTextMultiLineDescrizioneAnnuncio.text.toString(),
                     true, //è un materiale fisico
                     getUsername(),
-                    spinnerArea.selectedItemPosition
+                    spinnerArea.selectedItemPosition,
+                    false
                 )
 
                 val intent = Intent(this, Nuovo_Materiale_Fisico::class.java)
@@ -101,7 +102,8 @@ class Nuovo_annuncio: AppCompatActivity(), AdapterView.OnItemSelectedListener {
                         editTextMultiLineDescrizioneAnnuncio.text.toString(),
                         false, //è un materiale digitale
                         getUsername(),
-                        spinnerArea.selectedItemPosition
+                        spinnerArea.selectedItemPosition,
+                        false
                     )
 
                     val intent = Intent(this, Nuovo_Materiale_Digitale::class.java)

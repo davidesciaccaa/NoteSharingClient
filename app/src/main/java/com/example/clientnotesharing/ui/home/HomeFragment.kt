@@ -49,7 +49,7 @@ class HomeFragment: Fragment(){
 
         var listaAnnunci: ArrayList<Annuncio> = ArrayList()
         val adapter = MyAdapter(requireContext(), fetchAnnunciFromDatabase())
-        val commandiAnnunci = CommandiAnnunciListView(requireContext(), adapter)
+        val commandiAnnunci = CommandiAnnunciListView(requireContext(), adapter, false)
 
         //Swipe for refresh
         val swipeLayout = binding.swipeLayout
@@ -61,7 +61,7 @@ class HomeFragment: Fragment(){
 
         binding.listViewAnnunci.setOnItemClickListener { _, _, position, _ ->
             if(listaAnnunci.isNotEmpty()){
-                val clickedAnnuncio = listaAnnunci[position]
+                val clickedAnnuncio = listaAnnunci[position] // è come un get
                 commandiAnnunci.clickMateriale(clickedAnnuncio)
             } else {
                 //Log.d("TAG", "I: Lista vuota")
@@ -75,11 +75,11 @@ class HomeFragment: Fragment(){
         commandiAnnunci.searchListView(requireActivity(), viewLifecycleOwner)
 
         //filtraggio per area - possiamo usare i bottoni per cambiare area degli annunci in Home
-        binding.btnSport.setOnClickListener { commandiAnnunci.setFilter("0", false) }
-        binding.btnGiuridicoeconomico.setOnClickListener { commandiAnnunci.setFilter("1", false) }
-        binding.btnSanitario.setOnClickListener { commandiAnnunci.setFilter("2", false) }
-        binding.btnScienze.setOnClickListener { commandiAnnunci.setFilter("3", false) }
-        binding.btnUmanisticosociale.setOnClickListener { commandiAnnunci.setFilter("4", false) }
+        binding.btnSport.setOnClickListener { commandiAnnunci.setFilter("0") }
+        binding.btnGiuridicoeconomico.setOnClickListener { commandiAnnunci.setFilter("1") }
+        binding.btnSanitario.setOnClickListener { commandiAnnunci.setFilter("2") }
+        binding.btnScienze.setOnClickListener { commandiAnnunci.setFilter("3") }
+        binding.btnUmanisticosociale.setOnClickListener { commandiAnnunci.setFilter("4") }
 
 
         return root
