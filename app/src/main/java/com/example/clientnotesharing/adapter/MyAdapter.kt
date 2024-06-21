@@ -77,7 +77,6 @@ class MyAdapter(private val context: Context, private var filteredAnnunciList: A
             btnPreferiti.setBackgroundResource(R.drawable.favorite_icon)
             notifyDataSetChanged() // Refresh the list to reflect changes
         }
-
         //il bottone
         btnPreferiti.setOnClickListener {
             //Toast.makeText(context, "Btn clicked", Toast.LENGTH_SHORT).show()
@@ -93,7 +92,16 @@ class MyAdapter(private val context: Context, private var filteredAnnunciList: A
                 }
                 //aggiorno lo stato del dblocale
                 val db = dbHelper(context)
-                db.setPreferiti(annuncio.id, true)
+                db.setPreferiti(annuncio, true)
+                Log.d("TAG", "******************Gli annunci preferiti nel db locale sono --> ${db.getAnnunciPreferiti()}")
+                Log.d("TAG", "******************Gli annunci nel db locale sono --> ${db.getAllData("UserTable")}")
+                for (i in db.provaGetP(annuncio.id)){
+                    Log.d("TAG", "******************Preferito 1 =True --> ${i}")
+                }
+                //for (i in db.getAnnuncioById(annuncio.id)){
+                //    Log.d("TAG", "******************Annunciio con id : ${i.id} =True --> ${i}")
+                //}
+
                 //aggiorno anche qua lo stato
                 annuncio.preferito = true
                 //cambio l'icona del btn

@@ -2,8 +2,10 @@ package com.example.clientnotesharing.dbLocale
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import com.example.clientnotesharing.data.Annuncio
 import kotlinx.serialization.json.Json
 
@@ -82,10 +84,88 @@ class dbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, nu
     }
 
     fun getAllData(tableName: String): ArrayList<Annuncio>{
-        var lista = ArrayList<Annuncio>()
         val db = this.readableDatabase
         val cursor = db.rawQuery("SELECT * FROM $tableName", null)
-        if(cursor.moveToFirst()){
+        return getAnnuncioFromCursor(cursor)
+    }
+
+    fun getAnnunciPreferiti(): ArrayList<Annuncio>{
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME_ANNUNCIO WHERE preferito=1", null) //1 sta per true
+        return getAnnuncioFromCursor(cursor)
+    }
+    fun deleteDatabase() {
+        context.deleteDatabase(DATABASENAME)
+    }
+
+
+    fun setPreferiti(annuncio: Annuncio, preferiti: Boolean) {
+        val db = this.writableDatabase
+        /*
+        val contentValues = ContentValues().apply {
+
+            put(PREFERITO_ANNUNCIO, if (preferiti) 1 else 0)  // Convert Boolean to Integer
+        }
+
+         */
+        val data = ContentValues()
+        data.put(ID_ANNUNCIO, annuncio.id)
+        data.put(TITOLO_ANNUNCIO, annuncio.titolo)
+        data.put(DATA_ANNUNCIO, annuncio.data)
+        data.put(DESC_ANNUNCIO, annuncio.descrizioneAnnuncio)
+        data.put(TIPOMATERIALE_ANNUNCIO, if (annuncio.tipoMateriale) 1 else 0)  // Convert Boolean to Integer
+        data.put(PROPRIETARIO_ANNUNCIO, annuncio.idProprietario)
+        data.put(AREA_ANNUNCIO, annuncio.areaAnnuncio)
+        data.put(PREFERITO_ANNUNCIO, if (preferiti) 1 else 0)
+        db.update(TABLE_NAME_ANNUNCIO, data, "$ID_ANNUNCIO = ?", arrayOf(annuncio.id) )
+        /*
+        val whereClause = "$ID_ANNUNCIO = ?"
+        val whereArgs = arrayOf()
+
+        Log.d("DB_UPDATE", "Attempting to update preferiti for ID: $idA")
+
+        try {
+            // Check if the record exists
+            val cursor = db.rawQuery("SELECT $ID_ANNUNCIO FROM $TABLE_NAME_ANNUNCIO_PERSONALE WHERE $ID_ANNUNCIO = ?", whereArgs)
+            if (cursor.moveToFirst()) {
+                Log.d("DB_UPDATE", "Record with ID: $idA exists, proceeding with update.")
+
+                val rowsAffected = db.update(TABLE_NAME_ANNUNCIO_PERSONALE, contentValues, whereClause, whereArgs)
+                Log.d("DB_UPDATE", "Rows affected: $rowsAffected")
+
+                if (rowsAffected == 0) {
+                    Log.w("DB_UPDATE_WARNING", "No rows were updated. This could mean that the record with ID: $idA does not exist.")
+                }
+            } else {
+                Log.w("DB_UPDATE_WARNING", "Record with ID: $idA does not exist. Update will not proceed.")
+            }
+            cursor.close()
+        } catch (e: Exception) {
+            Log.e("DB_UPDATE_ERROR", "Error updating preferiti", e)
+        } finally {
+            db.close()
+        }
+
+         */
+    }
+
+     /*
+    fun setPreferiti(idA: String, preferiti: Boolean) {
+        var annuncioEsistente = getAnnuncioById(idA)
+
+    }
+
+     */
+
+    fun getAnnuncioById(idA: String):Annuncio {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME_ANNUNCIO WHERE $ID_ANNUNCIO= '$idA'", null)
+        return getAnnuncioFromCursor(cursor).get(0)
+
+    }
+    private fun getAnnuncioFromCursor(cursor: Cursor): ArrayList<Annuncio>{
+        val lista = ArrayList<Annuncio>()
+        if (cursor.moveToFirst()) {
             do {
                 val id = cursor.getString(cursor.getColumnIndexOrThrow(ID_ANNUNCIO))
                 val titolo = cursor.getString(cursor.getColumnIndexOrThrow(TITOLO_ANNUNCIO))
@@ -96,42 +176,26 @@ class dbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, nu
                 val area = cursor.getInt(cursor.getColumnIndexOrThrow(AREA_ANNUNCIO))
                 val preferito = cursor.getInt(cursor.getColumnIndexOrThrow(PREFERITO_ANNUNCIO))
                 lista.add(Annuncio(id, titolo, data, desc, if(tipoM==1) true else false, proprietario, area, if(preferito==1) true else false))
-            }while (cursor.moveToNext())
+            } while (cursor.moveToNext())
         }
+        cursor.close()
+        return  lista
+    }
+
+    fun provaGetP(idA: String): ArrayList<Int> {
+        val lista = ArrayList<Int>()
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT $PREFERITO_ANNUNCIO FROM $TABLE_NAME_ANNUNCIO WHERE $ID_ANNUNCIO= '$idA'", null)
+        if (cursor.moveToFirst()) {
+            do {
+                val preferito = cursor.getInt(cursor.getColumnIndexOrThrow(PREFERITO_ANNUNCIO))
+                lista.add(preferito)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
         return lista
     }
 
-    fun getAnnunciPreferiti(): ArrayList<Annuncio>{
-        var lista = ArrayList<Annuncio>()
-        val db = this.readableDatabase
-        val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME_ANNUNCIO WHERE preferito=1", null) //1 sta per true
-        if(cursor.moveToFirst()){
-            do {
-                do {
-                    val id = cursor.getString(cursor.getColumnIndexOrThrow(ID_ANNUNCIO))
-                    val titolo = cursor.getString(cursor.getColumnIndexOrThrow(TITOLO_ANNUNCIO))
-                    val data = cursor.getString(cursor.getColumnIndexOrThrow(DATA_ANNUNCIO))
-                    val desc = cursor.getString(cursor.getColumnIndexOrThrow(DESC_ANNUNCIO))
-                    val tipoM = cursor.getInt(cursor.getColumnIndexOrThrow(TIPOMATERIALE_ANNUNCIO))
-                    val proprietario = cursor.getString(cursor.getColumnIndexOrThrow(PROPRIETARIO_ANNUNCIO))
-                    val area = cursor.getInt(cursor.getColumnIndexOrThrow(AREA_ANNUNCIO))
-                    val preferito = cursor.getInt(cursor.getColumnIndexOrThrow(PREFERITO_ANNUNCIO))
-                    lista.add(Annuncio(id, titolo, data, desc, if(tipoM==1) true else false, proprietario, area, if(preferito==1) true else false))
-                }while (cursor.moveToNext())
-            }while (cursor.moveToNext())
-        }
-        return lista
-    }
-    fun deleteDatabase() {
-        context.deleteDatabase(DATABASENAME)
-    }
-    fun setPreferiti(idA: String, preferiti: Boolean) {
-        val db = this.writableDatabase
-        val contentValues = ContentValues().apply {
-            put(PREFERITO_ANNUNCIO, if (preferiti) 1 else 0)  // Convert Boolean to Integer
-        }
-        db.update(TABLE_NAME_ANNUNCIO_PERSONALE, contentValues, "$ID_ANNUNCIO = ?", arrayOf(idA))
-    }
     fun getMyData():ArrayList<Annuncio>{
         var lista = ArrayList<Annuncio>()
         val db = this.readableDatabase

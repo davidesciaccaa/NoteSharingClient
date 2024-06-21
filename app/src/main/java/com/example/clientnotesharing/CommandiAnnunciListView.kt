@@ -86,6 +86,7 @@ class CommandiAnnunciListView (var context: Context){
                     }
                 }
 
+
             } catch (e: HttpException) {
                 Log.e("MainActivity", "HTTP Exception: ${e.message()}")
                 e.printStackTrace()
