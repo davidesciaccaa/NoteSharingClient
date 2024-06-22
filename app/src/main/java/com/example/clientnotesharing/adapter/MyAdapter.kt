@@ -84,6 +84,7 @@ class MyAdapter(private val context: Context, private var filteredAnnunciList: A
                 annuncio.preferito = true
                 //cambio l'icona del btn
                 btnPreferiti.setBackgroundResource(R.drawable.favorite_icon)
+                notifyDataSetChanged() // Refresh the list to reflect changes
             }else{
                 //dico al server di aggiornare l'attributo preferito dell'annuncio
                 (context as? LifecycleOwner)?.lifecycleScope?.launch {
@@ -94,13 +95,14 @@ class MyAdapter(private val context: Context, private var filteredAnnunciList: A
                         Log.d("TAG", "MyAdapter ${e.printStackTrace()}")
                     }
                 }
-                //aggiorno lo stato del dblocale
+                //aggiorno lo stato del db locale
                 val db = dbHelper(context)
                 db.setPreferiti(annuncio, false)
                 //aggiorno anche qua lo stato
                 annuncio.preferito = false
                 //cambio l'icona del btn
                 btnPreferiti.setBackgroundResource(R.drawable.heart_plus_icon)
+                notifyDataSetChanged() // Refresh the list to reflect changes
             }
 
         }
@@ -138,4 +140,5 @@ class MyAdapter(private val context: Context, private var filteredAnnunciList: A
         filteredAnnunciList = ArrayList(annunciList)
         notifyDataSetChanged()
     }
+
 }

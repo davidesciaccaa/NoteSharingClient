@@ -94,10 +94,10 @@ class dbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, nu
         val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME_ANNUNCIO WHERE preferito=1", null) //1 sta per true
         return getAnnuncioFromCursor(cursor)
     }
+
     fun deleteDatabase() {
         context.deleteDatabase(DATABASENAME)
     }
-
 
     fun setPreferiti(annuncio: Annuncio, preferiti: Boolean) {
         val db = this.writableDatabase
@@ -167,6 +167,11 @@ class dbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, nu
         if(username != null){
             return username
         }else return ""
+    }
+
+    fun eliminaAnnuncio(id: String) {
+        val db = this.readableDatabase
+        db.delete(TABLE_NAME_ANNUNCIO, "$ID_ANNUNCIO = ?", arrayOf(id))
     }
 
 }

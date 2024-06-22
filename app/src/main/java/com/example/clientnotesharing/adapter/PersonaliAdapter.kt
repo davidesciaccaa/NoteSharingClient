@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.clientnotesharing.NotesApi
 import com.example.clientnotesharing.R
 import com.example.clientnotesharing.data.Annuncio
+import com.example.clientnotesharing.dbLocale.dbHelper
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -70,7 +71,9 @@ class PersonaliAdapter(private val context: Context, private var filteredAnnunci
                     Log.d("TAG", "PersonaliAdapter ${e.printStackTrace()}")
                 }
             }
-
+            //aggiorno lo stato del db locale
+            val db = dbHelper(context)
+            db.eliminaAnnuncio(annuncio.id)
         }
         
         return view
