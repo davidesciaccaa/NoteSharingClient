@@ -21,19 +21,6 @@ import java.util.Locale
 class MyAdapter(private val context: Context, private var filteredAnnunciList: ArrayList<Annuncio>) : BaseAdapter(), Filterable {
 
     private var annunciList: ArrayList<Annuncio> = ArrayList()
-    /*
-    private var filteredAnnunciList: ArrayList<Annuncio> = ArrayList()
-
-    init {
-        fetchAnnunciFromDatabase()
-    }
-
-    private fun fetchAnnunciFromDatabase() {
-        val dbHelper = dbHelper(context)
-        annunciList = dbHelper.getAllData("UserTable")
-        filteredAnnunciList = ArrayList(annunciList)
-    }
-    */
 
     private class ViewHolder(row: View) {
         val titleTextView: TextView = row.findViewById(R.id.textViewTittle)
@@ -77,7 +64,7 @@ class MyAdapter(private val context: Context, private var filteredAnnunciList: A
             btnPreferiti.setBackgroundResource(R.drawable.favorite_icon)
             notifyDataSetChanged() // Refresh the list to reflect changes
         }
-        //il bottone
+        //il bottone dei preferiti (il cuore)
         btnPreferiti.setOnClickListener {
             //Toast.makeText(context, "Btn clicked", Toast.LENGTH_SHORT).show()
             if(!annuncio.preferito){
@@ -93,15 +80,6 @@ class MyAdapter(private val context: Context, private var filteredAnnunciList: A
                 //aggiorno lo stato del dblocale
                 val db = dbHelper(context)
                 db.setPreferiti(annuncio, true)
-                Log.d("TAG", "******************Gli annunci preferiti nel db locale sono --> ${db.getAnnunciPreferiti()}")
-                Log.d("TAG", "******************Gli annunci nel db locale sono --> ${db.getAllData("UserTable")}")
-                for (i in db.provaGetP(annuncio.id)){
-                    Log.d("TAG", "******************Preferito 1 =True --> ${i}")
-                }
-                //for (i in db.getAnnuncioById(annuncio.id)){
-                //    Log.d("TAG", "******************Annunciio con id : ${i.id} =True --> ${i}")
-                //}
-
                 //aggiorno anche qua lo stato
                 annuncio.preferito = true
                 //cambio l'icona del btn
@@ -116,6 +94,9 @@ class MyAdapter(private val context: Context, private var filteredAnnunciList: A
                         Log.d("TAG", "MyAdapter ${e.printStackTrace()}")
                     }
                 }
+                //aggiorno lo stato del dblocale
+                val db = dbHelper(context)
+                db.setPreferiti(annuncio, false)
                 //aggiorno anche qua lo stato
                 annuncio.preferito = false
                 //cambio l'icona del btn
@@ -125,6 +106,7 @@ class MyAdapter(private val context: Context, private var filteredAnnunciList: A
         }
         return view
     }
+
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {

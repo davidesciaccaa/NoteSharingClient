@@ -101,13 +101,6 @@ class dbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, nu
 
     fun setPreferiti(annuncio: Annuncio, preferiti: Boolean) {
         val db = this.writableDatabase
-        /*
-        val contentValues = ContentValues().apply {
-
-            put(PREFERITO_ANNUNCIO, if (preferiti) 1 else 0)  // Convert Boolean to Integer
-        }
-
-         */
         val data = ContentValues()
         data.put(ID_ANNUNCIO, annuncio.id)
         data.put(TITOLO_ANNUNCIO, annuncio.titolo)
@@ -118,51 +111,15 @@ class dbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, nu
         data.put(AREA_ANNUNCIO, annuncio.areaAnnuncio)
         data.put(PREFERITO_ANNUNCIO, if (preferiti) 1 else 0)
         db.update(TABLE_NAME_ANNUNCIO, data, "$ID_ANNUNCIO = ?", arrayOf(annuncio.id) )
-        /*
-        val whereClause = "$ID_ANNUNCIO = ?"
-        val whereArgs = arrayOf()
-
-        Log.d("DB_UPDATE", "Attempting to update preferiti for ID: $idA")
-
-        try {
-            // Check if the record exists
-            val cursor = db.rawQuery("SELECT $ID_ANNUNCIO FROM $TABLE_NAME_ANNUNCIO_PERSONALE WHERE $ID_ANNUNCIO = ?", whereArgs)
-            if (cursor.moveToFirst()) {
-                Log.d("DB_UPDATE", "Record with ID: $idA exists, proceeding with update.")
-
-                val rowsAffected = db.update(TABLE_NAME_ANNUNCIO_PERSONALE, contentValues, whereClause, whereArgs)
-                Log.d("DB_UPDATE", "Rows affected: $rowsAffected")
-
-                if (rowsAffected == 0) {
-                    Log.w("DB_UPDATE_WARNING", "No rows were updated. This could mean that the record with ID: $idA does not exist.")
-                }
-            } else {
-                Log.w("DB_UPDATE_WARNING", "Record with ID: $idA does not exist. Update will not proceed.")
-            }
-            cursor.close()
-        } catch (e: Exception) {
-            Log.e("DB_UPDATE_ERROR", "Error updating preferiti", e)
-        } finally {
-            db.close()
-        }
-
-         */
     }
 
-     /*
-    fun setPreferiti(idA: String, preferiti: Boolean) {
-        var annuncioEsistente = getAnnuncioById(idA)
-
-    }
-
-     */
-
-    fun getAnnuncioById(idA: String):Annuncio {
+    /* fun getAnnuncioById(idA: String):Annuncio {
         val db = this.readableDatabase
         val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME_ANNUNCIO WHERE $ID_ANNUNCIO= '$idA'", null)
         return getAnnuncioFromCursor(cursor).get(0)
 
-    }
+    } */
+
     private fun getAnnuncioFromCursor(cursor: Cursor): ArrayList<Annuncio>{
         val lista = ArrayList<Annuncio>()
         if (cursor.moveToFirst()) {
@@ -180,20 +137,6 @@ class dbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, nu
         }
         cursor.close()
         return  lista
-    }
-
-    fun provaGetP(idA: String): ArrayList<Int> {
-        val lista = ArrayList<Int>()
-        val db = this.readableDatabase
-        val cursor = db.rawQuery("SELECT $PREFERITO_ANNUNCIO FROM $TABLE_NAME_ANNUNCIO WHERE $ID_ANNUNCIO= '$idA'", null)
-        if (cursor.moveToFirst()) {
-            do {
-                val preferito = cursor.getInt(cursor.getColumnIndexOrThrow(PREFERITO_ANNUNCIO))
-                lista.add(preferito)
-            } while (cursor.moveToNext())
-        }
-        cursor.close()
-        return lista
     }
 
     fun getMyData():ArrayList<Annuncio>{
@@ -217,6 +160,7 @@ class dbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, nu
         }
         return lista
     }
+
     private fun getUsername(): String {
         val sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
         var username = sharedPreferences.getString("username", null)
