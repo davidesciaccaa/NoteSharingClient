@@ -7,5 +7,4 @@ data class MaterialeDigitale(
     var annoRiferimento: Int,
     var descrizioneMateriale: String
 ) {
-    //in kotlin ci sono in automatico i getters e setters
 }

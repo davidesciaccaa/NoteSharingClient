@@ -1,6 +1,7 @@
 package com.example.clientnotesharing
 
 import com.example.clientnotesharing.data.Annuncio
+import com.example.clientnotesharing.data.DatoDigitale
 import com.example.clientnotesharing.data.MaterialeDigitale
 import retrofit2.Retrofit
 import retrofit2.http.GET
@@ -21,7 +22,7 @@ import retrofit2.http.Part
 import retrofit2.http.Query
 
 
-const val BASE_URL =  "http://192.168.79.90:8080" // "http://10.0.2.2:8080"  //
+const val BASE_URL =  "http://192.168.206.58:8080" // "http://10.0.2.2:8080"  //
 private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .addConverterFactory(
@@ -37,11 +38,15 @@ object NotesApi{
      */
 }
 interface NoteSharingApi{
-    @Multipart
     @POST("uploadPdf")
-    suspend fun uploadPdf(@Part file: MultipartBody.Part): ResponseBody
+    suspend fun uploadPdf(@Body datoD: DatoDigitale)
+    /*
     @GET("getPDFs")
     suspend fun getPDFs(@Query("idAnnuncio") idAnnuncio: String): Response<MultipartBody.Part> //deve esserer Response<...>
+    */
+    @GET("getPDFs")
+    suspend fun getPDFs(@Query("idAnnuncio") idAnnuncio: String): Response<DatoDigitale>
+
     @POST("uploadAnnuncio")
     suspend fun uploadAnnuncio(@Body annuncio: Annuncio)
     @POST("uploadMD")

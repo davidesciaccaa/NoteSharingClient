@@ -68,6 +68,9 @@ class CommandiAnnunciListView (var context: Context){
                     if (response.isSuccessful){
                         var materialeDigitaleAssociato = response.body()
                         if(materialeDigitaleAssociato != null){
+                            Log.d("ComandiAnnunciListView, fun clickMateriale", "**********Materiale digitale: $materialeDigitaleAssociato")
+                            Log.d("ComandiAnnunciListView, fun clickMateriale", "**********Annuncio digitale: $annuncioSelezionato")
+
                             val intent = Intent(context, AnnuncioMD::class.java)
                             val jsonStringA = Json.encodeToString(Annuncio.serializer(), annuncioSelezionato)
                             val jsonStringM = Json.encodeToString(MaterialeDigitale.serializer(), materialeDigitaleAssociato)

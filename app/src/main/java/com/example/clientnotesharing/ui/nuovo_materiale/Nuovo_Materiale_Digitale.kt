@@ -1,9 +1,11 @@
 package com.example.clientnotesharing.ui.nuovo_materiale
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
@@ -16,9 +18,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.clientnotesharing.MainActivity
 import com.example.clientnotesharing.NotesApi
 import com.example.clientnotesharing.R
 import com.example.clientnotesharing.data.Annuncio
+import com.example.clientnotesharing.data.DatoDigitale
 import com.example.clientnotesharing.data.MaterialeDigitale
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -26,11 +30,31 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
+import java.util.UUID
 
 class Nuovo_Materiale_Digitale: AppCompatActivity() {
     private var nrPdfCaricati = 0
     //per lo spinner
     private var itemSelez = ""
+    private var nuovoAid: String = ""
+    private lateinit var datoD: DatoDigitale
+
+    private val pickPdfFiles = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        // Handle the returned Uri
+        if (uri != null) {
+            val filePath = uriToFilePath(this, uri)
+            if (filePath != null) {
+                val file = File(filePath)
+                val datoDigitale = DatoDigitale(UUID.randomUUID().toString(), nuovoAid, file.readBytes(), file.name)
+                Log.d("TAG", "**** dato digitale: ${datoDigitale.fileName} byte: ${datoDigitale.fileBytes}")
+                datoD = datoDigitale
+            } else {
+                Log.d("TAG", "Failed to get file path from URI")
+            }
+        } else {
+            Log.d("TAG", "No file selected")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -43,6 +67,11 @@ class Nuovo_Materiale_Digitale: AppCompatActivity() {
             setHomeAsUpIndicator(R.drawable.arrow_back_20dp)
         }
 
+        val nuovoA = intent.getStringExtra("nuovoA").let {
+            Json.decodeFromString<Annuncio>(it!!)
+        }
+        nuovoAid = nuovoA.id
+
         val btnSelezionaPDF = findViewById<Button>(R.id.btnSelezionaPDF)
         val editTAnno = findViewById<EditText>(R.id.editTextNumberAnno)
         val editMultilineDescr = findViewById<EditText>(R.id.editTextTextMultiLineDescrizione)
@@ -50,55 +79,42 @@ class Nuovo_Materiale_Digitale: AppCompatActivity() {
         val buttonIndietro = findViewById<Button>(R.id.btnIndietro)
 
         btnSelezionaPDF.setOnClickListener {
-            pickPdfFiles.launch("application/pdf") //per selezionare solo pdf
+            pickPdfFiles.launch("application/pdf")
         }
-
         buttonConferma.setOnClickListener{
-            val nuovoA = intent.getStringExtra("nuovoA").let {
-                Json.decodeFromString<Annuncio>(it!!)
-            }
             val nuovoMD = MaterialeDigitale(
                 nuovoA.id,
                 editTAnno.text.toString().toInt(),
                 editMultilineDescr.text.toString()
             )
             lifecycleScope.launch {
-                NotesApi.retrofitService.uploadAnnuncio(nuovoA)
-                NotesApi.retrofitService.uploadMaterialeDigitale(nuovoMD)
+                Log.d("TAG", "Coroutine started")
+                try {
+                    if (::datoD.isInitialized) {
+                        Log.d("TAG", "Uploading Annuncio")
+                        NotesApi.retrofitService.uploadAnnuncio(nuovoA)
+                        NotesApi.retrofitService.uploadMaterialeDigitale(nuovoMD)
+                        Log.d("TAG", "******************+++++** dato digitale: ${datoD.fileName} byte: ${datoD.fileBytes}")
+                        NotesApi.retrofitService.uploadPdf(datoD)
+
+                        //closeActivities() //qua perchè poi falisce anche la coroutine
+                    }
+                } catch (e: Exception) {
+                    Log.e("TAG", "Coroutine exception: ${e.message}", e)
+                } finally {
+                    Log.d("TAG", "Coroutine completed")
+                }
             }
-            finish()
-            //to do: chiudere la pagina Nuovo annuncio
+
             //to do: controllo che non sono rimasti vuoti
+
+
         }
         buttonIndietro.setOnClickListener{
             onBackPressedDispatcher.onBackPressed() //clicca il back button
         }
     }
 
-    private val pickPdfFiles = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        println("****************** uri: $uri")
-        // Handle the returned Uri
-        if (uri != null) {
-            //val file = File(uri.path) // convert Uri to File
-            val filePath = uriToFilePath(this, uri)
-            if (filePath != null) {
-                val file = File(filePath)
-                val requestFile = file.asRequestBody("application/pdf".toMediaType())
-                val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
-                lifecycleScope.launch {
-                    NotesApi.retrofitService.uploadPdf(body)
-                    nrPdfCaricati += 1
-                    findViewById<TextView>(R.id.tvNrPdf).text = "PDF caricati: $nrPdfCaricati"
-
-                }
-            } else {
-                println("Failed to get file path from URI")
-            }
-        } else {
-            println("No file selected")
-        }
-
-    }
     private fun uriToFilePath(context: Context, uri: Uri): String? {
         return try {
             // Query the ContentResolver for the file's display name
@@ -126,6 +142,13 @@ class Nuovo_Materiale_Digitale: AppCompatActivity() {
             e.printStackTrace()
             null
         }
+    }
+    private fun closeActivities() {
+        // Start the new activity with flags to clear the back stack
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        finish()
     }
     //implementazione back arrow button nell'app bar
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
