@@ -7,11 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.clientnotesharing.MainActivity
 import com.example.clientnotesharing.databinding.FragmentSettingsBinding
 import com.example.clientnotesharing.dbLocale.dbHelper
 import android.content.Intent
-import com.example.clientnotesharing.ui.signUpLogin.Login
+import com.example.clientnotesharing.ui.sign_up_login.Login
 
 
 class SettingsFragment : Fragment() {

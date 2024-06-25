@@ -34,8 +34,8 @@
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ui.visualizza_materiale.AnnuncioMF" />
         <activity android:name=".ui.visualizza_materiale.AnnuncioMD" />
-        <activity android:name=".ui.signUpLogin.Login" />
-        <activity android:name=".ui.signUpLogin.SignUp" />
+        <activity android:name=".ui.sign_up_login.Login" />
+        <activity android:name=".ui.sign_up_login.SignUp" />
     </application>
 
 </manifest>

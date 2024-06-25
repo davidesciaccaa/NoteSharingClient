@@ -1,4 +1,4 @@
-package com.example.clientnotesharing.ui.signUpLogin
+package com.example.clientnotesharing.ui.sign_up_login
 
 import android.content.Intent
 import android.os.Bundle
@@ -14,7 +14,6 @@ import com.example.clientnotesharing.NotesApi
 import com.example.clientnotesharing.R
 import com.example.clientnotesharing.data.MessageResponse
 import com.example.clientnotesharing.data.Persona
-import com.example.clientnotesharing.data.UserSession
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import retrofit2.Response
