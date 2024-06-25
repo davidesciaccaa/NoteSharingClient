@@ -9,7 +9,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.clientnotesharing.databinding.ActivityMainBinding
-import com.example.clientnotesharing.ui.nuovo_materiale.Nuovo_annuncio
+import com.example.clientnotesharing.ui.nuovo_materiale.NuovoAnnuncio
 import com.example.clientnotesharing.ui.signUpLogin.Login
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
 
         //bottone per creare nuovi annunci
         findViewById<FloatingActionButton>(R.id.addbtn).setOnClickListener{
-            val intent = Intent(this, Nuovo_annuncio::class.java)
+            val intent = Intent(this, NuovoAnnuncio::class.java)
             startActivity(intent)
         }
 

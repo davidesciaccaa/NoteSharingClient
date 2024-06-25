@@ -118,7 +118,7 @@ class AnnuncioMD: AppCompatActivity() {
         }
     }
 
-    fun fetchDatoDigitale(idAnnuncio: String): DatoDigitale? {
+    private fun fetchDatoDigitale(idAnnuncio: String): DatoDigitale? {
         var datoDigitaleRicevuto: DatoDigitale? = null
         lifecycleScope.launch {
             try {

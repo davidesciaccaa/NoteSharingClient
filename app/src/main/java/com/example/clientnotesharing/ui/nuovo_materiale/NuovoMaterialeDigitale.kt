@@ -7,12 +7,8 @@ import android.os.Bundle
 import android.provider.OpenableColumns
 import android.util.Log
 import android.view.MenuItem
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Spinner
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,20 +20,18 @@ import com.example.clientnotesharing.R
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.data.DatoDigitale
 import com.example.clientnotesharing.data.MaterialeDigitale
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.util.UUID
 
-class Nuovo_Materiale_Digitale: AppCompatActivity() {
+class NuovoMaterialeDigitale: AppCompatActivity() {
     private var nrPdfCaricati = 0
     //per lo spinner
     private var itemSelez = ""
     private var nuovoAid: String = ""
-    private lateinit var datoD: DatoDigitale
+    private var datoD: ArrayList<DatoDigitale> = ArrayList<DatoDigitale>()
 
     private val pickPdfFiles = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         // Handle the returned Uri
@@ -47,7 +41,10 @@ class Nuovo_Materiale_Digitale: AppCompatActivity() {
                 val file = File(filePath)
                 val datoDigitale = DatoDigitale(UUID.randomUUID().toString(), nuovoAid, file.readBytes(), file.name)
                 Log.d("TAG", "**** dato digitale: ${datoDigitale.fileName} byte: ${datoDigitale.fileBytes}")
-                datoD = datoDigitale
+                datoD.add(datoDigitale)
+                val textViewNrPdf = findViewById<TextView>(R.id.tvNrPdf)
+                nrPdfCaricati++
+                textViewNrPdf.text = getString(R.string.PDFSelezionati, nrPdfCaricati)
             } else {
                 Log.d("TAG", "Failed to get file path from URI")
             }
@@ -77,7 +74,9 @@ class Nuovo_Materiale_Digitale: AppCompatActivity() {
         val editMultilineDescr = findViewById<EditText>(R.id.editTextTextMultiLineDescrizione)
         val buttonConferma = findViewById<Button>(R.id.btnCreaNuovoA)
         val buttonIndietro = findViewById<Button>(R.id.btnIndietro)
+        val textViewNrPdf = findViewById<TextView>(R.id.tvNrPdf)
 
+        textViewNrPdf.text = getString(R.string.PDFSelezionati, nrPdfCaricati)
         btnSelezionaPDF.setOnClickListener {
             pickPdfFiles.launch("application/pdf")
         }
@@ -87,24 +86,23 @@ class Nuovo_Materiale_Digitale: AppCompatActivity() {
                 editTAnno.text.toString().toInt(),
                 editMultilineDescr.text.toString()
             )
-            lifecycleScope.launch {
+            lifecycleScope.launch(Dispatchers.IO) {
                 Log.d("TAG", "Coroutine started")
                 try {
-                    if (::datoD.isInitialized) {
+                    if (datoD.isNotEmpty()) {
                         Log.d("TAG", "Uploading Annuncio")
                         NotesApi.retrofitService.uploadAnnuncio(nuovoA)
                         NotesApi.retrofitService.uploadMaterialeDigitale(nuovoMD)
-                        Log.d("TAG", "******************+++++** dato digitale: ${datoD.fileName} byte: ${datoD.fileBytes}")
-                        NotesApi.retrofitService.uploadPdf(datoD)
-
-                        //closeActivities() //qua perchè poi falisce anche la coroutine
+                        for(dato in datoD){
+                            NotesApi.retrofitService.uploadPdf(dato)
+                        }
                     }
                 } catch (e: Exception) {
                     Log.e("TAG", "Coroutine exception: ${e.message}", e)
                 } finally {
                     Log.d("TAG", "Coroutine completed")
                 }
-            }
+            }.invokeOnCompletion { closeActivities() }
 
             //to do: controllo che non sono rimasti vuoti
 

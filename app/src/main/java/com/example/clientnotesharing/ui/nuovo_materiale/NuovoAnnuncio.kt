@@ -2,7 +2,6 @@ package com.example.clientnotesharing.ui.nuovo_materiale
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
@@ -18,7 +17,7 @@ import kotlinx.serialization.json.Json
 import java.time.LocalDate
 import java.util.UUID
 
-class Nuovo_annuncio: AppCompatActivity(), AdapterView.OnItemSelectedListener {
+class NuovoAnnuncio: AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private var itemSelez = ""
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -89,7 +88,7 @@ class Nuovo_annuncio: AppCompatActivity(), AdapterView.OnItemSelectedListener {
                     false
                 )
 
-                val intent = Intent(this, Nuovo_Materiale_Fisico::class.java)
+                val intent = Intent(this, NuovoMaterialeFisico::class.java)
                 val jsonString = Json.encodeToString(Annuncio.serializer(), nuovoA)
                 intent.putExtra("nuovoA", jsonString)
                 startActivity(intent)
@@ -106,7 +105,7 @@ class Nuovo_annuncio: AppCompatActivity(), AdapterView.OnItemSelectedListener {
                         false
                     )
 
-                    val intent = Intent(this, Nuovo_Materiale_Digitale::class.java)
+                    val intent = Intent(this, NuovoMaterialeDigitale::class.java)
                     val jsonString = Json.encodeToString(Annuncio.serializer(), nuovoA)
                     intent.putExtra("nuovoA", jsonString)
                     startActivity(intent)

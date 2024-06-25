@@ -3,13 +3,8 @@ package com.example.clientnotesharing.ui.nuovo_materiale
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Spinner
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -21,7 +16,7 @@ import com.example.clientnotesharing.data.MaterialeFisico
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
-class Nuovo_Materiale_Fisico: AppCompatActivity() {
+class NuovoMaterialeFisico: AppCompatActivity() {
     //per lo spinner
     private var itemSelez = ""
     //implementazione back arrow button nell'app bar
