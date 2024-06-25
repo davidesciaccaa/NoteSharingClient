@@ -22,7 +22,7 @@ import retrofit2.http.Part
 import retrofit2.http.Query
 
 
-const val BASE_URL =  "http://192.168.203.90:8080" // "http://10.0.2.2:8080"  //
+const val BASE_URL =  "http://10.0.2.2:8080"  // "http://192.168.203.90:8080" //
 private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .addConverterFactory(
@@ -45,7 +45,7 @@ interface NoteSharingApi{
     suspend fun getPDFs(@Query("idAnnuncio") idAnnuncio: String): Response<MultipartBody.Part> //deve esserer Response<...>
     */
     @GET("getPDFs")
-    suspend fun getPDFs(@Query("idAnnuncio") idAnnuncio: String): Response<DatoDigitale>
+    suspend fun getPDFs(@Query("idAnnuncio") idAnnuncio: String): Response<ArrayList<DatoDigitale>>
 
     @POST("uploadAnnuncio")
     suspend fun uploadAnnuncio(@Body annuncio: Annuncio)

@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -17,18 +18,31 @@ import com.example.clientnotesharing.R
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.data.DatoDigitale
 import com.example.clientnotesharing.data.MaterialeDigitale
-import com.example.clientnotesharing.data.MaterialeFisico
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import retrofit2.HttpException
 import java.io.IOException
 
+class AnnuncioMD : AppCompatActivity() {
 
-class AnnuncioMD: AppCompatActivity() {
+    private lateinit var createDocumentLauncher: ActivityResultLauncher<Intent>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.annuncio_md)
+
+        createDocumentLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result.data?.data?.let { uri ->
+                    val fileName = result.data?.getStringExtra("pdfName") ?: "default_name.pdf"
+                    val fileContent = result.data?.getByteArrayExtra("fileContent") ?: ByteArray(0)
+                    writeBytesToDocument(uri, fileName, fileContent)
+                }
+            } else {
+                Toast.makeText(this, "PDF creation canceled", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         val jsonStringA = intent.getStringExtra("AnnuncioSelezionato")
         val jsonStringM = intent.getStringExtra("MaterialeAssociato")
@@ -37,10 +51,9 @@ class AnnuncioMD: AppCompatActivity() {
             val AnnuncioSelezionato = Json.decodeFromString<Annuncio>(jsonStringA)
             val MaterialeDigitaleAssociato = Json.decodeFromString<MaterialeDigitale>(jsonStringM)
 
-
-            //appbar
+            // appbar
             supportActionBar?.apply {
-                title = AnnuncioSelezionato.titolo //cambio il titolo dell'app bar della view aperta
+                title = AnnuncioSelezionato.titolo // cambio il titolo dell'app bar della view aperta
                 setDisplayHomeAsUpEnabled(true)
                 setHomeAsUpIndicator(R.drawable.arrow_back_20dp)
             }
@@ -53,8 +66,6 @@ class AnnuncioMD: AppCompatActivity() {
             val tvDescrMaterialeD = findViewById<TextView>(R.id.tvDescrMaterialeD)
             val btnScaricaPDFs = findViewById<TextView>(R.id.btnDownloadPDFs)
 
-            //this.title = AnnuncioSelezionato.titolo //cambio il titolo dell'app bar della view aperta
-
             tvDataAn.text = AnnuncioSelezionato.data
             vtDescrizioneAnnuncioMD.text = AnnuncioSelezionato.descrizioneAnnuncio
             tvEmailProprietarioMD.text = "TO DO**************"
@@ -62,50 +73,40 @@ class AnnuncioMD: AppCompatActivity() {
             tvNomeCorsoMD.text = AnnuncioSelezionato.AreaToString()
             tvDescrMaterialeD.text = MaterialeDigitaleAssociato.descrizioneMateriale
 
-
-            //pdf
+            // pdf
             btnScaricaPDFs.setOnClickListener {
-                //fetchPDF(AnnuncioSelezionato.id)
-                val datoDigitale = fetchDatoDigitale(AnnuncioSelezionato.id)
-                if(datoDigitale != null){
-                    var bytePdf = datoDigitale.fileBytes
-                    var namepdf= datoDigitale.fileName
-                    createPdfDocument(bytePdf, namepdf)
-                }else{
-                    //To do
-                    Toast.makeText(this, "Errore: non è stato ricevuto nulla dal server", Toast.LENGTH_SHORT).show()
+                lifecycleScope.launch {
+                    val listaDatiDigitali = fetchDatoDigitale(AnnuncioSelezionato.id)
+                    Log.e("AnnuncioMD", "àààààààààààààààààààà: ${listaDatiDigitali}")
+                    if (listaDatiDigitali.isNotEmpty()) {
+                        for (i in listaDatiDigitali) {
+                            val bytePdf = i.fileBytes
+                            val namepdf = i.fileName
+                            createPdfDocument(bytePdf, namepdf)
+                        }
+                    } else {
+                        // To do
+                        Log.e("AnnuncioMD", "Errore: non è stato ricevuto nulla dal server")
+                    }
                 }
-
             }
         } else {
             Log.e("AnnuncioMD", "Intent extras AnnuncioSelezionato or MaterialeAssociato is null")
             Toast.makeText(this, "Intent data missing or corrupted", Toast.LENGTH_SHORT).show()
-
         }
-
-
     }
-    private fun createPdfDocument(bytePDF: ByteArray, pdfName: String) {
-        val createDocumentLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                result.data?.data?.let { uri ->
-                    val fileName = "$pdfName.pdf"
-                    val fileContent = bytePDF
-                    writeBytesToDocument(uri, fileName, fileContent)
-                }
-            } else {
-                Toast.makeText(this, "PDF creation canceled", Toast.LENGTH_SHORT).show()
-            }
-        }
 
+    private fun createPdfDocument(bytePDF: ByteArray, pdfName: String) {
         val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "application/pdf"
             putExtra(Intent.EXTRA_TITLE, "$pdfName.pdf")
+            putExtra("fileContent", bytePDF)
+            putExtra("pdfName", pdfName)
         }
-
         createDocumentLauncher.launch(intent)
     }
+
     private fun writeBytesToDocument(uri: Uri, fileName: String, fileContent: ByteArray) {
         try {
             contentResolver.openOutputStream(uri)?.use { outputStream ->
@@ -118,37 +119,34 @@ class AnnuncioMD: AppCompatActivity() {
         }
     }
 
-    private fun fetchDatoDigitale(idAnnuncio: String): DatoDigitale? {
-        var datoDigitaleRicevuto: DatoDigitale? = null
-        lifecycleScope.launch {
-            try {
-                var response = NotesApi.retrofitService.getPDFs(idAnnuncio)
-                if (response.isSuccessful) {
-                    //var multipartPDF = response.body()
-                    response.body()?.let { datoDigitale ->
-                        datoDigitaleRicevuto = datoDigitale
-                    }
-                } else {
-                    // Error occurred
-                    val errorMessage = response.message()
-                    // Handle error message...
-                }
-            } catch (e: HttpException) {
-                Log.e("MainActivity", "HTTP Exception: ${e.message()}")
-                e.printStackTrace()
-            } catch (e: IOException) {
-                Log.e("MainActivity", "IO Exception: ${e.message}")
-                e.printStackTrace()
-            } catch (e: Exception) {
-                Log.e("MainActivity", "Exception: ${e.message}")
-                e.printStackTrace()
+    private suspend fun fetchDatoDigitale(idAnnuncio: String): ArrayList<DatoDigitale> {
+        return try {
+            val response = NotesApi.retrofitService.getPDFs(idAnnuncio)
+            if (response.isSuccessful) {
+                response.body()?.let { listaDatiDigitali ->
+                    Log.e("AnnuncioMD", "àààààààààààààààààààà: ${listaDatiDigitali[0].fileName}")
+                    listaDatiDigitali
+                } ?: ArrayList()
+            } else {
+                Log.e("AnnuncioMD", "The response from the server was not successful: ${response.message()}")
+                ArrayList()
             }
+        } catch (e: HttpException) {
+            Log.e("AnnuncioMD", "HTTP Exception: ${e.message()}")
+            e.printStackTrace()
+            ArrayList()
+        } catch (e: IOException) {
+            Log.e("AnnuncioMD", "IO Exception: ${e.message}")
+            e.printStackTrace()
+            ArrayList()
+        } catch (e: Exception) {
+            Log.e("AnnuncioMD", "Exception: ${e.message}")
+            e.printStackTrace()
+            ArrayList()
         }
-        return datoDigitaleRicevuto
     }
 
-
-    //implementazione back arrow button nell'app bar
+    // implementazione back arrow button nell'app bar
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
