@@ -27,15 +27,17 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.nuovo_materiale.NuovoAnnuncio"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".ui.nuovo_materiale.NuovoMaterialeFisico"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".ui.nuovo_materiale.NuovoMaterialeDigitale"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".ui.visualizza_materiale.AnnuncioMF" />
         <activity android:name=".ui.visualizza_materiale.AnnuncioMD" />
-        <activity android:name=".ui.sign_up_login.Login" />
-        <activity android:name=".ui.sign_up_login.SignUp" />
+        <activity android:name=".ui.sign_up_login.Login"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".ui.sign_up_login.SignUp"
+            android:windowSoftInputMode="adjustPan"/>
     </application>
 
 </manifest>
