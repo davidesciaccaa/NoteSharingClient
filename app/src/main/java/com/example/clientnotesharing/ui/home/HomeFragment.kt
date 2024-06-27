@@ -16,6 +16,7 @@ import com.example.clientnotesharing.adapter.MyAdapter
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.databinding.FragmentHomeBinding
 import com.example.clientnotesharing.dbLocale.dbHelper
+import com.example.clientnotesharing.util.Utility
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -85,10 +86,10 @@ class HomeFragment: Fragment(){
         return ArrayList(dbHelper.getAllData("UserTable"))
     }
 
-    fun fetchAnnunciFromServer(swipeLayout: SwipeRefreshLayout, listaAnnunci: ArrayList<Annuncio>, adapter: MyAdapter, dbLocal: dbHelper): ArrayList<Annuncio> {
+    private fun fetchAnnunciFromServer(swipeLayout: SwipeRefreshLayout, listaAnnunci: ArrayList<Annuncio>, adapter: MyAdapter, dbLocal: dbHelper): ArrayList<Annuncio> {
         (context as? LifecycleOwner)?.lifecycleScope?.launch {
             try {
-                val response = NotesApi.retrofitService.getAnnunci()
+                val response = NotesApi.retrofitService.getAnnunci(Utility().getUsername(requireContext()))
 
                 //uso i dati degli annunci
                 if (response.isSuccessful) {
@@ -128,7 +129,7 @@ class HomeFragment: Fragment(){
         e.printStackTrace()
     }
     // Filtra (e toglie il filtro) per l'area
-    fun setFilter(filterValue: String) {
+    private fun setFilter(filterValue: String) {
         if (!statoFilter) {
             adapter.filter.filter(filterValue)
             statoFilter = true

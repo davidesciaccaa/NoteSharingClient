@@ -106,6 +106,7 @@ class AnnunciPersonaliFragment : Fragment() {
         val dbHelper = dbHelper(requireContext())
         return ArrayList(dbHelper.getAllData("UserTable"))
     }
+
     private fun getUsername(): String {
         val sharedPreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
         var username = sharedPreferences.getString("username", null)

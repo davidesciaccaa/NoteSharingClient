@@ -22,7 +22,7 @@ import retrofit2.http.Part
 import retrofit2.http.Query
 
 
-const val BASE_URL =  "http://192.168.239.94:8080" // "http://10.0.2.2:8080"  //
+const val BASE_URL =  "http://192.168.203.90:8080" // "http://10.0.2.2:8080"  //
 private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .addConverterFactory(
@@ -33,20 +33,12 @@ object NotesApi{
     val retrofitService : NoteSharingApi by lazy {
         retrofit.create(NoteSharingApi::class.java) //è l'inizializzazione di retrofitService
     }
-    /*
-    You make this lazy initialization to make sure it is initialized at its first usage. Ignore the error, which you fix in the next steps.
-     */
 }
 interface NoteSharingApi{
     @POST("uploadPdf")
     suspend fun uploadPdf(@Body datoD: DatoDigitale)
-    /*
-    @GET("getPDFs")
-    suspend fun getPDFs(@Query("idAnnuncio") idAnnuncio: String): Response<MultipartBody.Part> //deve esserer Response<...>
-    */
     @GET("getPDFs")
     suspend fun getPDFs(@Query("idAnnuncio") idAnnuncio: String): Response<ArrayList<DatoDigitale>>
-
     @POST("uploadAnnuncio")
     suspend fun uploadAnnuncio(@Body annuncio: Annuncio)
     @POST("uploadMD")
@@ -54,7 +46,7 @@ interface NoteSharingApi{
     @POST("uploadMF")
     suspend fun uploadMaterialeFisico(@Body annuncio: MaterialeFisico)
     @GET("listaAnnunci")
-    suspend fun getAnnunci(): Response<ArrayList<Annuncio>> //restituisce tutti gli annunci.
+    suspend fun getAnnunci(@Query("username") username: String): Response<ArrayList<Annuncio>> //restituisce tutti gli annunci tranne quelli pubblicati dall'utente.
     @GET("listaAnnunciSalvati")
     suspend fun getAnnunciSalvati(@Query("username") username: String): Response<ArrayList<Annuncio>> //restituisce gli annunci salvati
     @POST("salvaAnnuncioComePreferito")
@@ -74,8 +66,6 @@ interface NoteSharingApi{
     @GET("myAnnunci")
     suspend fun getMyAnnunci(@Query("username") username: String): Response<ArrayList<Annuncio>>
 }
-
-
 
 /*
 The call to create() function on a Retrofit object is expensive in terms
