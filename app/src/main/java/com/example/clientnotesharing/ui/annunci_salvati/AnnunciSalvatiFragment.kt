@@ -105,7 +105,6 @@ class AnnunciSalvatiFragment : Fragment() {
                     response.body()?.let { annunci ->
                         listaAnnunci.clear()
                         listaAnnunci.addAll(annunci) //questa la lista contiene tutti i dati degli annunci
-                        //adapter.updateData(listaAnnunci)
 
                         dbLocal.insertAnnunci(listaAnnunci, "UserFavoritesTable")
                         adapter.updateData(dbLocal.getAnnunciPreferiti())

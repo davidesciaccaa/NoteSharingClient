@@ -14,8 +14,10 @@ import androidx.lifecycle.lifecycleScope
 import com.example.clientnotesharing.NotesApi
 import com.example.clientnotesharing.R
 import com.example.clientnotesharing.data.Annuncio
+import com.example.clientnotesharing.data.MessageResponse
 import com.example.clientnotesharing.dbLocale.DbHelper
 import kotlinx.coroutines.launch
+import retrofit2.Response
 
 class PersonaliAdapter(private val context: Context, private var filteredAnnunciList: ArrayList<Annuncio>) : BaseAdapter() {
 
@@ -60,21 +62,25 @@ class PersonaliAdapter(private val context: Context, private var filteredAnnunci
 
         //il bottone
         btnPreferiti.setOnClickListener {
+            var result: Response<MessageResponse>? = null
             (context as? LifecycleOwner)?.lifecycleScope?.launch {
                 try {
-                    NotesApi.retrofitService.eliminaAnnuncio(annuncio.id)
-                    notifyDataSetChanged() // Refresh the list to reflect changes
+                    result = NotesApi.retrofitService.eliminaAnnuncio(annuncio.id)
+                    if(result?.isSuccessful == true){
+                        //aggiorno lo stato del db locale
+                        val db = DbHelper(context)
+                        db.eliminaAnnuncio(annuncio.id)
+                        // Remove the item from the list immediately
+                        filteredAnnunciList.removeAt(position)
+                        notifyDataSetChanged()
+                    }else{
+                        // Da gestire
+                    }
                 } catch (e: Exception) {
                     Log.d("TAG", "PersonaliAdapter ${e.printStackTrace()}")
                 }
             }
-            //aggiorno lo stato del db locale
-            val db = DbHelper(context)
-            db.eliminaAnnuncio(annuncio.id)
 
-            // Remove the item from the list immediately
-            filteredAnnunciList.removeAt(position)
-            notifyDataSetChanged()
         }
         
         return view

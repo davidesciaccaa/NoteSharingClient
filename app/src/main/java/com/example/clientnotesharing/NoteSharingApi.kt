@@ -54,7 +54,7 @@ interface NoteSharingApi{
     @POST("eliminaAnnuncioComePreferito")
     suspend fun eliminaAnnuncioComePreferito(@Body idAnnuncio: String)
     @POST("eliminaAnnuncio")
-    suspend fun eliminaAnnuncio(@Body idAnnuncio: String)
+    suspend fun eliminaAnnuncio(@Body idAnnuncio: String): Response<MessageResponse>
     @GET("materialeFisicoAssociatoAnnuncio")
     suspend fun getMaterialeFisicoAnnuncio(@Query("idAnnuncio") idAnnuncio: String): Response<MaterialeFisico>
     @GET("materialeDigitaleAssociatoAnnuncio")

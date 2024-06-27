@@ -73,7 +73,6 @@ class AnnunciPersonaliFragment : Fragment() {
                     response.body()?.let { annunci ->
                         listaAnnunci.clear()
                         listaAnnunci.addAll(annunci)
-                        //adapter.updateData(listaAnnunci)
 
                         // Aggiunta anche nel db locale
                         dbLocal.insertAnnunci(listaAnnunci, "UserTable")

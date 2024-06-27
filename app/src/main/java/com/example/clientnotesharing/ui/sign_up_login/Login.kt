@@ -51,7 +51,7 @@ class Login: AppCompatActivity() {
                     e.printStackTrace()
                 }
             }.invokeOnCompletion {
-                if (resultLogin != null && resultLogin!!.isSuccessful) {
+                if (resultLogin != null && resultLogin?.isSuccessful == true) {
                     val responseBody = resultLogin!!.body()
                     if (responseBody != null && responseBody.message == "Login successful") {
                         saveLoginState(editTextUsername.text.toString())
