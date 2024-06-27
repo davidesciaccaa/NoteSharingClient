@@ -71,6 +71,10 @@ class PersonaliAdapter(private val context: Context, private var filteredAnnunci
             //aggiorno lo stato del db locale
             val db = DbHelper(context)
             db.eliminaAnnuncio(annuncio.id)
+
+            // Remove the item from the list immediately
+            filteredAnnunciList.removeAt(position)
+            notifyDataSetChanged()
         }
         
         return view

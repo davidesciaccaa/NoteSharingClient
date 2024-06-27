@@ -25,9 +25,6 @@ import java.io.IOException
 class AnnunciSalvatiFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
     private var statoFilter: Boolean = false
     private lateinit var adapter: MyAdapter
@@ -108,10 +105,10 @@ class AnnunciSalvatiFragment : Fragment() {
                     response.body()?.let { annunci ->
                         listaAnnunci.clear()
                         listaAnnunci.addAll(annunci) //questa la lista contiene tutti i dati degli annunci
-                        adapter.updateData(listaAnnunci)
+                        //adapter.updateData(listaAnnunci)
 
                         dbLocal.insertAnnunci(listaAnnunci, "UserFavoritesTable")
-                        adapter.updateData(dbLocal.getAllData("UserFavoritesTable"))
+                        adapter.updateData(dbLocal.getAnnunciPreferiti())
                         //var list = database.getAllData("UserFavoritesTable")
                         //Log.d("TAG", "I: +++++++++++++++++++++++ ${listaAnnunci.get(0)}")
 

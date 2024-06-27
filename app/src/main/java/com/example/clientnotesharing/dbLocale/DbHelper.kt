@@ -82,7 +82,7 @@ class DbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, nu
         db.close()
     }
 
-    fun getAllData(tableName: String): ArrayList<Annuncio>{
+    fun getAllDataEccettoPersonali(tableName: String): ArrayList<Annuncio>{
         val db = this.readableDatabase
         val username = Utility().getUsername(context)
         val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME_ANNUNCIO WHERE $ID_ANNUNCIO NOT IN (SELECT $ID_ANNUNCIO FROM $TABLE_NAME_ANNUNCIO WHERE $PROPRIETARIO_ANNUNCIO = ?) ;", arrayOf(username))

@@ -21,9 +21,7 @@ class AnnunciPersonaliFragment : Fragment() {
 
     private var _binding: FragmentPersonaliBinding? = null
     private val binding get() = _binding!!
-
     private lateinit var adapter: PersonaliAdapter
-    private var listaAnnunci: ArrayList<Annuncio> = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,10 +32,11 @@ class AnnunciPersonaliFragment : Fragment() {
         val root: View = binding.root
 
         val dbLocal = DbHelper(requireContext())
+        var listaAnnunci: ArrayList<Annuncio> = ArrayList()
         // Setup SwipeRefreshLayout
         val swipeLayout = binding.swipeLayout
         swipeLayout.setOnRefreshListener {
-            listaAnnunci = fetchAnnunciFromRemoteServer(swipeLayout, dbLocal)
+            listaAnnunci = fetchAnnunciFromRemoteServer(swipeLayout, dbLocal, listaAnnunci)
         }
 
         // Initialize ArrayAdapter
@@ -63,7 +62,7 @@ class AnnunciPersonaliFragment : Fragment() {
         return root
     }
 
-    private fun fetchAnnunciFromRemoteServer(swipeLayout: SwipeRefreshLayout, dbLocal: DbHelper): ArrayList<Annuncio> {
+    private fun fetchAnnunciFromRemoteServer(swipeLayout: SwipeRefreshLayout, dbLocal: DbHelper, listaAnnunci: ArrayList<Annuncio>): ArrayList<Annuncio> {
         swipeLayout.isRefreshing = true // Start refreshing animation
 
         lifecycleScope.launch {
@@ -74,12 +73,12 @@ class AnnunciPersonaliFragment : Fragment() {
                     response.body()?.let { annunci ->
                         listaAnnunci.clear()
                         listaAnnunci.addAll(annunci)
-                        adapter.updateData(listaAnnunci)
+                        //adapter.updateData(listaAnnunci)
 
                         // Aggiunta anche nel db locale
                         dbLocal.insertAnnunci(listaAnnunci, "UserTable")
                         //aggiorno la listView
-                        adapter.updateData(dbLocal.getAllData("UserTable"))
+                        adapter.updateData(dbLocal.getAnnunciPersonali())
                     }
                 } else {
                     Log.e("AnnunciPersonaliFragment", "Error: ${response.message()}")

@@ -83,7 +83,7 @@ class HomeFragment: Fragment(){
 
     private fun fetchAnnunciFromLocalDb(): ArrayList<Annuncio> {
         val dbHelper = DbHelper(requireContext())
-        return ArrayList(dbHelper.getAllData("UserTable"))
+        return ArrayList(dbHelper.getAllDataEccettoPersonali("UserTable"))
     }
 
     private fun fetchAnnunciFromServer(swipeLayout: SwipeRefreshLayout, listaAnnunci: ArrayList<Annuncio>, adapter: MyAdapter, dbLocal: DbHelper): ArrayList<Annuncio> {
@@ -96,10 +96,10 @@ class HomeFragment: Fragment(){
                     response.body()?.let { annunci ->
                         listaAnnunci.clear()
                         listaAnnunci.addAll(annunci) //questa la lista contiene tutti i dati degli annunci
-                        adapter.updateData(listaAnnunci)
+                        //adapter.updateData(listaAnnunci)
 
                         dbLocal.insertAnnunci(listaAnnunci, "UserTable")
-                        adapter.updateData(dbLocal.getAllData("UserTable"))
+                        adapter.updateData(dbLocal.getAllDataEccettoPersonali("UserTable"))
                     }
                 } else {
                     Log.e("HomeFragment", "Error: ${response.message()}")
