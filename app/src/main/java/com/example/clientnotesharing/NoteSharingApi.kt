@@ -22,7 +22,7 @@ import retrofit2.http.Part
 import retrofit2.http.Query
 
 
-const val BASE_URL =  "http://192.168.206.58:8080" // "http://10.0.2.2:8080"  //
+const val BASE_URL =  "http://192.168.203.90:8080" // "http://10.0.2.2:8080"  //
 private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .addConverterFactory(
@@ -35,36 +35,39 @@ object NotesApi{
     }
 }
 interface NoteSharingApi{
+    //notesRoute
     @POST("uploadPdf")
-    suspend fun uploadPdf(@Body datoD: DatoDigitale)
+    suspend fun uploadPdf(@Body datoD: DatoDigitale): Response<MessageResponse>
     @GET("getPDFs")
     suspend fun getPDFs(@Query("idAnnuncio") idAnnuncio: String): Response<ArrayList<DatoDigitale>>
     @POST("uploadAnnuncio")
-    suspend fun uploadAnnuncio(@Body annuncio: Annuncio)
+    suspend fun uploadAnnuncio(@Body annuncio: Annuncio): Response<MessageResponse>
     @POST("uploadMD")
-    suspend fun uploadMaterialeDigitale(@Body annuncio: MaterialeDigitale)
+    suspend fun uploadMaterialeDigitale(@Body annuncio: MaterialeDigitale): Response<MessageResponse>
     @POST("uploadMF")
-    suspend fun uploadMaterialeFisico(@Body annuncio: MaterialeFisico)
-    @GET("listaAnnunci")
-    suspend fun getAnnunci(@Query("username") username: String): Response<ArrayList<Annuncio>> //restituisce tutti gli annunci tranne quelli pubblicati dall'utente.
-    @GET("listaAnnunciSalvati")
-    suspend fun getAnnunciSalvati(@Query("username") username: String): Response<ArrayList<Annuncio>> //restituisce gli annunci salvati
+    suspend fun uploadMaterialeFisico(@Body annuncio: MaterialeFisico): Response<MessageResponse>
     @POST("salvaAnnuncioComePreferito")
-    suspend fun salvaAnnuncioComePreferito(@Body idAnnuncio: String)
+    suspend fun salvaAnnuncioComePreferito(@Body idAnnuncio: String): Response<MessageResponse>
     @POST("eliminaAnnuncioComePreferito")
-    suspend fun eliminaAnnuncioComePreferito(@Body idAnnuncio: String)
+    suspend fun eliminaAnnuncioComePreferito(@Body idAnnuncio: String): Response<MessageResponse>
     @POST("eliminaAnnuncio")
     suspend fun eliminaAnnuncio(@Body idAnnuncio: String): Response<MessageResponse>
+    @GET("listaAnnunci")
+    suspend fun getAnnunci(@Query("username") username: String): Response<ArrayList<Annuncio>> //restituisce tutti gli annunci tranne quelli pubblicati dall'utente.
+    @GET("myAnnunci")
+    suspend fun getMyAnnunci(@Query("username") username: String): Response<ArrayList<Annuncio>>
+    @GET("listaAnnunciSalvati")
+    suspend fun getAnnunciSalvati(@Query("username") username: String): Response<ArrayList<Annuncio>> //restituisce gli annunci salvati
     @GET("materialeFisicoAssociatoAnnuncio")
     suspend fun getMaterialeFisicoAnnuncio(@Query("idAnnuncio") idAnnuncio: String): Response<MaterialeFisico>
     @GET("materialeDigitaleAssociatoAnnuncio")
     suspend fun getMaterialeDigitaleAnnuncio(@Query("idAnnuncio") idAnnuncio: String): Response<MaterialeDigitale>
+    //personeRoute
     @POST("UserLogin")
     suspend fun uploadLogin(@Body userSession: UserSession): Response<MessageResponse>
     @POST("UserSignUp")
     suspend fun uploadSignUp(@Body persona: Persona): Response<MessageResponse>
-    @GET("myAnnunci")
-    suspend fun getMyAnnunci(@Query("username") username: String): Response<ArrayList<Annuncio>>
+
 }
 
 /*

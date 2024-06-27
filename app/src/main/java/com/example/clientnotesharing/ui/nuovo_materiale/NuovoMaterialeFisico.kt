@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -68,14 +69,17 @@ class NuovoMaterialeFisico: AppCompatActivity() {
                 )
             lifecycleScope.launch {
                 //invio al server
-                NotesApi.retrofitService.uploadAnnuncio(nuovoA)
-                NotesApi.retrofitService.uploadMaterialeFisico(nuovoMf)
+                var responseAnnuncio = NotesApi.retrofitService.uploadAnnuncio(nuovoA)
+                var responseMaterialeFisico = NotesApi.retrofitService.uploadMaterialeFisico(nuovoMf)
+                if (!(responseAnnuncio.isSuccessful && responseMaterialeFisico.isSuccessful)) {
+                    Toast.makeText(this@NuovoMaterialeFisico, "Failed to retrieve PDF content", Toast.LENGTH_SHORT).show()
+                }
                 //forse conviene avere exceptions per gestirle qua??
             }
             closeActivities() //chiude la view e va in Home
-            //to do: controllo che non sono rimasti vuoti ***************
-            //***********************************
-            //************************************
+
+        //to do: controllo che non sono rimasti vuoti ***************
+
         }
         buttonIndietro.setOnClickListener{
             onBackPressedDispatcher.onBackPressed() //clicca il back button

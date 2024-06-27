@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.example.clientnotesharing.NotesApi
@@ -69,38 +70,45 @@ class MyAdapter(private val context: Context, private var filteredAnnunciList: A
                 //dico al server di aggiornare l'attributo preferito dell'annuncio
                 (context as? LifecycleOwner)?.lifecycleScope?.launch {
                     try {
-                        NotesApi.retrofitService.salvaAnnuncioComePreferito(annuncio.id)
-                        notifyDataSetChanged() // Refresh the list to reflect changes
+                        val responseAnnuncioPreferito = NotesApi.retrofitService.salvaAnnuncioComePreferito(annuncio.id)
+                        if (!responseAnnuncioPreferito.isSuccessful) {
+                            Toast.makeText(context, "Failed to add to favourites", Toast.LENGTH_SHORT).show()
+                        } else {
+                            //aggiorno lo stato del dblocale
+                            val db = DbHelper(context)
+                            db.setPreferiti(annuncio, true)
+                            //aggiorno anche qua lo stato
+                            annuncio.preferito = true
+                            //cambio l'icona del btn
+                            btnPreferiti.setBackgroundResource(R.drawable.favorite_icon)
+                            notifyDataSetChanged() // Refresh the list to reflect changes
+                        }
                     } catch (e: Exception) {
                         Log.d("TAG", "MyAdapter ${e.printStackTrace()}")
                     }
                 }
-                //aggiorno lo stato del dblocale
-                val db = DbHelper(context)
-                db.setPreferiti(annuncio, true)
-                //aggiorno anche qua lo stato
-                annuncio.preferito = true
-                //cambio l'icona del btn
-                btnPreferiti.setBackgroundResource(R.drawable.favorite_icon)
-                notifyDataSetChanged() // Refresh the list to reflect changes
             }else{
                 //dico al server di aggiornare l'attributo preferito dell'annuncio
                 (context as? LifecycleOwner)?.lifecycleScope?.launch {
                     try {
-                        NotesApi.retrofitService.eliminaAnnuncioComePreferito(annuncio.id)
-                        notifyDataSetChanged() // Refresh the list to reflect changes
+                        val responseAnnuncioPreferito = NotesApi.retrofitService.eliminaAnnuncioComePreferito(annuncio.id)
+                        if(!responseAnnuncioPreferito.isSuccessful){
+                            Toast.makeText(context, "Failed to delete from favourites", Toast.LENGTH_SHORT).show()
+                        } else {
+                            //aggiorno lo stato del db locale
+                            val db = DbHelper(context)
+                            db.setPreferiti(annuncio, false)
+                            //aggiorno anche qua lo stato
+                            annuncio.preferito = false
+                            //cambio l'icona del btn
+                            btnPreferiti.setBackgroundResource(R.drawable.heart_plus_icon)
+                            notifyDataSetChanged() // Refresh the list to reflect changes
+                        }
                     } catch (e: Exception) {
                         Log.d("TAG", "MyAdapter ${e.printStackTrace()}")
                     }
                 }
-                //aggiorno lo stato del db locale
-                val db = DbHelper(context)
-                db.setPreferiti(annuncio, false)
-                //aggiorno anche qua lo stato
-                annuncio.preferito = false
-                //cambio l'icona del btn
-                btnPreferiti.setBackgroundResource(R.drawable.heart_plus_icon)
-                notifyDataSetChanged() // Refresh the list to reflect changes
+
             }
 
         }

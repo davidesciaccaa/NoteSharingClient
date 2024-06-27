@@ -30,7 +30,6 @@ import java.io.IOException
 class CommandiAnnunciListView (var context: Context){
     private val database = DbHelper(context)
 
-
     //recupera dal server i materiali corrispondenti all'annuncio selezionato (preso in input) ed invia/apre le classi corrispondenti
     fun clickMateriale(annuncioSelezionato: Annuncio){
         Log.d("TAG", "onclick${annuncioSelezionato}")

@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -20,9 +21,11 @@ import com.example.clientnotesharing.R
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.data.DatoDigitale
 import com.example.clientnotesharing.data.MaterialeDigitale
+import com.example.clientnotesharing.data.MessageResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
+import retrofit2.Response
 import java.io.File
 import java.util.UUID
 
@@ -90,11 +93,22 @@ class NuovoMaterialeDigitale: AppCompatActivity() {
                 Log.d("TAG", "Coroutine started")
                 try {
                     if (datoD.isNotEmpty()) {
-                        Log.d("TAG", "Uploading Annuncio")
-                        NotesApi.retrofitService.uploadAnnuncio(nuovoA)
-                        NotesApi.retrofitService.uploadMaterialeDigitale(nuovoMD)
+                        var responseAnnuncio =NotesApi.retrofitService.uploadAnnuncio(nuovoA)
+                        var responseMaterialeDigitale =NotesApi.retrofitService.uploadMaterialeDigitale(nuovoMD)
+                        var responseListPDF: ArrayList<Response<MessageResponse>> = ArrayList()
                         for(dato in datoD){
-                            NotesApi.retrofitService.uploadPdf(dato)
+                            responseListPDF.add(NotesApi.retrofitService.uploadPdf(dato))
+                        }
+                        if (!(responseAnnuncio.isSuccessful && responseMaterialeDigitale.isSuccessful)) {
+                            var check = false
+                            for(response in responseListPDF) {
+                                if(!response.isSuccessful){
+                                    check = true
+                                }
+                            }
+                            if (check) {
+                                Toast.makeText(this@NuovoMaterialeDigitale, "Failed to retrieve PDF content", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
                 } catch (e: Exception) {
