@@ -16,7 +16,7 @@ import com.example.clientnotesharing.NotesApi
 import com.example.clientnotesharing.adapter.MyAdapter
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.databinding.FragmentHomeBinding
-import com.example.clientnotesharing.dbLocale.dbHelper
+import com.example.clientnotesharing.dbLocale.DbHelper
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -42,7 +42,7 @@ class AnnunciSalvatiFragment : Fragment() {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        val dbLocal = dbHelper(requireContext())
+        val dbLocal = DbHelper(requireContext())
         var listaAnnunci: ArrayList<Annuncio> = ArrayList()
         adapter = MyAdapter(requireContext(), fetchAnnunciPreferitiFromLocalDb())
 
@@ -88,7 +88,7 @@ class AnnunciSalvatiFragment : Fragment() {
     }
 
     private fun fetchAnnunciPreferitiFromLocalDb(): ArrayList<Annuncio> {
-        val dbHelper = dbHelper(requireContext())
+        val dbHelper = DbHelper(requireContext())
         return ArrayList(dbHelper.getAnnunciPreferiti())
     }
     private fun getUsername(): String {
@@ -98,7 +98,7 @@ class AnnunciSalvatiFragment : Fragment() {
             return username
         }else return ""
     }
-    fun fetchAnnunciPreferitiFromServer(username:String, swipeLayout: SwipeRefreshLayout, listaAnnunci: ArrayList<Annuncio>, adapter: MyAdapter, dbLocal: dbHelper): ArrayList<Annuncio> {
+    fun fetchAnnunciPreferitiFromServer(username:String, swipeLayout: SwipeRefreshLayout, listaAnnunci: ArrayList<Annuncio>, adapter: MyAdapter, dbLocal: DbHelper): ArrayList<Annuncio> {
         (context as? LifecycleOwner)?.lifecycleScope?.launch {
             try {
                 val response = NotesApi.retrofitService.getAnnunciSalvati(username)

@@ -5,11 +5,10 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
 import com.example.clientnotesharing.data.Annuncio
-import kotlinx.serialization.json.Json
+import com.example.clientnotesharing.util.Utility
 
-class dbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, null, DATABASEVERSION){
+class DbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, null, DATABASEVERSION){
     companion object { //cosi mettiamo le costanti qua al posto al di fuori della classe
         //somo inizializzate prima della creazione dell'oggetto
         private val DATABASENAME = "dbExample"
@@ -85,7 +84,8 @@ class dbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, nu
 
     fun getAllData(tableName: String): ArrayList<Annuncio>{
         val db = this.readableDatabase
-        val cursor = db.rawQuery("SELECT * FROM $tableName", null)
+        val username = Utility().getUsername(context)
+        val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME_ANNUNCIO WHERE $ID_ANNUNCIO NOT IN (SELECT $ID_ANNUNCIO FROM $TABLE_NAME_ANNUNCIO WHERE $PROPRIETARIO_ANNUNCIO = ?) ;", arrayOf(username))
         return getAnnuncioFromCursor(cursor)
     }
 
@@ -172,6 +172,13 @@ class dbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, nu
     fun eliminaAnnuncio(id: String) {
         val db = this.readableDatabase
         db.delete(TABLE_NAME_ANNUNCIO, "$ID_ANNUNCIO = ?", arrayOf(id))
+    }
+
+    fun getAnnunciPersonali(): ArrayList<Annuncio> {
+        val db = this.readableDatabase
+        val username = Utility().getUsername(context)
+        val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME_ANNUNCIO WHERE $PROPRIETARIO_ANNUNCIO = ?", arrayOf(username))
+        return getAnnuncioFromCursor(cursor)
     }
 
 }

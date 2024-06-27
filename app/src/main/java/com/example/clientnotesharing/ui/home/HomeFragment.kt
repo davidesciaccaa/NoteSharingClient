@@ -15,7 +15,7 @@ import com.example.clientnotesharing.NotesApi
 import com.example.clientnotesharing.adapter.MyAdapter
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.databinding.FragmentHomeBinding
-import com.example.clientnotesharing.dbLocale.dbHelper
+import com.example.clientnotesharing.dbLocale.DbHelper
 import com.example.clientnotesharing.util.Utility
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -36,7 +36,7 @@ class HomeFragment: Fragment(){
         val homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        val dbLocal = dbHelper(requireContext())
+        val dbLocal = DbHelper(requireContext())
         var listaAnnunci: ArrayList<Annuncio> = ArrayList()
         val adapter = MyAdapter(requireContext(), fetchAnnunciFromLocalDb())
         val commandiAnnunci = CommandiAnnunciListView(requireContext())
@@ -82,11 +82,11 @@ class HomeFragment: Fragment(){
     }
 
     private fun fetchAnnunciFromLocalDb(): ArrayList<Annuncio> {
-        val dbHelper = dbHelper(requireContext())
+        val dbHelper = DbHelper(requireContext())
         return ArrayList(dbHelper.getAllData("UserTable"))
     }
 
-    private fun fetchAnnunciFromServer(swipeLayout: SwipeRefreshLayout, listaAnnunci: ArrayList<Annuncio>, adapter: MyAdapter, dbLocal: dbHelper): ArrayList<Annuncio> {
+    private fun fetchAnnunciFromServer(swipeLayout: SwipeRefreshLayout, listaAnnunci: ArrayList<Annuncio>, adapter: MyAdapter, dbLocal: DbHelper): ArrayList<Annuncio> {
         (context as? LifecycleOwner)?.lifecycleScope?.launch {
             try {
                 val response = NotesApi.retrofitService.getAnnunci(Utility().getUsername(requireContext()))

@@ -13,12 +13,11 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.clientnotesharing.adapter.MyAdapter
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.data.MaterialeDigitale
 import com.example.clientnotesharing.data.MaterialeFisico
-import com.example.clientnotesharing.dbLocale.dbHelper
+import com.example.clientnotesharing.dbLocale.DbHelper
 import com.example.clientnotesharing.ui.visualizza_materiale.AnnuncioMD
 import com.example.clientnotesharing.ui.visualizza_materiale.AnnuncioMF
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +28,7 @@ import retrofit2.HttpException
 import java.io.IOException
 
 class CommandiAnnunciListView (var context: Context){
-    private val database = dbHelper(context)
+    private val database = DbHelper(context)
 
 
     //recupera dal server i materiali corrispondenti all'annuncio selezionato (preso in input) ed invia/apre le classi corrispondenti

@@ -6,17 +6,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.clientnotesharing.CommandiAnnunciListView
 import com.example.clientnotesharing.NotesApi
-import com.example.clientnotesharing.R
 import com.example.clientnotesharing.adapter.PersonaliAdapter
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.databinding.FragmentPersonaliBinding
-import com.example.clientnotesharing.dbLocale.dbHelper
+import com.example.clientnotesharing.dbLocale.DbHelper
 import kotlinx.coroutines.launch
 
 class AnnunciPersonaliFragment : Fragment() {
@@ -35,7 +33,7 @@ class AnnunciPersonaliFragment : Fragment() {
         _binding = FragmentPersonaliBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val dbLocal = dbHelper(requireContext())
+        val dbLocal = DbHelper(requireContext())
         // Setup SwipeRefreshLayout
         val swipeLayout = binding.swipeLayout
         swipeLayout.setOnRefreshListener {
@@ -65,7 +63,7 @@ class AnnunciPersonaliFragment : Fragment() {
         return root
     }
 
-    private fun fetchAnnunciFromRemoteServer(swipeLayout: SwipeRefreshLayout, dbLocal: dbHelper): ArrayList<Annuncio> {
+    private fun fetchAnnunciFromRemoteServer(swipeLayout: SwipeRefreshLayout, dbLocal: DbHelper): ArrayList<Annuncio> {
         swipeLayout.isRefreshing = true // Start refreshing animation
 
         lifecycleScope.launch {
@@ -103,8 +101,8 @@ class AnnunciPersonaliFragment : Fragment() {
 
 
     private fun fetchAnnunciFromLocalDb(): ArrayList<Annuncio> {
-        val dbHelper = dbHelper(requireContext())
-        return ArrayList(dbHelper.getAllData("UserTable"))
+        val dbHelper = DbHelper(requireContext())
+        return ArrayList(dbHelper.getAnnunciPersonali())
     }
 
     private fun getUsername(): String {

@@ -8,17 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.Button
-import android.widget.Filter
-import android.widget.Filterable
 import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.example.clientnotesharing.NotesApi
 import com.example.clientnotesharing.R
 import com.example.clientnotesharing.data.Annuncio
-import com.example.clientnotesharing.dbLocale.dbHelper
+import com.example.clientnotesharing.dbLocale.DbHelper
 import kotlinx.coroutines.launch
-import java.util.Locale
 
 class PersonaliAdapter(private val context: Context, private var filteredAnnunciList: ArrayList<Annuncio>) : BaseAdapter() {
 
@@ -72,7 +69,7 @@ class PersonaliAdapter(private val context: Context, private var filteredAnnunci
                 }
             }
             //aggiorno lo stato del db locale
-            val db = dbHelper(context)
+            val db = DbHelper(context)
             db.eliminaAnnuncio(annuncio.id)
         }
         

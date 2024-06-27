@@ -15,7 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.clientnotesharing.NotesApi
 import com.example.clientnotesharing.R
 import com.example.clientnotesharing.data.Annuncio
-import com.example.clientnotesharing.dbLocale.dbHelper
+import com.example.clientnotesharing.dbLocale.DbHelper
 import kotlinx.coroutines.launch
 import java.util.Locale
 class MyAdapter(private val context: Context, private var filteredAnnunciList: ArrayList<Annuncio>) : BaseAdapter(), Filterable {
@@ -44,7 +44,6 @@ class MyAdapter(private val context: Context, private var filteredAnnunciList: A
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         val view: View
         val viewHolder: ViewHolder
-
         if (convertView == null) {
             val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             view = inflater.inflate(R.layout.listlayout, parent, false)
@@ -54,7 +53,6 @@ class MyAdapter(private val context: Context, private var filteredAnnunciList: A
             view = convertView
             viewHolder = view.tag as ViewHolder
         }
-
         val btnPreferiti = viewHolder.favouritesButton
         var annuncio = filteredAnnunciList[position]
         viewHolder.titleTextView.text = annuncio.titolo
@@ -78,7 +76,7 @@ class MyAdapter(private val context: Context, private var filteredAnnunciList: A
                     }
                 }
                 //aggiorno lo stato del dblocale
-                val db = dbHelper(context)
+                val db = DbHelper(context)
                 db.setPreferiti(annuncio, true)
                 //aggiorno anche qua lo stato
                 annuncio.preferito = true
@@ -96,7 +94,7 @@ class MyAdapter(private val context: Context, private var filteredAnnunciList: A
                     }
                 }
                 //aggiorno lo stato del db locale
-                val db = dbHelper(context)
+                val db = DbHelper(context)
                 db.setPreferiti(annuncio, false)
                 //aggiorno anche qua lo stato
                 annuncio.preferito = false
@@ -127,7 +125,6 @@ class MyAdapter(private val context: Context, private var filteredAnnunciList: A
                 }
                 return filterResults
             }
-
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
                 filteredAnnunciList = results?.values as ArrayList<Annuncio>
                 notifyDataSetChanged()
