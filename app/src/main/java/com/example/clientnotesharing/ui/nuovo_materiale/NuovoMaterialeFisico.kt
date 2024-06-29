@@ -56,14 +56,14 @@ class NuovoMaterialeFisico: AppCompatActivity() {
 
         buttonConferma.setOnClickListener{
             if (
-                editTextNumberAnnoMF.text.toString().isNotEmpty() &&
-                multiLineDescrizioneMF.text.toString().isNotEmpty() &&
-                editTextNumberDecimalCostoMF.text.toString().isNotEmpty() &&
-                editTextNumberNumeroCivico.text.toString().isNotEmpty() &&
-                editTextViaRitiro.text.toString().isNotEmpty() &&
-                editTextProvinciaRitiro.text.toString().isNotEmpty() &&
-                editTextComuneRitiro.text.toString().isNotEmpty() &&
-                editTextNumberCAP.text.toString().isNotEmpty() &&
+                editTextNumberAnnoMF.text.toString().isNotBlank() &&
+                multiLineDescrizioneMF.text.toString().isNotBlank() &&
+                editTextNumberDecimalCostoMF.text.toString().isNotBlank() &&
+                editTextNumberNumeroCivico.text.toString().isNotBlank() &&
+                editTextViaRitiro.text.toString().isNotBlank() &&
+                editTextProvinciaRitiro.text.toString().isNotBlank() &&
+                editTextComuneRitiro.text.toString().isNotBlank() &&
+                editTextNumberCAP.text.toString().isNotBlank() &&
                 editTextNumberAnnoMF.text.toString().length == 4 &&
                 editTextNumberCAP.text.toString().length == 5
             ) {

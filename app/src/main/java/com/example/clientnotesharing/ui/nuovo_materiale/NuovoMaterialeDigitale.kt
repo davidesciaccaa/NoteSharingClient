@@ -84,8 +84,8 @@ class NuovoMaterialeDigitale: AppCompatActivity() {
         }
         buttonConferma.setOnClickListener{
             if (
-                editTAnno.text.toString().isNotEmpty() &&
-                editMultilineDescr.text.toString().isNotEmpty() &&
+                editTAnno.text.toString().isNotBlank() &&
+                editMultilineDescr.text.toString().isNotBlank() &&
                 nrPdfCaricati > 0 &&
                 editTAnno.text.toString().length == 4
             ) {

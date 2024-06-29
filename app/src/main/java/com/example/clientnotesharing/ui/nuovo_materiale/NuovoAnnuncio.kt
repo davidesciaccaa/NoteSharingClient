@@ -20,17 +20,25 @@ import kotlinx.serialization.json.Json
 import java.time.LocalDate
 import java.util.UUID
 
-class NuovoAnnuncio: AppCompatActivity(), AdapterView.OnItemSelectedListener {
+class NuovoAnnuncio : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private var itemSelez = ""
+    private var areaSelez = ""
+
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        // An item is selected. You can retrieve the selected item using
-        // parent.getItemAtPosition(pos).
-        itemSelez = parent?.getItemAtPosition(position).toString()
+        if (parent?.id == R.id.spinner) {
+            itemSelez = parent.getItemAtPosition(position).toString()
+        } else if (parent?.id == R.id.spinnerArea) {
+            areaSelez = parent.getItemAtPosition(position).toString()
+        }
+
+        // Check if both selections are made
+        checkSelections()
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
-        // Another interface callback.
+        // Handle case where nothing is selected, if needed
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
@@ -48,36 +56,36 @@ class NuovoAnnuncio: AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val buttonConferma = findViewById<Button>(R.id.btnAvanti)
         val buttonCancella = findViewById<Button>(R.id.btnCancella)
         val tvError = findViewById<TextView>(R.id.tvErrore)
-        //buttonConferma.isEnabled = false
+        buttonConferma.isEnabled = false
 
-        // Per lo spinner
         ArrayAdapter.createFromResource(
             this,
             R.array.spinner_options,
             android.R.layout.simple_spinner_item
         ).also { adapter ->
-            // Specify the layout to use when the list of choices appears.
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            // Apply the adapter to the spinner.
             spinner.adapter = adapter
+            // Set default selection
+            spinner.setSelection(0)
+            itemSelez = adapter.getItem(0).toString()
         }
         spinner.onItemSelectedListener = this
 
-        // Per lo spinner area dell'annuncio (scientifica, sportiva, etc)
         ArrayAdapter.createFromResource(
             this,
             R.array.area_spinner_options,
             android.R.layout.simple_spinner_item
         ).also { adapter ->
-            // Specify the layout to use when the list of choices appears.
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            // Apply the adapter to the spinner.
             spinnerArea.adapter = adapter
+            // Set default selection
+            spinnerArea.setSelection(0)
+            areaSelez = adapter.getItem(0).toString()
         }
         spinnerArea.onItemSelectedListener = this
 
-        buttonConferma.setOnClickListener{
-            if (editTextNomeAnnuncio.text.toString().isNotEmpty()) {
+        buttonConferma.setOnClickListener {
+            if (editTextNomeAnnuncio.text.toString().isNotBlank()) {
                 val ID: UUID = UUID.randomUUID()
                 if (itemSelez == "Materiale Fisico") {
                     val nuovoA = Annuncio(
@@ -95,35 +103,37 @@ class NuovoAnnuncio: AppCompatActivity(), AdapterView.OnItemSelectedListener {
                     intent.putExtra("nuovoA", jsonString)
                     startActivity(intent)
                     tvError.text = "" // cosi se si torna indietro il testo di errore non c'è più
-                }else{
-                    if (itemSelez == "Materiale Digitale") {
-                        val nuovoA = Annuncio(
-                            ID.toString(),
-                            editTextNomeAnnuncio.text.toString(),
-                            LocalDate.now().toString(),
-                            false, //è un materiale digitale
-                            getUsername(),
-                            spinnerArea.selectedItemPosition,
-                            false
-                        )
+                } else if (itemSelez == "Materiale Digitale") {
+                    val nuovoA = Annuncio(
+                        ID.toString(),
+                        editTextNomeAnnuncio.text.toString(),
+                        LocalDate.now().toString(),
+                        false, //è un materiale digitale
+                        getUsername(),
+                        spinnerArea.selectedItemPosition,
+                        false
+                    )
 
-                        val intent = Intent(this, NuovoMaterialeDigitale::class.java)
-                        val jsonString = Json.encodeToString(Annuncio.serializer(), nuovoA)
-                        intent.putExtra("nuovoA", jsonString)
-                        startActivity(intent)
-                        tvError.text = "" // cosi se si torna indietro il testo di errore non c'è più
-                    }
+                    val intent = Intent(this, NuovoMaterialeDigitale::class.java)
+                    val jsonString = Json.encodeToString(Annuncio.serializer(), nuovoA)
+                    intent.putExtra("nuovoA", jsonString)
+                    startActivity(intent)
+                    tvError.text = "" // cosi se si torna indietro il testo di errore non c'è più
                 }
-            }else{
+            } else {
                 tvError.text = resources.getString(R.string.completta_tutti_campi)
             }
         }
-        buttonCancella.setOnClickListener{
+        buttonCancella.setOnClickListener {
             finish()
         }
     }
 
-    //implementazione back arrow button nell'app bar
+    private fun checkSelections() {
+        val buttonConferma = findViewById<Button>(R.id.btnAvanti)
+        buttonConferma.isEnabled = itemSelez.isNotEmpty() && areaSelez.isNotEmpty()
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
@@ -138,5 +148,4 @@ class NuovoAnnuncio: AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
         return sharedPreferences.getString("username", "") ?: ""
     }
-
 }
