@@ -31,8 +31,6 @@ import java.util.UUID
 
 class NuovoMaterialeDigitale: AppCompatActivity() {
     private var nrPdfCaricati = 0
-    //per lo spinner
-    private var itemSelez = ""
     private var nuovoAid: String = ""
     private var datoD: ArrayList<DatoDigitale> = ArrayList<DatoDigitale>()
 
@@ -78,49 +76,56 @@ class NuovoMaterialeDigitale: AppCompatActivity() {
         val buttonConferma = findViewById<Button>(R.id.btnCreaNuovoA)
         val buttonIndietro = findViewById<Button>(R.id.btnIndietro)
         val textViewNrPdf = findViewById<TextView>(R.id.tvNrPdf)
+        val tvError = findViewById<TextView>(R.id.tvErroreMD)
 
         textViewNrPdf.text = getString(R.string.PDFSelezionati, nrPdfCaricati)
         btnSelezionaPDF.setOnClickListener {
             pickPdfFiles.launch("application/pdf")
         }
         buttonConferma.setOnClickListener{
-            val nuovoMD = MaterialeDigitale(
-                nuovoA.id,
-                editTAnno.text.toString().toInt(),
-                editMultilineDescr.text.toString()
-            )
-            lifecycleScope.launch(Dispatchers.IO) {
-                Log.d("TAG", "Coroutine started")
-                try {
-                    if (datoD.isNotEmpty()) {
-                        var responseAnnuncio =NotesApi.retrofitService.uploadAnnuncio(nuovoA)
-                        var responseMaterialeDigitale =NotesApi.retrofitService.uploadMaterialeDigitale(nuovoMD)
-                        var responseListPDF: ArrayList<Response<MessageResponse>> = ArrayList()
-                        for(dato in datoD){
-                            responseListPDF.add(NotesApi.retrofitService.uploadPdf(dato))
-                        }
-                        if (!(responseAnnuncio.isSuccessful && responseMaterialeDigitale.isSuccessful)) {
-                            var check = false
-                            for(response in responseListPDF) {
-                                if(!response.isSuccessful){
-                                    check = true
+            if (
+                editTAnno.text.toString().isNotEmpty() &&
+                editMultilineDescr.text.toString().isNotEmpty() &&
+                nrPdfCaricati > 0 &&
+                editTAnno.text.toString().length == 4
+            ) {
+                val nuovoMD = MaterialeDigitale(
+                    nuovoA.id,
+                    editTAnno.text.toString().toInt(),
+                    editMultilineDescr.text.toString()
+                )
+                lifecycleScope.launch(Dispatchers.IO) {
+                    Log.d("TAG", "Coroutine started")
+                    try {
+                        if (datoD.isNotEmpty()) {
+                            var responseAnnuncio =NotesApi.retrofitService.uploadAnnuncio(nuovoA)
+                            var responseMaterialeDigitale =NotesApi.retrofitService.uploadMaterialeDigitale(nuovoMD)
+                            var responseListPDF: ArrayList<Response<MessageResponse>> = ArrayList()
+                            for(dato in datoD){
+                                responseListPDF.add(NotesApi.retrofitService.uploadPdf(dato))
+                            }
+
+                            if (!(responseAnnuncio.isSuccessful && responseMaterialeDigitale.isSuccessful)) {
+                                var check = false
+                                for(response in responseListPDF) {
+                                    if(!response.isSuccessful){
+                                        check = true
+                                    }
+                                }
+                                if (check) {
+                                    Toast.makeText(this@NuovoMaterialeDigitale, "Failed to retrieve PDF content", Toast.LENGTH_SHORT).show()
                                 }
                             }
-                            if (check) {
-                                Toast.makeText(this@NuovoMaterialeDigitale, "Failed to retrieve PDF content", Toast.LENGTH_SHORT).show()
-                            }
                         }
+                    } catch (e: Exception) {
+                        Log.e("TAG", "Coroutine exception: ${e.message}", e)
+                    } finally {
+                        Log.d("TAG", "Coroutine completed")
                     }
-                } catch (e: Exception) {
-                    Log.e("TAG", "Coroutine exception: ${e.message}", e)
-                } finally {
-                    Log.d("TAG", "Coroutine completed")
                 }
-            }.invokeOnCompletion { closeActivities() }
-
-            //to do: controllo che non sono rimasti vuoti
-
-
+            }else{
+                tvError.text = resources.getString(R.string.completta_tutti_campi)
+            }
         }
         buttonIndietro.setOnClickListener{
             onBackPressedDispatcher.onBackPressed() //clicca il back button

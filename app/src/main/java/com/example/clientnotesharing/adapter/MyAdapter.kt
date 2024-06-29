@@ -81,7 +81,6 @@ class MyAdapter(private val context: Context, private var filteredAnnunciList: A
                             annuncio.preferito = true
                             //cambio l'icona del btn
                             btnPreferiti.setBackgroundResource(R.drawable.favorite_icon)
-                            notifyDataSetChanged() // Refresh the list to reflect changes
                         }
                     } catch (e: Exception) {
                         Log.d("TAG", "MyAdapter ${e.printStackTrace()}")
@@ -102,7 +101,6 @@ class MyAdapter(private val context: Context, private var filteredAnnunciList: A
                             annuncio.preferito = false
                             //cambio l'icona del btn
                             btnPreferiti.setBackgroundResource(R.drawable.heart_plus_icon)
-                            notifyDataSetChanged() // Refresh the list to reflect changes
                         }
                     } catch (e: Exception) {
                         Log.d("TAG", "MyAdapter ${e.printStackTrace()}")

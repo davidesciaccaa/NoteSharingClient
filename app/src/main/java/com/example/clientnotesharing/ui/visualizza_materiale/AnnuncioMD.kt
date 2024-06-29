@@ -85,7 +85,6 @@ class AnnuncioMD : AppCompatActivity() {
     }
     private fun populateUI(annuncioSelezionato: Annuncio, materialeDigitaleAssociato: MaterialeDigitale) {
         findViewById<TextView>(R.id.tvDataAnnuncio).text = annuncioSelezionato.data
-        findViewById<TextView>(R.id.vtDescrizioneAnnuncioMD).text = annuncioSelezionato.descrizioneAnnuncio
         findViewById<TextView>(R.id.tvEmailProprietarioMD).text = "TO DO**************"
         findViewById<TextView>(R.id.tvAnnoRifMD).text = materialeDigitaleAssociato.annoRiferimento.toString()
         findViewById<TextView>(R.id.tvNomeCorsoMD).text = annuncioSelezionato.AreaToString()

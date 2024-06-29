@@ -22,7 +22,7 @@ import retrofit2.http.Part
 import retrofit2.http.Query
 
 
-const val BASE_URL =  "http://192.168.203.90:8080" // "http://10.0.2.2:8080"  //
+const val BASE_URL =  "http://192.168.206.58:8080" // "http://10.0.2.2:8080"  //
 private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .addConverterFactory(

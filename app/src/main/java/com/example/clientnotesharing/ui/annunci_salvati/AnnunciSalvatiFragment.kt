@@ -53,7 +53,7 @@ class AnnunciSalvatiFragment : Fragment() {
 
         binding.listViewAnnunci.adapter = adapter
         binding.listViewAnnunci.setOnItemClickListener { _, _, position, _ ->
-            if(listaAnnunci.isNotEmpty()){
+            if(listaAnnunci.isNotEmpty() && position in listaAnnunci.indices){
                 Log.d("TAG", "A: +++++++++++++++++++++++ ${listaAnnunci.get(0)}")
                 val clickedAnnuncio = listaAnnunci[position]
                 commandiAnnunci.clickMateriale(clickedAnnuncio)

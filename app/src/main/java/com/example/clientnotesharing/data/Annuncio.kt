@@ -7,7 +7,6 @@ data class Annuncio (
     val id: String,
     val titolo: String,
     var data: String, //la data di creazione dell'annuncio
-    var descrizioneAnnuncio: String,
     var tipoMateriale: Boolean, //se true e di tipo materiale fisico
     var idProprietario: String,
     var areaAnnuncio: Int,

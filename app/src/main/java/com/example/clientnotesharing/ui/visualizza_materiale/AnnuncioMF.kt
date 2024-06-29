@@ -34,7 +34,6 @@ class AnnuncioMF: AppCompatActivity() {
         }
 
         val tvDataAnnuncio = findViewById<TextView>(R.id.tvData)
-        val tvDescrAnnuncio = findViewById<TextView>(R.id.tvDescriizioneAnnuncio)
         val tvEmail = findViewById<TextView>(R.id.tvEmailProprietario)
         val tvCosto = findViewById<TextView>(R.id.tvCosto)
         val tvAnnoMateriale = findViewById<TextView>(R.id.tvAnnoRif)
@@ -46,7 +45,6 @@ class AnnuncioMF: AppCompatActivity() {
         //this.title = AnnuncioSelezionato.titolo //cambio il titolo dell'app bar della view aperta
         //Il modo corretto è scrivere il testo in strings, avendo dei placeholder che vengono passati qua:
         tvDataAnnuncio.text = AnnuncioSelezionato.data//LocalDate.now().toString() //data corrente
-        tvDescrAnnuncio.text = AnnuncioSelezionato.descrizioneAnnuncio
         tvEmail.text = getString(R.string.proprietarioEmail, AnnuncioSelezionato.idProprietario) //devo avere 1 metodo che mi recupera la mail di quetso utente ************************
         tvCosto.text = getString(R.string.costo, MaterialeFisicoAssociato.costo)
         tvAnnoMateriale.text = getString(R.string.anno_riferimento, MaterialeFisicoAssociato.annoRiferimento)

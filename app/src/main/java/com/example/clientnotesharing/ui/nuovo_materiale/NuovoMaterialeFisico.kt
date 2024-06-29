@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -51,35 +52,48 @@ class NuovoMaterialeFisico: AppCompatActivity() {
         val editTextNumberCAP = findViewById<EditText>(R.id.editNCAP)
         val buttonConferma = findViewById<Button>(R.id.btnCreaNuovoA)
         val buttonIndietro = findViewById<Button>(R.id.btnIndietro)
+        val tvError = findViewById<TextView>(R.id.tvErroreMF)
 
         buttonConferma.setOnClickListener{
-            val nuovoA = intent.getStringExtra("nuovoA").let {
-                Json.decodeFromString<Annuncio>(it!!)
-            }
-            val nuovoMf = MaterialeFisico(
-                nuovoA.id,
-                editTextNumberDecimalCostoMF.text.toString().toInt(),
-                editTextNumberAnnoMF.text.toString().toInt(),
-                multiLineDescrizioneMF.text.toString(),
-                editTextComuneRitiro.text.toString(),
-                editTextProvinciaRitiro.text.toString(),
-                editTextViaRitiro.text.toString(),
-                editTextNumberNumeroCivico.text.toString().toInt(),
-                editTextNumberCAP.text.toString().toInt()
-                )
-            lifecycleScope.launch {
-                //invio al server
-                var responseAnnuncio = NotesApi.retrofitService.uploadAnnuncio(nuovoA)
-                var responseMaterialeFisico = NotesApi.retrofitService.uploadMaterialeFisico(nuovoMf)
-                if (!(responseAnnuncio.isSuccessful && responseMaterialeFisico.isSuccessful)) {
-                    Toast.makeText(this@NuovoMaterialeFisico, "Failed to retrieve PDF content", Toast.LENGTH_SHORT).show()
+            if (
+                editTextNumberAnnoMF.text.toString().isNotEmpty() &&
+                multiLineDescrizioneMF.text.toString().isNotEmpty() &&
+                editTextNumberDecimalCostoMF.text.toString().isNotEmpty() &&
+                editTextNumberNumeroCivico.text.toString().isNotEmpty() &&
+                editTextViaRitiro.text.toString().isNotEmpty() &&
+                editTextProvinciaRitiro.text.toString().isNotEmpty() &&
+                editTextComuneRitiro.text.toString().isNotEmpty() &&
+                editTextNumberCAP.text.toString().isNotEmpty() &&
+                editTextNumberAnnoMF.text.toString().length == 4 &&
+                editTextNumberCAP.text.toString().length == 5
+            ) {
+                val nuovoA = intent.getStringExtra("nuovoA").let {
+                    Json.decodeFromString<Annuncio>(it!!)
                 }
-                //forse conviene avere exceptions per gestirle qua??
+                val nuovoMf = MaterialeFisico(
+                    nuovoA.id,
+                    editTextNumberDecimalCostoMF.text.toString().toInt(),
+                    editTextNumberAnnoMF.text.toString().toInt(),
+                    multiLineDescrizioneMF.text.toString(),
+                    editTextComuneRitiro.text.toString(),
+                    editTextProvinciaRitiro.text.toString(),
+                    editTextViaRitiro.text.toString(),
+                    editTextNumberNumeroCivico.text.toString().toInt(),
+                    editTextNumberCAP.text.toString().toInt()
+                    )
+                lifecycleScope.launch {
+                    //invio al server
+                    var responseAnnuncio = NotesApi.retrofitService.uploadAnnuncio(nuovoA)
+                    var responseMaterialeFisico = NotesApi.retrofitService.uploadMaterialeFisico(nuovoMf)
+                    if (!(responseAnnuncio.isSuccessful && responseMaterialeFisico.isSuccessful)) {
+                        Toast.makeText(this@NuovoMaterialeFisico, "Failed to retrieve PDF content", Toast.LENGTH_SHORT).show()
+                    }
+                    //forse conviene avere exceptions per gestirle qua??
+                }
+                closeActivities() //chiude la view e va in Home
+            }else{
+                tvError.text = resources.getString(R.string.completta_tutti_campi)
             }
-            closeActivities() //chiude la view e va in Home
-
-        //to do: controllo che non sono rimasti vuoti ***************
-
         }
         buttonIndietro.setOnClickListener{
             onBackPressedDispatcher.onBackPressed() //clicca il back button

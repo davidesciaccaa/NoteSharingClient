@@ -2,6 +2,8 @@ package com.example.clientnotesharing.ui.nuovo_materiale
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
@@ -9,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.clientnotesharing.R
@@ -19,7 +22,6 @@ import java.util.UUID
 
 class NuovoAnnuncio: AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private var itemSelez = ""
-
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         // An item is selected. You can retrieve the selected item using
         // parent.getItemAtPosition(pos).
@@ -41,11 +43,12 @@ class NuovoAnnuncio: AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
 
         val editTextNomeAnnuncio = findViewById<EditText>(R.id.editTextNomeAnnuncio)
-        val editTextMultiLineDescrizioneAnnuncio = findViewById<EditText>(R.id.editTextMultiLineDescrizioneAnnuncio)
         val spinner = findViewById<Spinner>(R.id.spinner)
         val spinnerArea = findViewById<Spinner>(R.id.spinnerArea)
         val buttonConferma = findViewById<Button>(R.id.btnAvanti)
         val buttonCancella = findViewById<Button>(R.id.btnCancella)
+        val tvError = findViewById<TextView>(R.id.tvErrore)
+        //buttonConferma.isEnabled = false
 
         // Per lo spinner
         ArrayAdapter.createFromResource(
@@ -74,42 +77,45 @@ class NuovoAnnuncio: AppCompatActivity(), AdapterView.OnItemSelectedListener {
         spinnerArea.onItemSelectedListener = this
 
         buttonConferma.setOnClickListener{
-            val ID: UUID = UUID.randomUUID()
-
-            if (itemSelez == "Materiale Fisico") {
-                val nuovoA = Annuncio(
-                    ID.toString(),
-                    editTextNomeAnnuncio.text.toString(),
-                    LocalDate.now().toString(),
-                    editTextMultiLineDescrizioneAnnuncio.text.toString(),
-                    true, //è un materiale fisico
-                    getUsername(),
-                    spinnerArea.selectedItemPosition,
-                    false
-                )
-
-                val intent = Intent(this, NuovoMaterialeFisico::class.java)
-                val jsonString = Json.encodeToString(Annuncio.serializer(), nuovoA)
-                intent.putExtra("nuovoA", jsonString)
-                startActivity(intent)
-            }else{
-                if (itemSelez == "Materiale Digitale") {
+            if (editTextNomeAnnuncio.text.toString().isNotEmpty()) {
+                val ID: UUID = UUID.randomUUID()
+                if (itemSelez == "Materiale Fisico") {
                     val nuovoA = Annuncio(
                         ID.toString(),
                         editTextNomeAnnuncio.text.toString(),
                         LocalDate.now().toString(),
-                        editTextMultiLineDescrizioneAnnuncio.text.toString(),
-                        false, //è un materiale digitale
+                        true, //è un materiale fisico
                         getUsername(),
                         spinnerArea.selectedItemPosition,
                         false
                     )
 
-                    val intent = Intent(this, NuovoMaterialeDigitale::class.java)
+                    val intent = Intent(this, NuovoMaterialeFisico::class.java)
                     val jsonString = Json.encodeToString(Annuncio.serializer(), nuovoA)
                     intent.putExtra("nuovoA", jsonString)
                     startActivity(intent)
+                    tvError.text = "" // cosi se si torna indietro il testo di errore non c'è più
+                }else{
+                    if (itemSelez == "Materiale Digitale") {
+                        val nuovoA = Annuncio(
+                            ID.toString(),
+                            editTextNomeAnnuncio.text.toString(),
+                            LocalDate.now().toString(),
+                            false, //è un materiale digitale
+                            getUsername(),
+                            spinnerArea.selectedItemPosition,
+                            false
+                        )
+
+                        val intent = Intent(this, NuovoMaterialeDigitale::class.java)
+                        val jsonString = Json.encodeToString(Annuncio.serializer(), nuovoA)
+                        intent.putExtra("nuovoA", jsonString)
+                        startActivity(intent)
+                        tvError.text = "" // cosi se si torna indietro il testo di errore non c'è più
+                    }
                 }
+            }else{
+                tvError.text = resources.getString(R.string.completta_tutti_campi)
             }
         }
         buttonCancella.setOnClickListener{
