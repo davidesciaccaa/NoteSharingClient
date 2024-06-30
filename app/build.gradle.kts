@@ -87,5 +87,5 @@ dependencies {
 
     implementation ("com.itextpdf:itext7-core:7.1.15")
 
-    implementation("com.tomtom.sdk.maps:map-display:1.6.0")
+    implementation("com.tomtom.sdk.maps:map-display:1.5.0")
 }
