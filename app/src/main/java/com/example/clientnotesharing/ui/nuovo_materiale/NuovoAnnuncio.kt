@@ -85,11 +85,7 @@ class NuovoAnnuncio : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         spinnerArea.onItemSelectedListener = this
 
         buttonConferma.setOnClickListener {
-<<<<<<< HEAD
-            if (editTextNomeAnnuncio.text.toString().isNotEmpty()) {
-=======
             if (editTextNomeAnnuncio.text.toString().isNotBlank()) {
->>>>>>> cc86b6109a21ebb6eda341f1c38d59d5bd7cdc37
                 val ID: UUID = UUID.randomUUID()
                 if (itemSelez == "Materiale Fisico") {
                     val nuovoA = Annuncio(
@@ -152,8 +148,4 @@ class NuovoAnnuncio : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
         return sharedPreferences.getString("username", "") ?: ""
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> cc86b6109a21ebb6eda341f1c38d59d5bd7cdc37

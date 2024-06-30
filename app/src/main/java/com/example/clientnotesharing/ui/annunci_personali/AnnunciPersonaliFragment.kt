@@ -46,9 +46,6 @@ class AnnunciPersonaliFragment : Fragment() {
         binding.listViewAnnunci.setOnItemClickListener { _, _, position, _ ->
             if(listaAnnunci.isNotEmpty()){
                 val clickedAnnuncio = listaAnnunci[position] // è come un get
-
-                Log.e("Click Annuncio", "Error: *******************$position Annuncio $clickedAnnuncio")
-
                 commandiAnnunci.clickMateriale(clickedAnnuncio)
             } else {
                 //Log.d("TAG", "I: Lista vuota")

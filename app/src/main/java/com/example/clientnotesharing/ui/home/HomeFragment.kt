@@ -26,7 +26,6 @@ class HomeFragment: Fragment(){
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private var statoFilter: Boolean = false
-    private lateinit var adapter: MyAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,12 +64,12 @@ class HomeFragment: Fragment(){
         // Add MenuProvider to handle search functionality
         commandiAnnunci.searchListView(requireActivity(), viewLifecycleOwner, adapter)
 
-        //filtraggio per area - possiamo usare i bottoni per cambiare area degli annunci in Home
-        binding.btnSport.setOnClickListener { setFilter("0") }
-        binding.btnGiuridicoeconomico.setOnClickListener { setFilter("1") }
-        binding.btnSanitario.setOnClickListener { setFilter("2") }
-        binding.btnScienze.setOnClickListener { setFilter("3") }
-        binding.btnUmanisticosociale.setOnClickListener { setFilter("4") }
+        // Filtraggio per area - possiamo usare i bottoni per cambiare area degli annunci in Home
+        binding.btnSport.setOnClickListener { setFilter("0", adapter) }
+        binding.btnGiuridicoeconomico.setOnClickListener { setFilter("1", adapter) }
+        binding.btnSanitario.setOnClickListener { setFilter("2", adapter) }
+        binding.btnScienze.setOnClickListener { setFilter("3", adapter) }
+        binding.btnUmanisticosociale.setOnClickListener { setFilter("4", adapter) }
 
 
         return root
@@ -129,7 +128,7 @@ class HomeFragment: Fragment(){
         e.printStackTrace()
     }
     // Filtra (e toglie il filtro) per l'area
-    private fun setFilter(filterValue: String) {
+    private fun setFilter(filterValue: String, adapter: MyAdapter) {
         if (!statoFilter) {
             adapter.filter.filter(filterValue)
             statoFilter = true
