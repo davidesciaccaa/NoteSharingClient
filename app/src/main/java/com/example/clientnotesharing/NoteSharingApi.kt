@@ -23,6 +23,10 @@ import retrofit2.http.Part
 import retrofit2.http.Query
 import android.content.Context
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> cc86b6109a21ebb6eda341f1c38d59d5bd7cdc37
 const val BASE_URL =  "http://192.168.203.90:8080" // "http://10.0.2.2:8080"  //
 private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
