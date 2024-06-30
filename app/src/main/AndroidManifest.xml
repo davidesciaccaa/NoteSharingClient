@@ -38,6 +38,7 @@
             android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".ui.sign_up_login.SignUp"
             android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".ui.sign_up_login.NuovoIP" />
     </application>
 
 </manifest>

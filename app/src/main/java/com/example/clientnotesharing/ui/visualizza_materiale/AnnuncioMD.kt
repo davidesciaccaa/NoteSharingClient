@@ -24,11 +24,15 @@ import kotlinx.serialization.json.Json
 import retrofit2.HttpException
 import java.io.IOException
 import java.io.OutputStream
+import java.util.LinkedList
+import java.util.Queue
 
 class AnnuncioMD : AppCompatActivity() {
 
     private lateinit var createDocumentLauncher: ActivityResultLauncher<Intent>
     private lateinit var arrayBytesFile: ByteArray
+    private val pdfCreationQueue: Queue<DatoDigitale> = LinkedList()
+    private var isCreatingDocument = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -43,8 +47,10 @@ class AnnuncioMD : AppCompatActivity() {
                     if (::arrayBytesFile.isInitialized) {
                         // Call your method to write bytes to document
                         writeBytesToDocument(uri, arrayBytesFile)
+                        processNextInQueue()
                     } else {
                         Toast.makeText(this, "Failed to retrieve PDF content", Toast.LENGTH_SHORT).show()
+                        processNextInQueue()
 
                         /*
 
@@ -54,6 +60,7 @@ class AnnuncioMD : AppCompatActivity() {
                 }
             } else {
                 Toast.makeText(this, "PDF creation canceled", Toast.LENGTH_SHORT).show()
+                processNextInQueue()
             }
         }
         handleIntentExtras()
@@ -99,12 +106,21 @@ class AnnuncioMD : AppCompatActivity() {
     private suspend fun downloadPDFs(annuncioId: String) {
         val listaDatiDigitali = fetchDatoDigitale(annuncioId)
         if (listaDatiDigitali.isNotEmpty()) {
-            for (datoDigitale in listaDatiDigitali) {
-                arrayBytesFile = datoDigitale.fileBytes
-                createPdfDocument(datoDigitale.fileName)
+            pdfCreationQueue.addAll(listaDatiDigitali)
+            if (!isCreatingDocument) {
+                processNextInQueue()
             }
         } else {
             Log.e("AnnuncioMD", "Errore: non è stato ricevuto nulla dal server")
+        }
+    }
+    private fun processNextInQueue() {
+        val nextItem = pdfCreationQueue.poll()
+        if (nextItem != null) {
+            arrayBytesFile = nextItem.fileBytes
+            createPdfDocument(nextItem.fileName)
+        } else {
+            isCreatingDocument = false
         }
     }
 

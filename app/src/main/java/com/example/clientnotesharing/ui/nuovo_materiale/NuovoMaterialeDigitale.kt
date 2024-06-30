@@ -9,11 +9,13 @@ import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.lifecycleScope
 import com.example.clientnotesharing.MainActivity
 import com.example.clientnotesharing.NotesApi
@@ -77,12 +79,14 @@ class NuovoMaterialeDigitale: AppCompatActivity() {
         val buttonIndietro = findViewById<Button>(R.id.btnIndietro)
         val textViewNrPdf = findViewById<TextView>(R.id.tvNrPdf)
         val tvError = findViewById<TextView>(R.id.tvErroreMD)
+        val tvAttesaPdf = findViewById<TextView>(R.id.tvAttesaPdf)
 
         textViewNrPdf.text = getString(R.string.PDFSelezionati, nrPdfCaricati)
         btnSelezionaPDF.setOnClickListener {
             pickPdfFiles.launch("application/pdf")
         }
         buttonConferma.setOnClickListener{
+            tvAttesaPdf.text = resources.getString(R.string.attendi_caricamento)
             if (
                 editTAnno.text.toString().isNotEmpty() &&
                 editMultilineDescr.text.toString().isNotEmpty() &&
@@ -122,6 +126,7 @@ class NuovoMaterialeDigitale: AppCompatActivity() {
                     } finally {
                         Log.d("TAG", "Coroutine completed")
                     }
+                    closeActivities()
                 }
             }else{
                 tvError.text = resources.getString(R.string.completta_tutti_campi)

@@ -34,12 +34,25 @@ class Login: AppCompatActivity() {
         val btnSignupGoogle = findViewById<Button>(R.id.btn_signupGoogle)
 
         btnLogin.setOnClickListener {
+            //NotesApi.init(this)
+            //Controllo login Admin (per modificare l'ip)
             var resultLogin: Response<MessageResponse>? = null
             lifecycleScope.launch {
                 try {
                     resultLogin = NotesApi.retrofitService.uploadLogin(
                         UserSession(editTextUsername.text.toString(), editTextPassword.text.toString())
                     )
+                    if (resultLogin != null && resultLogin?.isSuccessful == true) {
+                        val responseBody = resultLogin!!.body()
+                        if (responseBody != null && responseBody.message == "Login successful") {
+                            saveLoginState(editTextUsername.text.toString())
+                            redirectToMainActivity()
+                        } else {
+                            tvErroreLogin.text = "Credenziali errate."
+                        }
+                    } else {
+                        tvErroreLogin.text = "Credenziali errate."
+                    }
                 } catch (e: HttpException) {
                     Log.e("LoginActivity", "HTTP Exception: ${e.message}")
                     e.printStackTrace()
@@ -50,19 +63,8 @@ class Login: AppCompatActivity() {
                     Log.e("LoginActivity", "Exception: ${e.message}")
                     e.printStackTrace()
                 }
-            }.invokeOnCompletion {
-                if (resultLogin != null && resultLogin?.isSuccessful == true) {
-                    val responseBody = resultLogin!!.body()
-                    if (responseBody != null && responseBody.message == "Login successful") {
-                        saveLoginState(editTextUsername.text.toString())
-                        redirectToMainActivity()
-                    } else {
-                        tvErroreLogin.text = "Credenziali errate."
-                    }
-                } else {
-                    tvErroreLogin.text = "Credenziali errate."
-                }
             }
+
         }
 
         btnSignup.setOnClickListener{

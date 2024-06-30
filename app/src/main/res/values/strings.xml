@@ -76,4 +76,5 @@
     <string name="areaSanitaria">Area Sanitaria</string>
     <string name="areaScienzeUmaneSociali">Area Scienze Umane-Sociali</string>
     <string name="completta_tutti_campi">Controlla che tutti i dati inseriti sono corretti</string>
+    <string name="attendi_caricamento">Attendi il caricamento dei file</string>
 </resources>

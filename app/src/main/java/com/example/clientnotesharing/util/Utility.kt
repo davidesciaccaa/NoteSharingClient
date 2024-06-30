@@ -1,7 +1,7 @@
 package com.example.clientnotesharing.util
 
 import android.content.Context
-import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.appcompat.app.AppCompatActivity
 
 class Utility {
 
