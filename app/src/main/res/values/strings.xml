@@ -77,4 +77,11 @@
     <string name="areaScienzeUmaneSociali">Area Scienze Umane-Sociali</string>
     <string name="completta_tutti_campi">Controlla che tutti i dati inseriti sono corretti</string>
     <string name="attendi_caricamento">Attendi il caricamento dei file</string>
+    <string name="logout">Log Out</string>
+    <string name="cambiopsw">Cambio password</string>
+    <string name="hello_user">Ciao %1$s</string>
+    <string name="old_psw">Password attuale</string>
+    <string name="new_psw">Password nuova</string>
+    <string name="psw_changed_successful">Password cambiata con successo</string>
+    <string name="psw_not_changed">Errore - Password non cambiata</string>
 </resources>

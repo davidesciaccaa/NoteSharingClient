@@ -22,6 +22,7 @@ import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Query
 import android.content.Context
+import com.example.clientnotesharing.data.CambioPasswordRequest
 
 const val BASE_URL =  "http://192.168.203.90:8080" // "http://10.0.2.2:8080"  //
 private val retrofit = Retrofit.Builder()
@@ -68,7 +69,8 @@ interface NoteSharingApi{
     suspend fun uploadLogin(@Body userSession: UserSession): Response<MessageResponse>
     @POST("UserSignUp")
     suspend fun uploadSignUp(@Body persona: Persona): Response<MessageResponse>
-
+    @POST("CambioPassword")
+    suspend fun cambioPsw(@Body dati: CambioPasswordRequest): Response<MessageResponse>
 }
 
 /*
