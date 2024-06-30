@@ -2,7 +2,6 @@ package com.example.clientnotesharing.ui.visualizza_materiale
 
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.TableLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +9,9 @@ import com.example.clientnotesharing.R
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.data.MaterialeFisico
 import com.google.android.gms.maps.MapView
+import com.tomtom.sdk.map.display.MapOptions
+import com.tomtom.sdk.map.display.TomTomMap
+import com.tomtom.sdk.map.display.ui.MapFragment
 import kotlinx.serialization.json.Json
 
 
@@ -40,7 +42,17 @@ class AnnuncioMF: AppCompatActivity() {
         val tvDescrMateriale = findViewById<TextView>(R.id.tvDescMateriale)
         val tvCorso = findViewById<TextView>(R.id.tvCorso)
         val tvIndirizzo = findViewById<TextView>(R.id.tvIndirizzo)
-        val map = findViewById<MapView>(R.id.mapView)
+        //val map = findViewById<MapView>(R.id.map_fragment)
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment) as? MapFragment
+//        val mapOptions = MapOptions(mapKey = "lRQwcMyFY7tTIhvMG8GWArsPPGCaZz6b")
+//        val mapFragment = MapFragment.newInstance(mapOptions)
+//        supportFragmentManager.beginTransaction()
+//            .replace(R.id.map_container, mapFragment)
+//            .commit()
+//        mapFragment.getMapAsync { tomtomMap: TomTomMap ->
+//            // Your code goes here
+//        }
+
 
         //this.title = AnnuncioSelezionato.titolo //cambio il titolo dell'app bar della view aperta
         //Il modo corretto è scrivere il testo in strings, avendo dei placeholder che vengono passati qua:
@@ -51,6 +63,7 @@ class AnnuncioMF: AppCompatActivity() {
         tvDescrMateriale.text = MaterialeFisicoAssociato.descrizioneMateriale
         tvCorso.text = getString(R.string.corso_riferimento, AnnuncioSelezionato.AreaToString())
         tvIndirizzo.text = getString(R.string.indirizzo_ritiro, MaterialeFisicoAssociato.provincia, MaterialeFisicoAssociato.comune, MaterialeFisicoAssociato.via, MaterialeFisicoAssociato.numeroCivico)
+
 
     }
     //implementazione back arrow button nell'app bar

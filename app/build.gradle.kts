@@ -4,7 +4,7 @@ plugins {
     //id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
     kotlin("plugin.serialization") version "1.8.10"
 }
-
+val tomtomApiKey: String by project
 android {
     namespace = "com.example.clientnotesharing"
     compileSdk = 34
@@ -37,6 +37,13 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
+    }
+    buildTypes.configureEach {
+        buildConfigField("String", "TOMTOM_API_KEY", "\"$tomtomApiKey\"")
+    }
+    packaging {
+        jniLibs.pickFirsts.add("lib/**/libc++_shared.so")
     }
 }
 
@@ -79,4 +86,6 @@ dependencies {
     implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
     implementation ("com.itextpdf:itext7-core:7.1.15")
+
+    implementation("com.tomtom.sdk.maps:map-display:1.6.0")
 }

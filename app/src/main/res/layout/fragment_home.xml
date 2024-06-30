@@ -35,49 +35,49 @@
                         android:id="@+id/btn_scienze"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="@string/areaScientifica"
-                        android:layout_marginEnd="8dp"
                         android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"/>
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="@string/areaScientifica" />
 
                     <Button
                         android:id="@+id/btn_sport"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="@string/areaSportiva"
                         android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
                         android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"/>
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="@string/areaSportiva" />
 
                     <Button
                         android:id="@+id/btn_giuridicoeconomico"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="@string/areaGiuridicoEconomica"
                         android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
                         android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"/>
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="@string/areaGiuridicoEconomica" />
 
                     <Button
                         android:id="@+id/btn_sanitario"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="@string/areaSanitaria"
                         android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
                         android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"/>
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="@string/areaSanitaria" />
 
                     <Button
                         android:id="@+id/btn_umanisticosociale"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="@string/areaScienzeUmaneSociali"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"/>
+                        android:layout_marginBottom="8dp"
+                        android:text="@string/areaScienzeUmaneSociali" />
 
                 </LinearLayout>
 
