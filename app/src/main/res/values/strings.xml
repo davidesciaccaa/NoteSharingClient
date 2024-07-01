@@ -84,4 +84,5 @@
     <string name="new_psw">Password nuova</string>
     <string name="psw_changed_successful">Password cambiata con successo</string>
     <string name="psw_not_changed">Errore - Password non cambiata</string>
+    <string name="apri_mappa">Apri mappa</string>
 </resources>
