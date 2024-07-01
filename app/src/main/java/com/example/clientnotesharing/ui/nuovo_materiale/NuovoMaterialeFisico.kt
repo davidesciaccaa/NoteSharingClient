@@ -1,6 +1,8 @@
 package com.example.clientnotesharing.ui.nuovo_materiale
 
 import android.content.Intent
+import android.location.Geocoder
+import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Button
@@ -8,6 +10,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.clientnotesharing.MainActivity
@@ -17,6 +20,8 @@ import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.data.MaterialeFisico
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
+import org.intellij.lang.annotations.Language
+import java.util.Locale
 
 class NuovoMaterialeFisico: AppCompatActivity() {
     //per lo spinner
@@ -66,6 +71,7 @@ class NuovoMaterialeFisico: AppCompatActivity() {
                 editTextNumberCAP.text.toString().isNotBlank() &&
                 editTextNumberAnnoMF.text.toString().length == 4 &&
                 editTextNumberCAP.text.toString().length == 5
+                //&& indirizzoInCoordinate()
             ) {
                 val nuovoA = intent.getStringExtra("nuovoA").let {
                     Json.decodeFromString<Annuncio>(it!!)
@@ -99,6 +105,13 @@ class NuovoMaterialeFisico: AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed() //clicca il back button
         }
     }
+
+//    @RequiresApi(Build.VERSION_CODES.TIRAMISU) //almeno android 13
+//    private fun indirizzoInCoordinate(nrCivico: Int, via: String, ): Boolean {
+//        Geocoder(this@NuovoMaterialeFisico, Locale.ITALY).getFromLocationName("Varese, viale Aguggiari 169",1, Geocoder.GeocodeListener {  })
+//        return false
+//    }
+
     private fun closeActivities() {
         // Start the new activity with flags to clear the back stack
         val intent = Intent(this, MainActivity::class.java)

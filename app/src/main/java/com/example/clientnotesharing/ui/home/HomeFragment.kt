@@ -1,17 +1,25 @@
 package com.example.clientnotesharing.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.clientnotesharing.CommandiAnnunciListView
 import com.example.clientnotesharing.NotesApi
+import com.example.clientnotesharing.R
+import com.example.clientnotesharing.ui.settings.SettingsActivity
 import com.example.clientnotesharing.adapter.MyAdapter
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.databinding.FragmentHomeBinding
@@ -39,6 +47,7 @@ class HomeFragment: Fragment(){
         var listaAnnunci: ArrayList<Annuncio> = ArrayList()
         val adapter = MyAdapter(requireContext(), fetchAnnunciFromLocalDb())
         val commandiAnnunci = CommandiAnnunciListView(requireContext())
+
 
         //Swipe for refresh
         val swipeLayout = binding.swipeLayout
@@ -71,8 +80,28 @@ class HomeFragment: Fragment(){
         binding.btnScienze.setOnClickListener { setFilter("3", adapter) }
         binding.btnUmanisticosociale.setOnClickListener { setFilter("4", adapter) }
 
-
+        addSettingsBtn() //Per avere il bottone di settings
         return root
+    }
+    fun addSettingsBtn(){
+        // Add MenuProvider to handle search functionality
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.settings_menu, menu)
+
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.action_settings -> {
+                        val intent = Intent(requireContext(), SettingsActivity::class.java)
+                        startActivity(intent)
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     override fun onDestroyView() {

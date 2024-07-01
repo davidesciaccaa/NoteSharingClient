@@ -88,4 +88,10 @@ dependencies {
     implementation ("com.itextpdf:itext7-core:7.1.15")
 
     implementation("com.tomtom.sdk.maps:map-display:1.5.0")
+    // https://mvnrepository.com/artifact/com.tomtom.speedtools/geo
+    //implementation("com.tomtom.speedtools:geo:3.4.4")
+    //implementation("com.tomtom.sdk.location:3.0.0")
+    implementation("com.tomtom.sdk.location:provider-android:1.6.0")
+
+
 }

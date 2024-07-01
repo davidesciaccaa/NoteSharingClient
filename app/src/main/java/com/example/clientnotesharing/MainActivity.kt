@@ -2,6 +2,8 @@ package com.example.clientnotesharing
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -56,5 +58,10 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
         finish() // così non rimane nel backstack
     }
+
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.settings_menu, menu)
+//        return true
+//    }
 
 }

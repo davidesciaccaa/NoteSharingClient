@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:usesCleartextTraffic="true"
@@ -37,6 +38,8 @@
         <activity android:name=".ui.sign_up_login.Login"
             android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".ui.sign_up_login.SignUp"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".ui.settings.SettingsActivity"
             android:windowSoftInputMode="adjustPan"/>
     </application>
 

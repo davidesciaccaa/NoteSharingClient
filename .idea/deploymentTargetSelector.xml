@@ -2,12 +2,24 @@
 <project version="4">
   <component name="deploymentTargetSelector">
     <selectionStates>
+      <SelectionState runConfigName="app.unitTest">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="app.androidTest">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="app.main">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-06-30T20:34:34.542094800Z">
+      </SelectionState>
+      <SelectionState runConfigName="NoteSharingClient.ClientNoteSharing.app">
+        <option name="selectionMode" value="DROPDOWN" />
+        <DropdownSelection timestamp="2024-07-01T12:45:00.471602900Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\david\.android\avd\Pixel_7_Pro_API_30.avd" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=28091FDH200HJV" />
             </handle>
           </Target>
         </DropdownSelection>
