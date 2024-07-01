@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
     private fun redirectToLogin() {
         val intent = Intent(this, Login::class.java)
         startActivity(intent)
-        finish() //così non rimane nel backstack
+        finish() // così non rimane nel backstack
     }
 
 }

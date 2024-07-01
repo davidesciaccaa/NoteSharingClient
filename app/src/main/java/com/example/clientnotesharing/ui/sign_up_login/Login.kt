@@ -1,10 +1,12 @@
 package com.example.clientnotesharing.ui.sign_up_login
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -19,19 +21,19 @@ import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
 
+
 class Login: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login)      //prende il login.xml della cartella res/layout
-
         val editTextUsername = findViewById<EditText>(R.id.editT_username)
         val editTextPassword = findViewById<EditText>(R.id.editT_password)
         val btnLogin = findViewById<Button>(R.id.btn_login)
         val tvErroreLogin = findViewById<TextView>(R.id.tv_erroreLogin)
         val btnSignup = findViewById<Button>(R.id.btn_signup)
-        val btnSignupGoogle = findViewById<Button>(R.id.btn_signupGoogle)
+        setLoginImage()
 
         btnLogin.setOnClickListener {
             //NotesApi.init(this)
@@ -85,5 +87,13 @@ class Login: AppCompatActivity() {
         startActivity(intent)
         finish()
     }
-
+    private fun setLoginImage(){
+        val imageView = findViewById<ImageView>(R.id.imageView)
+        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            imageView.setImageResource(R.drawable.image_login_dark_mode)
+        } else {
+            imageView.setImageResource(R.drawable.image_login_light_mode)
+        }
+    }
 }
