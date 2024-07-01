@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ClientNoteSharing</string>
+    <string name="app_name">NoteSharing</string>
     <string name="title_home">Home</string>
     <string name="title_annunci_salvati">Preferiti</string>
     <string name="title_annunci_personali">Personali</string>
