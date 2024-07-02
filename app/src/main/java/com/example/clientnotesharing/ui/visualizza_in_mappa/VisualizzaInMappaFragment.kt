@@ -1,6 +1,7 @@
 package com.example.clientnotesharing.ui.visualizza_in_mappa
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -15,6 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.example.clientnotesharing.CommandiAnnunciListView
 import com.example.clientnotesharing.NotesApi
 import com.example.clientnotesharing.R
 import com.example.clientnotesharing.databinding.FragmentVisualizzaMappaBinding
@@ -34,7 +36,16 @@ import com.tomtom.sdk.map.display.ui.MapFragment
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 import com.example.clientnotesharing.data.Annuncio
+import com.example.clientnotesharing.data.MaterialeFisico
 import com.example.clientnotesharing.dbLocale.DbHelper
+import com.example.clientnotesharing.ui.nuovo_materiale.NuovoMaterialeDigitale
+import com.example.clientnotesharing.ui.visualizza_materiale.AnnuncioMF
+import com.itextpdf.kernel.colors.Lab
+import com.tomtom.sdk.map.display.marker.Label
+import com.tomtom.sdk.map.display.marker.Marker
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
 
 class VisualizzaInMappaFragment : Fragment() {
     private val LOCATION_PERMISSION_REQUEST_CODE = 100
@@ -95,10 +106,10 @@ class VisualizzaInMappaFragment : Fragment() {
                         }
                     androidLocationProvider.addOnLocationUpdateListener(onLocationUpdateListener)
                     androidLocationProvider.removeOnLocationUpdateListener(onLocationUpdateListener)
-
+                    val listaAnnunci = DbHelper(requireContext()).getAllDataEccettoPersonali("UserTable")
                     binding.btnRefresh.setOnClickListener{
                         // Aggiunge marker per ogni annuncio esistente, dalla internal var di HomeFragment
-                        for (annuncio in DbHelper(requireContext()).getAllDataEccettoPersonali("UserTable")) {
+                        for (annuncio in listaAnnunci) {
                             // Controlliamo se è un materiale fisico, se è true lo è (è boolean)
                             if (annuncio.tipoMateriale) {
                                 lifecycleScope.launch {
@@ -114,6 +125,7 @@ class VisualizzaInMappaFragment : Fragment() {
                                                 MarkerOptions(
                                                     coordinate = geoPoint,
                                                     pinImage = ImageFactory.fromResource(R.drawable.map_pin),
+                                                    tag = annuncio.id
                                                 )
                                             tomtomMap.addMarker(markerOptions)
                                             Log.e("HomeFragment", "Fine")
@@ -123,6 +135,18 @@ class VisualizzaInMappaFragment : Fragment() {
                                         }
                                     }
                                 }
+                            }
+                        }
+                    }
+
+                    //Quando si fa click su un Marker nella mappa
+                    tomtomMap.addMarkerClickListener { marker: Marker ->
+                        val idAnnuncio = marker.tag
+                        //Recupero dal server
+                        if (idAnnuncio!=null) {
+                            val annuncio = trovaAnnuncioPerId(listaAnnunci, idAnnuncio)
+                            if (annuncio != null) {
+                                CommandiAnnunciListView(requireContext()).clickMateriale(annuncio)
                             }
                         }
                     }
@@ -136,4 +160,8 @@ class VisualizzaInMappaFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+    fun trovaAnnuncioPerId(listaAnnunci: ArrayList<Annuncio>, idDaCercare: String): Annuncio? {
+        return listaAnnunci.find { it.id == idDaCercare }
+    }
+
 }
