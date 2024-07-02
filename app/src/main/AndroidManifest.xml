@@ -41,7 +41,7 @@
             android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".ui.settings.SettingsActivity"
             android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".ui.map.MappaAnnuncio"/>
+        <activity android:name=".ui.visualizza_materiale.MappaAnnuncio"/>
     </application>
 
 </manifest>

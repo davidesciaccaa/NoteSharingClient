@@ -25,8 +25,8 @@
         />
 
     <fragment
-        android:id="@+id/navigation_settings"
-        android:name="com.example.clientnotesharing.ui.settings1.SettingsFragment"
-        android:label="@string/title_impostazioni"
-        tools:layout="@layout/fragment_settings" />
+        android:id="@+id/navigation_visualizza_in_mappa"
+        android:name="com.example.clientnotesharing.ui.visualizza_in_mappa.VisualizzaInMappaFragment"
+        android:label="@string/title_mappa"
+        tools:layout="@layout/fragment_visualizza_in_mappa" />
 </navigation>

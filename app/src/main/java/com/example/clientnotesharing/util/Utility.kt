@@ -2,6 +2,7 @@ package com.example.clientnotesharing.util
 
 import android.content.Context
 import android.location.Geocoder
+import android.location.Geocoder.GeocodeListener
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +24,8 @@ class Utility {
     suspend fun getGeoPointFromAddress(context: Context, address: String): GeoPoint? {
         return withContext(Dispatchers.IO) {
             val geocoder = Geocoder(context, Locale.ITALY)
+
+            //************
             val addresses = geocoder.getFromLocationName(address, 1)
 
             if (addresses?.isNotEmpty() == true) {

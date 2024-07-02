@@ -1,10 +1,10 @@
-package com.example.clientnotesharing.ui.settings1
+package com.example.clientnotesharing.ui.visualizza_in_mappa
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class SettingsViewModel : ViewModel() {
+class VisualizzaInMappaViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is notifications Fragment"

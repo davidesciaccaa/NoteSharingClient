@@ -1,47 +1,19 @@
 package com.example.clientnotesharing.ui.visualizza_materiale
 
 import android.content.Intent
-import android.location.Address
-import android.location.Geocoder
 import android.os.Build
 import android.os.Bundle
-import android.os.HandlerThread
-import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import com.example.clientnotesharing.R
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.data.MaterialeFisico
-import com.example.clientnotesharing.ui.map.MappaAnnuncio
-import com.example.clientnotesharing.ui.settings.SettingsActivity
-import com.google.android.gms.maps.MapView
-import com.tomtom.quantity.Distance
-import com.tomtom.sdk.location.GeoLocation
-import com.tomtom.sdk.map.display.MapOptions
-import com.tomtom.sdk.map.display.TomTomMap
-import com.tomtom.sdk.map.display.image.ImageFactory
-import com.tomtom.sdk.map.display.marker.MarkerOptions
-import com.tomtom.sdk.map.display.ui.MapFragment
-import com.tomtom.sdk.location.GeoPoint
-import com.tomtom.sdk.location.LocationProvider
-import com.tomtom.sdk.location.OnLocationUpdateListener
-import com.tomtom.sdk.location.android.AndroidLocationProvider
-import com.tomtom.sdk.location.android.AndroidLocationProviderConfig
-import com.tomtom.sdk.location.road.SpeedLimit
-import com.tomtom.sdk.map.display.gesture.MapPanningListener
-import com.tomtom.sdk.map.display.location.LocationMarkerOptions
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
-import java.util.Locale
-import kotlin.time.Duration.Companion.milliseconds
 
 
 class AnnuncioMF: AppCompatActivity() {

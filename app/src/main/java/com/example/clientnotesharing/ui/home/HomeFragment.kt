@@ -34,7 +34,7 @@ class HomeFragment: Fragment(){
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private var statoFilter: Boolean = false
-
+    internal var listaAnnunci: ArrayList<Annuncio> = ArrayList()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,10 +44,8 @@ class HomeFragment: Fragment(){
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val dbLocal = DbHelper(requireContext())
-        var listaAnnunci: ArrayList<Annuncio> = ArrayList()
         val adapter = MyAdapter(requireContext(), fetchAnnunciFromLocalDb())
         val commandiAnnunci = CommandiAnnunciListView(requireContext())
-
 
         //Swipe for refresh
         val swipeLayout = binding.swipeLayout
@@ -57,7 +55,6 @@ class HomeFragment: Fragment(){
         }
 
         binding.listViewAnnunci.adapter = adapter
-
         binding.listViewAnnunci.setOnItemClickListener { _, _, position, _ ->
             if(listaAnnunci.isNotEmpty()){
                 val clickedAnnuncio = listaAnnunci[position] // è come un get
@@ -103,22 +100,18 @@ class HomeFragment: Fragment(){
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
     private fun fetchAnnunciFromLocalDb(): ArrayList<Annuncio> {
         val dbHelper = DbHelper(requireContext())
         return ArrayList(dbHelper.getAllDataEccettoPersonali("UserTable"))
     }
-
     private fun fetchAnnunciFromServer(swipeLayout: SwipeRefreshLayout, listaAnnunci: ArrayList<Annuncio>, adapter: MyAdapter, dbLocal: DbHelper): ArrayList<Annuncio> {
         (context as? LifecycleOwner)?.lifecycleScope?.launch {
             try {
                 val response = NotesApi.retrofitService.getAnnunci(Utility().getUsername(requireContext()))
-
                 //uso i dati degli annunci
                 if (response.isSuccessful) {
                     response.body()?.let { annunci ->

@@ -17,8 +17,8 @@
         android:title="@string/title_annunci_personali" />
 
     <item
-        android:id="@+id/navigation_settings"
-        android:icon="@drawable/settings_icon"
-        android:title="@string/title_impostazioni" />
+        android:id="@+id/navigation_visualizza_in_mappa"
+        android:icon="@drawable/location_icon_filled"
+        android:title="@string/title_mappa" />
 
 </menu>

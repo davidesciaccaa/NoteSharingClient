@@ -3,7 +3,7 @@
     <string name="title_home">Home</string>
     <string name="title_annunci_salvati">Preferiti</string>
     <string name="title_annunci_personali">Personali</string>
-    <string name="title_impostazioni">Impostazioni</string>
+    <string name="title_mappa">Mappa</string>
 
     <string-array name="spinner_options">
         <item>Materiale Digitale</item>
@@ -85,4 +85,5 @@
     <string name="psw_changed_successful">Password cambiata con successo</string>
     <string name="psw_not_changed">Errore - Password non cambiata</string>
     <string name="apri_mappa">Apri mappa</string>
+    <string name="aggiornaMappa">Aggiorna la mappa</string>
 </resources>
