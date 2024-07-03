@@ -1,71 +1,67 @@
-package com.example.clientnotesharing.ui.annunci_salvati
+package com.example.clientnotesharing.ui.fragment_bottom_nav_bar
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.clientnotesharing.CommandiAnnunciListView
 import com.example.clientnotesharing.NotesApi
+import com.example.clientnotesharing.util.CommandiAnnunciListView
 import com.example.clientnotesharing.adapter.MyAdapter
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.databinding.FragmentHomeBinding
 import com.example.clientnotesharing.dbLocale.DbHelper
-import kotlinx.coroutines.launch
+import com.example.clientnotesharing.util.Utility
 import retrofit2.HttpException
+import retrofit2.Response
 import java.io.IOException
 
-
+/*
+ * Classe per il fragment che contiene la listView per la visualizzazione degli annunci salvati come preferiti
+ */
 class AnnunciSalvatiFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private var statoFilter: Boolean = false
-    private lateinit var adapter: MyAdapter
+    private var listaAnnunci: ArrayList<Annuncio> = ArrayList()
+    private lateinit var adapter: MyAdapter //Perchè ha bisogno del context e requireContext non puo essere fatto qua
+    private lateinit var dbLocal: DbHelper //Perchè ha bisogno del context e requireContext non puo essere fatto qua
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val dashboardViewModel =
-            ViewModelProvider(this)[AnnunciSalvatiViewModel::class.java]
-
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        val dbLocal = DbHelper(requireContext())
-        var listaAnnunci: ArrayList<Annuncio> = ArrayList()
-        adapter = MyAdapter(requireContext(), fetchAnnunciPreferitiFromLocalDb())
-
         val commandiAnnunci = CommandiAnnunciListView(requireContext())
-        //Swipe for refresh
+        dbLocal = DbHelper(requireContext())
+        adapter= MyAdapter(requireContext(), fetchAnnunciPreferitiFromLocalDb()) // inizializzazione adapter con i dati del db locale
+
+        // SwipeRefreshLayout
         var swipeLayout = binding.swipeLayout
         swipeLayout.setOnRefreshListener {
-            //listaAnnunci = commandiAnnunci.fetchAnnunciPreferitiFromServer(getUsername() ,swipeLayout, listaAnnunci) //aggiorno la lista degli annunci
-            listaAnnunci = fetchAnnunciPreferitiFromServer(getUsername() ,swipeLayout, listaAnnunci, adapter, dbLocal) //aggiorno la lista degli annunci
+            //listaAnnunci = fetchAnnunciPreferitiFromServer(getUsername() ,swipeLayout, listaAnnunci, adapter, dbLocal) // prende i dati dal server e aggiorna la lista
+            listaAnnunci = commandiAnnunci.fetchAnnunciFromServer(swipeLayout, listaAnnunci, ::opDbLocale, ::opServer) // prende i dati dal server e aggiorna la lista
+
         }
 
+        // gestione della listView
         binding.listViewAnnunci.adapter = adapter
-        binding.listViewAnnunci.setOnItemClickListener { _, _, position, _ ->
+        binding.listViewAnnunci.setOnItemClickListener { _, _, position, _ -> // listener per i click degli elementi della listView
             if(listaAnnunci.isNotEmpty() && position in listaAnnunci.indices){
-                Log.d("TAG", "A: +++++++++++++++++++++++ ${listaAnnunci.get(0)}")
-                val clickedAnnuncio = listaAnnunci[position]
-                commandiAnnunci.clickMateriale(clickedAnnuncio)
+                val clickedAnnuncio = listaAnnunci[position] // prendo l'elemento cliccato
+                commandiAnnunci.clickMateriale(clickedAnnuncio) // chiamo il metodo per aprire l'activity corrispondente al materiale
             } else {
                 listaAnnunci = fetchAnnunciPreferitiFromLocalDb() //vengono presi dal db locale
-                Log.d("TAG", "O: +++++++++++++++++++++++ ${listaAnnunci.get(0)}")
                 val clickedAnnuncio = listaAnnunci[position]
                 commandiAnnunci.clickMateriale(clickedAnnuncio)
             }
         }
 
-        // Add MenuProvider to handle search functionality
+        // Gestione della ricerca
         commandiAnnunci.searchListView(requireActivity(), viewLifecycleOwner, adapter)
 
         //filtraggio per area - possiamo usare i bottoni per cambiare area degli annunci in Home
@@ -75,8 +71,20 @@ class AnnunciSalvatiFragment : Fragment() {
         binding.btnScienze.setOnClickListener { setFilter("3") }
         binding.btnUmanisticosociale.setOnClickListener { setFilter("4") }
 
-
         return root
+    }
+
+    // Metodo con le operazioni sul db locale che commandiAnnunci.fetchAnnunciFromServer deve eseguire
+    private fun opDbLocale() {
+        // Aggiungo anche nel db locale
+        dbLocal.insertAnnunci(listaAnnunci)
+        // Aggiorno la listView per visualizzare i nuovi dati
+        adapter.updateData(dbLocal.getAnnunciPreferiti())
+    }
+
+    // Metodo con l'operazioni del server che commandiAnnunci.fetchAnnunciFromServer deve eseguire
+    private suspend fun opServer(): Response<ArrayList<Annuncio>> {
+        return NotesApi.retrofitService.getAnnunciSalvati(Utility().getUsername(requireContext()))
     }
 
     override fun onDestroyView() {
@@ -88,42 +96,7 @@ class AnnunciSalvatiFragment : Fragment() {
         val dbHelper = DbHelper(requireContext())
         return ArrayList(dbHelper.getAnnunciPreferiti())
     }
-    private fun getUsername(): String {
-        val sharedPreferences = requireContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
-        var username = sharedPreferences.getString("username", null)
-        if(username != null){
-            return username
-        }else return ""
-    }
-    fun fetchAnnunciPreferitiFromServer(username:String, swipeLayout: SwipeRefreshLayout, listaAnnunci: ArrayList<Annuncio>, adapter: MyAdapter, dbLocal: DbHelper): ArrayList<Annuncio> {
-        (context as? LifecycleOwner)?.lifecycleScope?.launch {
-            try {
-                val response = NotesApi.retrofitService.getAnnunciSalvati(username)
 
-                //uso i dati degli annunci
-                if (response.isSuccessful) {
-                    response.body()?.let { annunci ->
-                        listaAnnunci.clear()
-                        listaAnnunci.addAll(annunci) //questa la lista contiene tutti i dati degli annunci
-
-                        dbLocal.insertAnnunci(listaAnnunci, "UserFavoritesTable")
-                        adapter.updateData(dbLocal.getAnnunciPreferiti())
-                        //var list = database.getAllData("UserFavoritesTable")
-                        //Log.d("TAG", "I: +++++++++++++++++++++++ ${listaAnnunci.get(0)}")
-
-                    }
-                } else {
-                    Log.e("", "Error: ${response.message()}")
-                }
-            } catch (e: Exception) {
-                handleNetworkException(e)
-            } finally {
-                swipeLayout.isRefreshing = false // Stop the refreshing animation
-            }
-
-        }
-        return listaAnnunci
-    }
     // gestione delle eccezioni
     private fun handleNetworkException(e: Exception) {
         when (e) {

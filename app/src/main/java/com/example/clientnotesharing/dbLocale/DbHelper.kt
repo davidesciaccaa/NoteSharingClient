@@ -8,12 +8,14 @@ import android.database.sqlite.SQLiteOpenHelper
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.util.Utility
 
+/*
+ * Classe helper per il db locale
+ */
 class DbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, null, DATABASEVERSION){
-    companion object { //cosi mettiamo le costanti qua al posto al di fuori della classe
-        //somo inizializzate prima della creazione dell'oggetto
+    companion object {
         private val DATABASENAME = "dbExample"
         private val DATABASEVERSION = 1
-        private val TABLE_NAME_ANNUNCIO = "UserTable" //annunci di tutti gli utenti
+        private val TABLE_NAME_ANNUNCIO = "UserTable"
         private val ID_ANNUNCIO = "id"
         private val TITOLO_ANNUNCIO = "titolo"
         private val DATA_ANNUNCIO = "data"
@@ -24,7 +26,7 @@ class DbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, nu
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
-        //table per tutti gli annunci
+        // creo il db
         db?.execSQL("CREATE TABLE $TABLE_NAME_ANNUNCIO (" +
                 "$ID_ANNUNCIO VARCHAR PRIMARY KEY,"+ //usare l'id degli annunci
                 "$TITOLO_ANNUNCIO VARCHAR,"+
@@ -41,60 +43,71 @@ class DbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, nu
         onCreate(db)
     }
 
-    fun insertAnnunci(lista: ArrayList<Annuncio>, tableName: String){
+    fun deleteDatabase() {
+        context.deleteDatabase(DATABASENAME)
+    }
+
+    // Metodo per inserire un nuovo annuncio nel db locale
+    fun insertAnnunci(lista: ArrayList<Annuncio>){
         val db = this.writableDatabase
         for (annuncio in lista){
-            //val jsonStringAnnuncio = Json.encodeToString(Annuncio.serializer(), annuncio)
             val data = ContentValues()
             data.put(ID_ANNUNCIO, annuncio.id)
             data.put(TITOLO_ANNUNCIO, annuncio.titolo)
             data.put(DATA_ANNUNCIO, annuncio.data)
-            data.put(TIPOMATERIALE_ANNUNCIO, if (annuncio.tipoMateriale) 1 else 0)  // Convert Boolean to Integer
+            data.put(TIPOMATERIALE_ANNUNCIO, if (annuncio.tipoMateriale) 1 else 0)  // Uso un intero perchè sqlite non ha boolean
             data.put(PROPRIETARIO_ANNUNCIO, annuncio.idProprietario)
             data.put(AREA_ANNUNCIO, annuncio.areaAnnuncio)
-            data.put(PREFERITO_ANNUNCIO, if (annuncio.preferito) 1 else 0)  // Convert Boolean to Integer
-            db.insertWithOnConflict(tableName, null, data, SQLiteDatabase.CONFLICT_IGNORE)
+            data.put(PREFERITO_ANNUNCIO, if (annuncio.preferito) 1 else 0) // Uso un intero perchè sqlite non ha boolean
+            db.insertWithOnConflict(TABLE_NAME_ANNUNCIO, null, data, SQLiteDatabase.CONFLICT_IGNORE)
         }
         db.close()
     }
 
-    fun getAllDataEccettoPersonali(tableName: String): ArrayList<Annuncio>{
+    // Metodo che restituisce una lista con tutti gli annunci nel db locale che non appartengono all'utente loggato
+    fun getAllDataEccettoPersonali(): ArrayList<Annuncio>{
         val db = this.readableDatabase
         val username = Utility().getUsername(context)
         val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME_ANNUNCIO WHERE $ID_ANNUNCIO NOT IN (SELECT $ID_ANNUNCIO FROM $TABLE_NAME_ANNUNCIO WHERE $PROPRIETARIO_ANNUNCIO = ?) ;", arrayOf(username))
         return getAnnuncioFromCursor(cursor)
     }
 
+    // Metodo che restituisce tutti gli annunci nel db locale che hanno l'attributo preferito = true
     fun getAnnunciPreferiti(): ArrayList<Annuncio>{
         val db = this.readableDatabase
         val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME_ANNUNCIO WHERE preferito=1", null) //1 sta per true
         return getAnnuncioFromCursor(cursor)
     }
 
-    fun deleteDatabase() {
-        context.deleteDatabase(DATABASENAME)
-    }
-
+    // Metodo che aggiorna l'attributo preferito all'annuncio che prende in input, settandolo a true
     fun setPreferiti(annuncio: Annuncio, preferiti: Boolean) {
         val db = this.writableDatabase
         val data = ContentValues()
         data.put(ID_ANNUNCIO, annuncio.id)
         data.put(TITOLO_ANNUNCIO, annuncio.titolo)
         data.put(DATA_ANNUNCIO, annuncio.data)
-        data.put(TIPOMATERIALE_ANNUNCIO, if (annuncio.tipoMateriale) 1 else 0)  // Convert Boolean to Integer
+        data.put(TIPOMATERIALE_ANNUNCIO, if (annuncio.tipoMateriale) 1 else 0)  // Uso un intero perchè sqlite non ha boolean
         data.put(PROPRIETARIO_ANNUNCIO, annuncio.idProprietario)
         data.put(AREA_ANNUNCIO, annuncio.areaAnnuncio)
         data.put(PREFERITO_ANNUNCIO, if (preferiti) 1 else 0)
         db.update(TABLE_NAME_ANNUNCIO, data, "$ID_ANNUNCIO = ?", arrayOf(annuncio.id) )
     }
 
-    /* fun getAnnuncioById(idA: String):Annuncio {
+    // Metodo che elimina l'annuncio corrispondendte all'id che riceve in input
+    fun eliminaAnnuncio(id: String) {
         val db = this.readableDatabase
-        val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME_ANNUNCIO WHERE $ID_ANNUNCIO= '$idA'", null)
-        return getAnnuncioFromCursor(cursor).get(0)
+        db.delete(TABLE_NAME_ANNUNCIO, "$ID_ANNUNCIO = ?", arrayOf(id))
+    }
 
-    } */
+    // Metodo che restituisce una lista che contiene tutti gli annunci creati dall'utente che sta usando l'app
+    fun getAnnunciPersonali(): ArrayList<Annuncio> {
+        val db = this.readableDatabase
+        val username = Utility().getUsername(context)
+        val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME_ANNUNCIO WHERE $PROPRIETARIO_ANNUNCIO = ?", arrayOf(username))
+        return getAnnuncioFromCursor(cursor)
+    }
 
+    // Metodo privato per convertire i dati del cursore (ricevuto da una query) in una lista di annunci
     private fun getAnnuncioFromCursor(cursor: Cursor): ArrayList<Annuncio>{
         val lista = ArrayList<Annuncio>()
         if (cursor.moveToFirst()) {
@@ -111,47 +124,6 @@ class DbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, nu
         }
         cursor.close()
         return  lista
-    }
-
-    fun getMyData():ArrayList<Annuncio>{
-        var lista = ArrayList<Annuncio>()
-        val db = this.readableDatabase
-        val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME_ANNUNCIO WHERE idProprietarioPersona= ${getUsername()}", null)
-        if(cursor.moveToFirst()){
-            do {
-                do {
-                    val id = cursor.getString(cursor.getColumnIndexOrThrow(ID_ANNUNCIO))
-                    val titolo = cursor.getString(cursor.getColumnIndexOrThrow(TITOLO_ANNUNCIO))
-                    val data = cursor.getString(cursor.getColumnIndexOrThrow(DATA_ANNUNCIO))
-                    val tipoM = cursor.getInt(cursor.getColumnIndexOrThrow(TIPOMATERIALE_ANNUNCIO))
-                    val proprietario = cursor.getString(cursor.getColumnIndexOrThrow(PROPRIETARIO_ANNUNCIO))
-                    val area = cursor.getInt(cursor.getColumnIndexOrThrow(AREA_ANNUNCIO))
-                    val preferito = cursor.getInt(cursor.getColumnIndexOrThrow(PREFERITO_ANNUNCIO))
-                    lista.add(Annuncio(id, titolo, data, if(tipoM==1) true else false, proprietario, area, if(preferito==1) true else false))
-                }while (cursor.moveToNext())
-            }while (cursor.moveToNext())
-        }
-        return lista
-    }
-
-    private fun getUsername(): String {
-        val sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
-        var username = sharedPreferences.getString("username", null)
-        if(username != null){
-            return username
-        }else return ""
-    }
-
-    fun eliminaAnnuncio(id: String) {
-        val db = this.readableDatabase
-        db.delete(TABLE_NAME_ANNUNCIO, "$ID_ANNUNCIO = ?", arrayOf(id))
-    }
-
-    fun getAnnunciPersonali(): ArrayList<Annuncio> {
-        val db = this.readableDatabase
-        val username = Utility().getUsername(context)
-        val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME_ANNUNCIO WHERE $PROPRIETARIO_ANNUNCIO = ?", arrayOf(username))
-        return getAnnuncioFromCursor(cursor)
     }
 
 }

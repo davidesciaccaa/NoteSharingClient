@@ -9,13 +9,11 @@ import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.lifecycleScope
 import com.example.clientnotesharing.MainActivity
 import com.example.clientnotesharing.NotesApi
@@ -31,23 +29,34 @@ import retrofit2.Response
 import java.io.File
 import java.util.UUID
 
+/*
+ * Classe per la View della creazione di un materiale (di un annuncio) di tipo digitale
+ */
 class NuovoMaterialeDigitale: AppCompatActivity() {
     private var nrPdfCaricati = 0
     private var nuovoAid: String = ""
     private var datoD: ArrayList<DatoDigitale> = ArrayList<DatoDigitale>()
 
+    // res
+    private lateinit var btnSelezionaPDF: Button
+    private lateinit var editTAnno: EditText
+    private lateinit var editMultilineDescr: EditText
+    private lateinit var buttonConferma: Button
+    private lateinit var buttonIndietro: Button
+    private lateinit var textViewNrPdf: TextView
+    private lateinit var tvError: TextView
+    private lateinit var tvAttesaPdf: TextView
+
     private val pickPdfFiles = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        // Handle the returned Uri
         if (uri != null) {
             val filePath = uriToFilePath(this, uri)
             if (filePath != null) {
                 val file = File(filePath)
                 val datoDigitale = DatoDigitale(UUID.randomUUID().toString(), nuovoAid, file.readBytes(), file.name)
-                Log.d("TAG", "**** dato digitale: ${datoDigitale.fileName} byte: ${datoDigitale.fileBytes}")
                 datoD.add(datoDigitale)
                 val textViewNrPdf = findViewById<TextView>(R.id.tvNrPdf)
                 nrPdfCaricati++
-                textViewNrPdf.text = getString(R.string.PDFSelezionati, nrPdfCaricati)
+                textViewNrPdf.text = getString(R.string.pdf_selezionati_valore, nrPdfCaricati)
             } else {
                 Log.d("TAG", "Failed to get file path from URI")
             }
@@ -60,71 +69,49 @@ class NuovoMaterialeDigitale: AppCompatActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.nuovo_materiale_digitale)
-        // Access the SupportActionBar
+
+        // Aggiungo il back btn all'app bar
         supportActionBar?.apply {
-            title = getString(R.string.titolo_appbar_nuovo_materiale_digitale)
+            title = getString(R.string.nuovo_materiale_digitale)
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.arrow_back_20dp)
         }
 
+        btnSelezionaPDF = findViewById(R.id.btnSelezionaPDF)
+        editTAnno = findViewById(R.id.editTextNumberAnno)
+        editMultilineDescr = findViewById(R.id.editTextTextMultiLineDescrizione)
+        buttonConferma = findViewById(R.id.btnCreaNuovoA)
+        buttonIndietro = findViewById(R.id.btnIndietro)
+        textViewNrPdf = findViewById(R.id.tvNrPdf)
+        tvError = findViewById(R.id.tvErroreMD)
+        tvAttesaPdf = findViewById(R.id.tvAttesaPdf)
+
+        // Ricevo l'annuncio inviato dalla classe NuovoAnnuncio
         val nuovoA = intent.getStringExtra("nuovoA").let {
             Json.decodeFromString<Annuncio>(it!!)
         }
-        nuovoAid = nuovoA.id
 
-        val btnSelezionaPDF = findViewById<Button>(R.id.btnSelezionaPDF)
-        val editTAnno = findViewById<EditText>(R.id.editTextNumberAnno)
-        val editMultilineDescr = findViewById<EditText>(R.id.editTextTextMultiLineDescrizione)
-        val buttonConferma = findViewById<Button>(R.id.btnCreaNuovoA)
-        val buttonIndietro = findViewById<Button>(R.id.btnIndietro)
-        val textViewNrPdf = findViewById<TextView>(R.id.tvNrPdf)
-        val tvError = findViewById<TextView>(R.id.tvErroreMD)
-        val tvAttesaPdf = findViewById<TextView>(R.id.tvAttesaPdf)
+        nuovoAid = nuovoA.id // var di classe. Serve per creare l'oggetto DatoDigitale
 
-        textViewNrPdf.text = getString(R.string.PDFSelezionati, nrPdfCaricati)
+        textViewNrPdf.text = getString(R.string.pdf_selezionati_valore, nrPdfCaricati)
         btnSelezionaPDF.setOnClickListener {
-            pickPdfFiles.launch("application/pdf")
+            pickPdfFiles.launch("application/pdf") // permetto solo la selezione dei pdf
         }
         buttonConferma.setOnClickListener{
             tvAttesaPdf.text = resources.getString(R.string.attendi_caricamento)
-            if (
-                editTAnno.text.toString().isNotBlank() &&
-                editMultilineDescr.text.toString().isNotBlank() &&
-                nrPdfCaricati > 0 &&
-                editTAnno.text.toString().length == 4
-            ) {
+            if (controlli()) {
                 val nuovoMD = MaterialeDigitale(
                     nuovoA.id,
                     editTAnno.text.toString().toInt(),
                     editMultilineDescr.text.toString()
                 )
-                lifecycleScope.launch(Dispatchers.IO) {
-                    Log.d("TAG", "Coroutine started")
+                lifecycleScope.launch{
                     try {
-                        if (datoD.isNotEmpty()) {
-                            var responseAnnuncio =NotesApi.retrofitService.uploadAnnuncio(nuovoA)
-                            var responseMaterialeDigitale =NotesApi.retrofitService.uploadMaterialeDigitale(nuovoMD)
-                            var responseListPDF: ArrayList<Response<MessageResponse>> = ArrayList()
-                            for(dato in datoD){
-                                responseListPDF.add(NotesApi.retrofitService.uploadPdf(dato))
-                            }
-
-                            if (!(responseAnnuncio.isSuccessful && responseMaterialeDigitale.isSuccessful)) {
-                                var check = false
-                                for(response in responseListPDF) {
-                                    if(!response.isSuccessful){
-                                        check = true
-                                    }
-                                }
-                                if (check) {
-                                    Toast.makeText(this@NuovoMaterialeDigitale, "Failed to retrieve PDF content", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        }
+                        inviaAlServer(nuovoA, nuovoMD) // Invio tutto al server
                     } catch (e: Exception) {
                         Log.e("TAG", "Coroutine exception: ${e.message}", e)
                     } finally {
-                        Log.d("TAG", "Coroutine completed")
+                        Log.e("TAG", "Coroutine completed")
                     }
                     closeActivities()
                 }
@@ -136,10 +123,46 @@ class NuovoMaterialeDigitale: AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed() //clicca il back button
         }
     }
+    // Invio al server tutto e controllo i risultati
+    private suspend fun inviaAlServer(nuovoA: Annuncio, nuovoMD: MaterialeDigitale) {
+        if (datoD.isNotEmpty()) { // datoD è una lista che contiene i pdf selezionati dall'utente
+            var responseAnnuncio =NotesApi.retrofitService.uploadAnnuncio(nuovoA) // invio l'annuncio al server
+            Log.e("TAG", "*********: ${nuovoA.id}")
+            Log.e("TAG", "*********: ${nuovoMD.id}")
+            var responseMaterialeDigitale =NotesApi.retrofitService.uploadMaterialeDigitale(nuovoMD) // invio il materiale al server
+            var responseListPDF: ArrayList<Response<MessageResponse>> = ArrayList()
+            for(dato in datoD){
+                Log.e("TAG", "pdf********${dato.idAnnuncio}")
+                // invio tutti i pdf selezionati
+                responseListPDF.add(NotesApi.retrofitService.uploadPdf(dato))
+            }
+            // Controllo le risposte del server
+            if (!(responseAnnuncio.isSuccessful && responseMaterialeDigitale.isSuccessful)) {
+                var check = false
+                for(response in responseListPDF) {
+                    // controllo le risposte di ogni pdf
+                    if(!response.isSuccessful){
+                        check = true
+                    }
+                }
+                if (check) {
+                    Toast.makeText(this@NuovoMaterialeDigitale, "Failed to retrieve PDF content", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
+    // I controlli di tutti i campi prima di continuare
+    private fun controlli(): Boolean {
+        return editTAnno.text.toString().isNotBlank() &&
+                editMultilineDescr.text.toString().isNotBlank() &&
+                nrPdfCaricati > 0 &&
+                editTAnno.text.toString().length == 4
+    }
+    // Metodo per ottenere il file path a partire dall'uri del file
     private fun uriToFilePath(context: Context, uri: Uri): String? {
         return try {
-            // Query the ContentResolver for the file's display name
+            // Query per ottenere il nome del file
             val cursor = context.contentResolver.query(uri, null, null, null, null)
             val nameIndex = cursor?.getColumnIndex(OpenableColumns.DISPLAY_NAME)
             val fileName = if (cursor?.moveToFirst() == true) {
@@ -149,7 +172,7 @@ class NuovoMaterialeDigitale: AppCompatActivity() {
             }
             cursor?.close()
 
-            // Use the file's display name to create a new File object
+            // Creo un nuovo file
             val inputStream = context.contentResolver.openInputStream(uri)
             if (inputStream != null && fileName != null) {
                 val file = File(context.cacheDir, fileName)
@@ -165,6 +188,7 @@ class NuovoMaterialeDigitale: AppCompatActivity() {
             null
         }
     }
+    // Metodo che apre la home screen e "pulisce" il backstack
     private fun closeActivities() {
         // Start the new activity with flags to clear the back stack
         val intent = Intent(this, MainActivity::class.java)

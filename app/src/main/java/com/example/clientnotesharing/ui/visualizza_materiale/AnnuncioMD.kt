@@ -21,12 +21,13 @@ import com.example.clientnotesharing.data.DatoDigitale
 import com.example.clientnotesharing.data.MaterialeDigitale
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import retrofit2.HttpException
-import java.io.IOException
 import java.io.OutputStream
 import java.util.LinkedList
 import java.util.Queue
 
+/*
+ * Classe per la View che mostra i dati di un annuncio con dati digitali
+ */
 class AnnuncioMD : AppCompatActivity() {
 
     private lateinit var createDocumentLauncher: ActivityResultLauncher<Intent>
@@ -47,26 +48,21 @@ class AnnuncioMD : AppCompatActivity() {
                     if (::arrayBytesFile.isInitialized) {
                         // Call your method to write bytes to document
                         writeBytesToDocument(uri, arrayBytesFile)
-                        processNextInQueue()
+                        gestisciIlProssimoNellaCoda()
                     } else {
                         Toast.makeText(this, "Failed to retrieve PDF content", Toast.LENGTH_SHORT).show()
-                        processNextInQueue()
-
-                        /*
-
-                        IL PROBLEMA è QUA: non riesce  prendere i dati dal put extra perchè nel metodo createPdfDocument i byte ci sono
-                         */
+                        gestisciIlProssimoNellaCoda()
                     }
                 }
             } else {
                 Toast.makeText(this, "PDF creation canceled", Toast.LENGTH_SHORT).show()
-                processNextInQueue()
+                gestisciIlProssimoNellaCoda()
             }
         }
         handleIntentExtras()
 
     }
-
+    // Riceve i dati dalle classi che chiamano la visualizzazione (Home, Personali, Preferiti o anche dai marker nella mappa)
     private fun handleIntentExtras() {
         val jsonStringA = intent.getStringExtra("AnnuncioSelezionato")
         val jsonStringM = intent.getStringExtra("MaterialeAssociato")
@@ -82,6 +78,7 @@ class AnnuncioMD : AppCompatActivity() {
             Toast.makeText(this, "Intent data missing or corrupted\"", Toast.LENGTH_SHORT).show()
         }
     }
+    // Modifiche nell'app bar
     private fun setupAppBar(titoloAnnuncioSelezionato: String) {
         // appbar
         supportActionBar?.apply {
@@ -90,6 +87,7 @@ class AnnuncioMD : AppCompatActivity() {
             setHomeAsUpIndicator(R.drawable.arrow_back_20dp)
         }
     }
+    // Carica i dati nelle textView
     private fun populateUI(annuncioSelezionato: Annuncio, materialeDigitaleAssociato: MaterialeDigitale) {
         findViewById<TextView>(R.id.tvDataAnnuncio).text = annuncioSelezionato.data
         findViewById<TextView>(R.id.tvEmailProprietarioMD).text = "TO DO**************"
@@ -103,29 +101,30 @@ class AnnuncioMD : AppCompatActivity() {
             }
         }
     }
+    // Metodo che inizia il processo di scarica e salvataggio dei pdf
     private suspend fun downloadPDFs(annuncioId: String) {
         val listaDatiDigitali = fetchDatoDigitale(annuncioId)
         if (listaDatiDigitali.isNotEmpty()) {
             pdfCreationQueue.addAll(listaDatiDigitali)
             if (!isCreatingDocument) {
-                processNextInQueue()
+                gestisciIlProssimoNellaCoda()
             }
         } else {
             Log.e("AnnuncioMD", "Errore: non è stato ricevuto nulla dal server")
         }
     }
-    private fun processNextInQueue() {
+    // Metodo per la gestione della coda
+    private fun gestisciIlProssimoNellaCoda() {
         val nextItem = pdfCreationQueue.poll()
         if (nextItem != null) {
             arrayBytesFile = nextItem.fileBytes
-            createPdfDocument(nextItem.fileName)
+            creaPdfVuoto(nextItem.fileName)
         } else {
             isCreatingDocument = false
         }
     }
-
-    //Funzione che crea un pdf vuoto
-    private fun createPdfDocument(pdfName: String) {
+    // Funzione che crea un pdf vuoto
+    private fun creaPdfVuoto(pdfName: String) {
         val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "application/pdf"
@@ -136,6 +135,7 @@ class AnnuncioMD : AppCompatActivity() {
         createDocumentLauncher.launch(intent)
     }
 
+    // Trasforma i byte in un file (pdf)
     fun writeBytesToDocument(uri: Uri, content: ByteArray) {
         val contentResolver: ContentResolver = applicationContext.contentResolver
         try {
@@ -152,6 +152,7 @@ class AnnuncioMD : AppCompatActivity() {
         }
     }
 
+    // Recupera in una lista i pdf dal server
     private suspend fun fetchDatoDigitale(idAnnuncio: String): ArrayList<DatoDigitale> {
         return try {
             val response = NotesApi.retrofitService.getPDFs(idAnnuncio)

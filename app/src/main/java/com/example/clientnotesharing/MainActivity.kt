@@ -18,15 +18,17 @@ import com.example.clientnotesharing.ui.sign_up_login.Login
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
+// MainActivity, cioè il punto di partenza
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    //variabile di location
+    //variabile per la gestione dei permessi della location
     private val LOCATION_PERMISSION_REQUEST_CODE = 100
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        // Controllo se l'utente è stato loggato
         if (!isLoggedIn()) {
             redirectToLogin()
             return
@@ -55,16 +57,31 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-        //bottone per creare nuovi annunci
-        findViewById<FloatingActionButton>(R.id.addbtn).setOnClickListener{
+
+        // floating action btn per la creazione di nuovi annunci
+        val fab = findViewById<FloatingActionButton>(R.id.addbtn)
+        fab.setOnClickListener{
             val intent = Intent(this, NuovoAnnuncio::class.java)
             startActivity(intent)
         }
+        // visibile solo in Home
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.navigation_home -> fab.show()
+                else -> fab.hide()
+            }
+        }
+
+
     }
+
+    // Metodo che controlla se l'utente ha già fatto il login in precedenza
     private fun isLoggedIn(): Boolean {
-        val sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE) // controlla nelle shared preferences
         return sharedPreferences.getBoolean("isLoggedIn", false)
     }
+
+    // Apre la schermata di login
     private fun redirectToLogin() {
         val intent = Intent(this, Login::class.java)
         startActivity(intent)

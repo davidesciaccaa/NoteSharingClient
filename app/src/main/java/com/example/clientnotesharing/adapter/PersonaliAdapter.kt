@@ -19,10 +19,15 @@ import com.example.clientnotesharing.dbLocale.DbHelper
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
+/*
+ * Questo adapter viene usato nella listView di AnnunciPersonali
+ */
 class PersonaliAdapter(private val context: Context, private var filteredAnnunciList: ArrayList<Annuncio>) : BaseAdapter() {
 
     private var annunciList: ArrayList<Annuncio> = ArrayList()
-
+    init {
+        annunciList = ArrayList(filteredAnnunciList)
+    }
     private class ViewHolder(row: View) {
         val titleTextView: TextView = row.findViewById(R.id.textViewTittle)
         val dateTextView: TextView = row.findViewById(R.id.textViewData)
@@ -41,16 +46,19 @@ class PersonaliAdapter(private val context: Context, private var filteredAnnunci
         return position.toLong()
     }
 
+    // Metodo per creare o riutilizzare una vista per ogni elemento della lista
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         val view: View
         val viewHolder: ViewHolder
 
         if (convertView == null) {
+            // Se convertView è null, viene creata una nuova vista e un nuovo ViewHolder
             val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             view = inflater.inflate(R.layout.list_my_annunci, parent, false)
             viewHolder = ViewHolder(view)
             view.tag = viewHolder
         } else {
+            // Altrimenti viene riutilizzata la vista esistente e il ViewHolder
             view = convertView
             viewHolder = view.tag as ViewHolder
         }
@@ -60,30 +68,33 @@ class PersonaliAdapter(private val context: Context, private var filteredAnnunci
         viewHolder.titleTextView.text = annuncio.titolo
         viewHolder.dateTextView.text = annuncio.data
 
-        //il bottone
+        // Gestione del bottone del cestino
         btnPreferiti.setOnClickListener {
-            var result: Response<MessageResponse>? = null
             (context as? LifecycleOwner)?.lifecycleScope?.launch {
-                try {
-                    result = NotesApi.retrofitService.eliminaAnnuncio(annuncio.id)
-                    if(result?.isSuccessful == true){
-                        //aggiorno lo stato del db locale
-                        val db = DbHelper(context)
-                        db.eliminaAnnuncio(annuncio.id)
-                        // Remove the item from the list immediately
-                        filteredAnnunciList.removeAt(position)
-                        notifyDataSetChanged()
-                    }else{
-                        // Da gestire
-                    }
-                } catch (e: Exception) {
-                    Log.d("TAG", "PersonaliAdapter ${e.printStackTrace()}")
-                }
+                serverEliminaAnnuncio(annuncio, position)
             }
 
         }
         
         return view
+    }
+
+    private suspend fun serverEliminaAnnuncio(annuncio: Annuncio, position: Int) {
+        try {
+            var result = NotesApi.retrofitService.eliminaAnnuncio(annuncio.id)
+            if(result.isSuccessful == true){
+                //aggiorno lo stato del db locale
+                val db = DbHelper(context)
+                db.eliminaAnnuncio(annuncio.id)
+                // Remove the item from the list immediately
+                filteredAnnunciList.removeAt(position)
+                notifyDataSetChanged()
+            }else{
+                // Da gestire
+            }
+        } catch (e: Exception) {
+            Log.d("TAG", "PersonaliAdapter ${e.printStackTrace()}")
+        }
     }
 
     fun updateData(newList: ArrayList<Annuncio>) {

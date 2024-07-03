@@ -15,14 +15,16 @@ import com.example.clientnotesharing.data.MaterialeFisico
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
 
-
+/*
+ * Classe per la View che mostra i dati di un annuncio con dati fisici
+ */
 class AnnuncioMF: AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.annuncio_mf)
-
+        // Riceve i dati dalle classi che chiamano la visualizzazione (Home, Personali, Preferiti o anche dai marker nella mappa)
         val AnnuncioSelezionato = intent.getStringExtra("AnnuncioSelezionato").let {
             Json.decodeFromString<Annuncio>(it!!)
         }
@@ -30,7 +32,7 @@ class AnnuncioMF: AppCompatActivity() {
             Json.decodeFromString<MaterialeFisico>(it!!)
         }
 
-        //appbar
+        // appbar
         supportActionBar?.apply {
             title = AnnuncioSelezionato.titolo
             setDisplayHomeAsUpEnabled(true)
@@ -46,16 +48,15 @@ class AnnuncioMF: AppCompatActivity() {
         val tvIndirizzo = findViewById<TextView>(R.id.tvIndirizzo)
         val btnApriMappa = findViewById<Button>(R.id.btnApriMappa)
 
-        //this.title = AnnuncioSelezionato.titolo //cambio il titolo dell'app bar della view aperta
-        //Il modo corretto è scrivere il testo in strings, avendo dei placeholder che vengono passati qua:
-        tvDataAnnuncio.text = AnnuncioSelezionato.data//LocalDate.now().toString() //data corrente
-        tvEmail.text = getString(R.string.proprietarioEmail, AnnuncioSelezionato.idProprietario) //devo avere 1 metodo che mi recupera la mail di quetso utente ************************
-        tvCosto.text = getString(R.string.costo, MaterialeFisicoAssociato.costo)
-        tvAnnoMateriale.text = getString(R.string.anno_riferimento, MaterialeFisicoAssociato.annoRiferimento)
+        tvDataAnnuncio.text = AnnuncioSelezionato.data
+        tvEmail.text = getString(R.string.proprietario_email_valore, AnnuncioSelezionato.idProprietario) //devo avere 1 metodo che mi recupera la mail di quetso utente ************************
+        tvCosto.text = getString(R.string.costo_valore, MaterialeFisicoAssociato.costo)
+        tvAnnoMateriale.text = getString(R.string.anno_riferimento_valore, MaterialeFisicoAssociato.annoRiferimento)
         tvDescrMateriale.text = MaterialeFisicoAssociato.descrizioneMateriale
-        tvCorso.text = getString(R.string.corso_riferimento, AnnuncioSelezionato.AreaToString())
-        tvIndirizzo.text = getString(R.string.indirizzo_ritiro, MaterialeFisicoAssociato.provincia, MaterialeFisicoAssociato.comune, MaterialeFisicoAssociato.via, MaterialeFisicoAssociato.numeroCivico)
+        tvCorso.text = getString(R.string.corso_riferimento_valore, AnnuncioSelezionato.AreaToString())
+        tvIndirizzo.text = getString(R.string.indirizzo_ritiro_valori, MaterialeFisicoAssociato.provincia, MaterialeFisicoAssociato.comune, MaterialeFisicoAssociato.via, MaterialeFisicoAssociato.numeroCivico)
 
+        // Trasformo l'indirizzo in coordinate ed apro la dinestra per la visualizzazione nella mappa
         val indirizzoMappa = "${MaterialeFisicoAssociato.comune}, via ${MaterialeFisicoAssociato.via} ${MaterialeFisicoAssociato.numeroCivico}"
         btnApriMappa.setOnClickListener{
             val intent = Intent(this@AnnuncioMF, MappaAnnuncio::class.java)
@@ -65,7 +66,7 @@ class AnnuncioMF: AppCompatActivity() {
         }
 
     }
-    //implementazione back arrow button nell'app bar
+    // Implementazione back arrow button nell'app bar
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {

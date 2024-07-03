@@ -2,6 +2,9 @@ package com.example.clientnotesharing.data
 
 import kotlinx.serialization.Serializable
 
+/*
+ * Data class per inviare/ricevera al/dal server i dati di riferimento per i materiali fisici (degli annunci)
+ */
 @Serializable
 data class MaterialeFisico(
     var id: String,

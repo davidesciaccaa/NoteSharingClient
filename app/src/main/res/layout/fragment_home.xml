@@ -38,7 +38,7 @@
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="8dp"
-                        android:text="@string/areaScientifica" />
+                        android:text="@string/area_scientifica" />
 
                     <Button
                         android:id="@+id/btn_sport"
@@ -48,7 +48,7 @@
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="8dp"
-                        android:text="@string/areaSportiva" />
+                        android:text="@string/area_sportiva" />
 
                     <Button
                         android:id="@+id/btn_giuridicoeconomico"
@@ -58,7 +58,7 @@
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="8dp"
-                        android:text="@string/areaGiuridicoEconomica" />
+                        android:text="@string/area_giuridico_economica" />
 
                     <Button
                         android:id="@+id/btn_sanitario"
@@ -68,7 +68,7 @@
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="8dp"
-                        android:text="@string/areaSanitaria" />
+                        android:text="@string/area_sanitaria" />
 
                     <Button
                         android:id="@+id/btn_umanisticosociale"
@@ -77,7 +77,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
-                        android:text="@string/areaScienzeUmaneSociali" />
+                        android:text="@string/area_scienze_umane_sociali" />
 
                 </LinearLayout>
 

@@ -18,27 +18,33 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
+/*
+ * Classe per la View delle Impostazioni
+ */
 class SettingsActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings)
 
-        findViewById<TextView>(R.id.tvHelloUser).text = getString(R.string.hello_user,  Utility().getUsername(this@SettingsActivity))
+        findViewById<TextView>(R.id.tvHelloUser).text = getString(R.string.ciao_valore,  Utility().getUsername(this@SettingsActivity))
+        // btn di logOut
         findViewById<TextView>(R.id.btnLogOut).setOnClickListener{
             logout()
         }
+        // btn di cambio password
         findViewById<TextView>(R.id.btnCambioPsw).setOnClickListener{
             val oldPassword = findViewById<TextView>(R.id.editTextOldPsw).text.toString()
             val newPassword = findViewById<TextView>(R.id.editTextNewPsw).text.toString()
-            if(oldPassword.isNotBlank() && newPassword.isNotBlank()){
+            if(oldPassword.isNotBlank() && newPassword.isNotBlank()){ // controlli
                 lifecycleScope.launch {
                     try {
+                        // Invio al server la ricchiesta
                         val result = NotesApi.retrofitService.cambioPsw(CambioPasswordRequest(oldPassword, newPassword, Utility().getUsername(this@SettingsActivity)))
-                        if(result.isSuccessful) {
+                        if(result.isSuccessful) { // controllo la risposta del server
                             logout()
                         } else {
-                            findViewById<TextView>(R.id.tvErrore).text = getString(R.string.psw_not_changed)
+                            findViewById<TextView>(R.id.tvErrore).text = getString(R.string.psw_non_cambiata)
                         }
                     } catch (e: HttpException) {
                         Log.e("LoginActivity", "HTTP Exception: ${e.message}")
@@ -54,6 +60,7 @@ class SettingsActivity: AppCompatActivity() {
             }
         }
     }
+    // Metodo che effettua il logOut
     private fun logout() {
         //elimino db locale
         val dbHelper = DbHelper(this@SettingsActivity)

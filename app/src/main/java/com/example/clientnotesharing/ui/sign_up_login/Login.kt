@@ -21,13 +21,15 @@ import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
 
-
+/*
+ * Classe per la View di login
+ */
 class Login: AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.login)      //prende il login.xml della cartella res/layout
+        setContentView(R.layout.login)
+
         val editTextUsername = findViewById<EditText>(R.id.editT_username)
         val editTextPassword = findViewById<EditText>(R.id.editT_password)
         val btnLogin = findViewById<Button>(R.id.btn_login)
@@ -36,14 +38,14 @@ class Login: AppCompatActivity() {
         setLoginImage()
 
         btnLogin.setOnClickListener {
-            //NotesApi.init(this)
-            //Controllo login Admin (per modificare l'ip)
+            // Chiedo al server la verifica delle credenziali
             var resultLogin: Response<MessageResponse>? = null
             lifecycleScope.launch {
                 try {
                     resultLogin = NotesApi.retrofitService.uploadLogin(
                         UserSession(editTextUsername.text.toString(), editTextPassword.text.toString())
                     )
+                    // Controllo la risposta del server
                     if (resultLogin != null && resultLogin?.isSuccessful == true) {
                         val responseBody = resultLogin!!.body()
                         if (responseBody != null && responseBody.message == "Login successful") {
@@ -75,6 +77,8 @@ class Login: AppCompatActivity() {
         }
 
     }
+
+    // Salvo lo username nelle shared preferences
     private fun saveLoginState(username: String) {
         val sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
@@ -87,6 +91,8 @@ class Login: AppCompatActivity() {
         startActivity(intent)
         finish()
     }
+
+    // Cambio dell'icona in base al theme del dispositivo
     private fun setLoginImage(){
         val imageView = findViewById<ImageView>(R.id.imageView)
         val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK

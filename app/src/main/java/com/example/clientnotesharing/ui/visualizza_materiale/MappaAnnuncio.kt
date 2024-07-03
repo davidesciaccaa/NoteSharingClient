@@ -1,11 +1,13 @@
 package com.example.clientnotesharing.ui.visualizza_materiale
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.HandlerThread
 import android.util.Log
+import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -26,9 +28,13 @@ import com.tomtom.sdk.map.display.ui.MapFragment
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 import com.example.clientnotesharing.util.Utility
+import com.tomtom.sdk.location.GeoPoint
 import com.tomtom.sdk.location.OnLocationUpdateListener
 import kotlinx.serialization.json.Json
 
+/*
+ * Classe per la isualizzazione della posizione di un annuncio (fisico) in una View che contiene solo una mappa
+ */
 class MappaAnnuncio: AppCompatActivity() {
     // Variabile per la location permission
     private val LOCATION_PERMISSION_REQUEST_CODE = 100
@@ -38,9 +44,18 @@ class MappaAnnuncio: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mappa)
 
+        // Aggiunta backArrow button nell'app bar
+        supportActionBar?.apply {
+            title = getString(R.string.mappa)
+            setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.arrow_back_20dp)
+        }
+
         val indirizzoRicevuto = intent.getStringExtra("indirizzo").let {
             Json.decodeFromString<String>(it!!)
         }
+
+        // Controllo dei permessi di location
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED) {
             // Permission is not granted
@@ -50,67 +65,46 @@ class MappaAnnuncio: AppCompatActivity() {
                 LOCATION_PERMISSION_REQUEST_CODE
             )
         } else {
-            val myMap = supportFragmentManager.findFragmentById(R.id.map_fragment) as? MapFragment
-            Log.e("HomeFragment", "Inizio...")
-            if (myMap != null) {
-                Log.e("HomeFragment", "dentro if...")
-                myMap.getMapAsync { tomtomMap: TomTomMap ->
-                    //Location provider
-                    val androidLocationProviderConfig =
-                        AndroidLocationProviderConfig(
-                            minTimeInterval = 250L.milliseconds,
-                            minDistance = Distance.meters(20.0),
-                        )
-                    val locationHandlerThread = HandlerThread("locationHandlerThread")
-                    locationHandlerThread.start()
-                    val androidLocationProvider: LocationProvider =
-                        AndroidLocationProvider(
-                            context = applicationContext,
-                            locationLooper = locationHandlerThread.looper,
-                            config = androidLocationProviderConfig,
-                        )
-                    // location attuale
-                    tomtomMap.setLocationProvider(androidLocationProvider)
-                    androidLocationProvider.enable()
-                    val locationMarkerOptions =
-                        LocationMarkerOptions(
-                            type = LocationMarkerOptions.Type.Pointer,
-                        )
-                    tomtomMap.enableLocationMarker(locationMarkerOptions)
-
-                    val onLocationUpdateListener =
-                        OnLocationUpdateListener { location: GeoLocation ->
-                            /* YOUR CODE GOES HERE */
-
-                        }
-                    androidLocationProvider.addOnLocationUpdateListener(onLocationUpdateListener)
-                    androidLocationProvider.removeOnLocationUpdateListener(onLocationUpdateListener)
-
-                    //Pin di una posizione
-                    //val geoPoint = getGeoPointFromAddress("Milano, viale Ungheria, 46")
-                    //val geoPoint = GeoPoint(45.81719052411793, 8.82978810142905)
-                    // Inside your activity or fragment function
-                    lifecycleScope.launch {
-                        val geoPoint = Utility().getGeoPointFromAddress(this@MappaAnnuncio, indirizzoRicevuto) //Dobbiamo passare l'indirizzo dell'annuncio
-                        // Use geoPoint here, it will be null if no address was found
-                        Log.e("HomeFragment", "coordinate $geoPoint")
-                        if (geoPoint != null) {
-                            val markerOptions =
-                                MarkerOptions(
-                                    coordinate = geoPoint,
-                                    pinImage = ImageFactory.fromResource(R.drawable.map_pin),
-                                )
-                            tomtomMap.addMarker(markerOptions)
-                            Log.e("HomeFragment", "Fine")
-                        } else {
-                            // Handle the case where no addresses were found
-                            Log.e("GeoPoint", "Address not found")
-                        }
-                    }
-
-                }
-            }
+            viewInMap(indirizzoRicevuto)
         }
 
+    }
+    // Mappa
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun viewInMap(indirizzoRicevuto: String) {
+        val myMap = supportFragmentManager.findFragmentById(R.id.map_fragment) as? MapFragment
+        if (myMap != null) {
+            myMap.getMapAsync { tomtomMap: TomTomMap ->
+                Utility().setupLocationProvider(tomtomMap, applicationContext)
+                addMarkerToMap(tomtomMap, indirizzoRicevuto)
+            }
+        }
+    }
+    // Aggiunta di marker nella mappa
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun addMarkerToMap(tomtomMap: TomTomMap, indirizzoRicevuto: String) {
+        lifecycleScope.launch {
+            val geoPoint = Utility().getGeoPointFromAddress(this@MappaAnnuncio, indirizzoRicevuto) //Dobbiamo passare l'indirizzo dell'annuncio
+            if (geoPoint != null) {
+                val markerOptions =
+                    MarkerOptions(
+                        coordinate = geoPoint,
+                        pinImage = ImageFactory.fromResource(R.drawable.map_pin),
+                    )
+                tomtomMap.addMarker(markerOptions)
+            } else {
+                Log.e("GeoPoint", "Address not found")
+            }
+        }
+    }
+    //implementazione back arrow button nell'app bar
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressedDispatcher.onBackPressed()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
