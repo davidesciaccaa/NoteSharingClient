@@ -7,12 +7,15 @@
 
     <TextView
         android:id="@+id/textViewTittle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="Titolo"
+        android:text="@string/titolo"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/textViewData"
+        app:layout_constraintEnd_toStartOf="@+id/btnDelete"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -21,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="02/05/2024"
+        android:text=""
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
