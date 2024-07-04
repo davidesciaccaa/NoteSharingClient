@@ -1,9 +1,14 @@
 package com.example.clientnotesharing.ui.nuovo_materiale
 
 import android.content.Intent
+import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowInsets
+import android.view.WindowInsetsController
+import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -11,6 +16,7 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.clientnotesharing.R
 import com.example.clientnotesharing.data.Annuncio
@@ -41,6 +47,7 @@ class NuovoAnnuncio : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         // Non gestiamo questo caso
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
@@ -51,7 +58,11 @@ class NuovoAnnuncio : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             title = getString(R.string.nuovo_annuncio)
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.arrow_back_20dp)
+
+
         }
+
+        Utility().gestioneLandscape(window, resources)
 
         val editTextNomeAnnuncio = findViewById<EditText>(R.id.editTextNomeAnnuncio)
         val buttonConferma = findViewById<Button>(R.id.btnAvanti)

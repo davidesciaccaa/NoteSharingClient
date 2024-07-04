@@ -3,16 +3,21 @@ package com.example.clientnotesharing.ui.nuovo_materiale
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.OpenableColumns
 import android.util.Log
 import android.view.MenuItem
+import android.view.WindowInsets
+import android.view.WindowInsetsController
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.clientnotesharing.MainActivity
@@ -22,6 +27,7 @@ import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.data.DatoDigitale
 import com.example.clientnotesharing.data.MaterialeDigitale
 import com.example.clientnotesharing.data.MessageResponse
+import com.example.clientnotesharing.util.Utility
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -47,6 +53,7 @@ class NuovoMaterialeDigitale: AppCompatActivity() {
     private lateinit var tvError: TextView
     private lateinit var tvAttesaPdf: TextView
 
+    // Per avere l'uri del pdf selezionato
     private val pickPdfFiles = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) {
             val filePath = uriToFilePath(this, uri)
@@ -65,6 +72,7 @@ class NuovoMaterialeDigitale: AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
@@ -76,6 +84,8 @@ class NuovoMaterialeDigitale: AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.arrow_back_20dp)
         }
+
+        Utility().gestioneLandscape(window, resources)
 
         btnSelezionaPDF = findViewById(R.id.btnSelezionaPDF)
         editTAnno = findViewById(R.id.editTextNumberAnno)
@@ -127,12 +137,9 @@ class NuovoMaterialeDigitale: AppCompatActivity() {
     private suspend fun inviaAlServer(nuovoA: Annuncio, nuovoMD: MaterialeDigitale) {
         if (datoD.isNotEmpty()) { // datoD è una lista che contiene i pdf selezionati dall'utente
             var responseAnnuncio =NotesApi.retrofitService.uploadAnnuncio(nuovoA) // invio l'annuncio al server
-            Log.e("TAG", "*********: ${nuovoA.id}")
-            Log.e("TAG", "*********: ${nuovoMD.id}")
             var responseMaterialeDigitale =NotesApi.retrofitService.uploadMaterialeDigitale(nuovoMD) // invio il materiale al server
             var responseListPDF: ArrayList<Response<MessageResponse>> = ArrayList()
             for(dato in datoD){
-                Log.e("TAG", "pdf********${dato.idAnnuncio}")
                 // invio tutti i pdf selezionati
                 responseListPDF.add(NotesApi.retrofitService.uploadPdf(dato))
             }

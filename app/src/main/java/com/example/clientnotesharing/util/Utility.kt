@@ -2,14 +2,21 @@ package com.example.clientnotesharing.util
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.location.Address
 import android.location.Geocoder
 import android.location.Geocoder.GeocodeListener
 import android.os.Build
 import android.os.HandlerThread
 import android.util.Log
+import android.view.Window
+import android.view.WindowInsets
+import android.view.WindowInsetsController
+import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
 import com.tomtom.quantity.Distance
 import com.tomtom.sdk.location.GeoLocation
 import com.tomtom.sdk.location.GeoPoint
@@ -97,5 +104,26 @@ class Utility {
         androidLocationProvider.addOnLocationUpdateListener(onLocationUpdateListener)
         androidLocationProvider.removeOnLocationUpdateListener(onLocationUpdateListener)
     }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    fun gestioneLandscape(window: Window, resources: Resources) {
+        val orientation = resources.configuration.orientation
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {// Metto in fullscreen
+            window.setDecorFitsSystemWindows(false)
+            val controller = window.insetsController
+            if (controller != null) {
+                controller.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
+                controller.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+
+            // Per non interferire con i cutout delle camere
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                val layoutParams = window.attributes
+                layoutParams.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER
+                window.attributes = layoutParams
+            }
+        }
+    }
+
 
 }

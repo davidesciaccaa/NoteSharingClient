@@ -2,10 +2,12 @@ package com.example.clientnotesharing.ui.settings
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.clientnotesharing.NotesApi
@@ -22,10 +24,13 @@ import java.io.IOException
  * Classe per la View delle Impostazioni
  */
 class SettingsActivity: AppCompatActivity() {
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings)
+
+        Utility().gestioneLandscape(window, resources)
 
         findViewById<TextView>(R.id.tvHelloUser).text = getString(R.string.ciao_valore,  Utility().getUsername(this@SettingsActivity))
         // btn di logOut

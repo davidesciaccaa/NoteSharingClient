@@ -36,9 +36,11 @@
         <activity android:name=".ui.visualizza_materiale.AnnuncioMF" />
         <activity android:name=".ui.visualizza_materiale.AnnuncioMD" />
         <activity android:name=".ui.sign_up_login.Login"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
         <activity android:name=".ui.sign_up_login.SignUp"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
         <activity android:name=".ui.settings.SettingsActivity"
             android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".ui.visualizza_materiale.MappaAnnuncio"/>

@@ -15,6 +15,7 @@ import com.example.clientnotesharing.NotesApi
 import com.example.clientnotesharing.R
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.data.MaterialeFisico
+import com.example.clientnotesharing.util.Utility
 import kotlinx.coroutines.launch
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
@@ -42,6 +43,8 @@ class AnnuncioMF: AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.arrow_back_20dp)
         }
+
+        Utility().gestioneLandscape(window, resources)
 
         val tvDataAnnuncio = findViewById<TextView>(R.id.tvData)
         val tvEmail = findViewById<TextView>(R.id.tvEmailProprietario)

@@ -53,6 +53,8 @@ class MappaAnnuncio: AppCompatActivity() {
             setHomeAsUpIndicator(R.drawable.arrow_back_20dp)
         }
 
+        Utility().gestioneLandscape(window, resources)
+
         val indirizzoRicevuto = intent.getStringExtra("indirizzo").let {
             Json.decodeFromString<String>(it!!)
         }

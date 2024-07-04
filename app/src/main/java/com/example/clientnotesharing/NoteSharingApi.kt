@@ -19,7 +19,7 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 // Indirizzo IP del server
-const val BASE_URL =  "http://192.168.154.168:8080" // "http://192.168.43.216:8080" // Per l'emulatore: "http://10.0.2.2:8080"
+const val BASE_URL =  "http://192.168.43.216:8080" // "http://192.168.43.216:8080" // Per l'emulatore: "http://10.0.2.2:8080"
 
 // Creazione dell'oggetto Retrofit, connettendosi al server
 private val retrofit = Retrofit.Builder()

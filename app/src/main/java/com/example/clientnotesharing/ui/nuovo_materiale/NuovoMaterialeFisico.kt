@@ -1,13 +1,18 @@
 package com.example.clientnotesharing.ui.nuovo_materiale
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.WindowInsets
+import android.view.WindowInsetsController
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.clientnotesharing.MainActivity
@@ -15,6 +20,7 @@ import com.example.clientnotesharing.NotesApi
 import com.example.clientnotesharing.R
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.data.MaterialeFisico
+import com.example.clientnotesharing.util.Utility
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
@@ -33,6 +39,7 @@ class NuovoMaterialeFisico: AppCompatActivity() {
     private lateinit var buttonConferma: Button
     private lateinit var buttonIndietro: Button
     private lateinit var tvError: TextView
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
@@ -56,6 +63,9 @@ class NuovoMaterialeFisico: AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.arrow_back_20dp)
         }
+
+        Utility().gestioneLandscape(window, resources)
+
         buttonConferma.setOnClickListener{
             if (controlli()) {
                 // Ricevo l'annuncio inviato dalla classe NuovoAnnuncio
@@ -122,4 +132,5 @@ class NuovoMaterialeFisico: AppCompatActivity() {
                 editTextNumberAnnoMF.text.toString().length == 4 &&
                 editTextNumberCAP.text.toString().length == 5
     }
+
 }

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.ContentResolver
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -12,6 +13,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.clientnotesharing.NotesApi
@@ -19,6 +21,7 @@ import com.example.clientnotesharing.R
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.data.DatoDigitale
 import com.example.clientnotesharing.data.MaterialeDigitale
+import com.example.clientnotesharing.util.Utility
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import java.io.OutputStream
@@ -35,18 +38,19 @@ class AnnuncioMD : AppCompatActivity() {
     private val pdfCreationQueue: Queue<DatoDigitale> = LinkedList()
     private var isCreatingDocument = false
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.annuncio_md)
 
+        Utility().gestioneLandscape(window, resources)
+
+        // Per avere l'uri del pdf selezionato
         createDocumentLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 result.data?.data?.let { uri ->
-                    // Retrieve the byte array from intent extras
-                    //val fileContent = result.data?.getByteArrayExtra("fileContent")
                     if (::arrayBytesFile.isInitialized) {
-                        // Call your method to write bytes to document
                         writeBytesToDocument(uri, arrayBytesFile)
                         gestisciIlProssimoNellaCoda()
                     } else {
