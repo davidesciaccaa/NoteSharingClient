@@ -3,15 +3,19 @@ package com.example.clientnotesharing.ui.visualizza_materiale
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.example.clientnotesharing.NotesApi
 import com.example.clientnotesharing.R
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.data.MaterialeFisico
+import kotlinx.coroutines.launch
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
 
@@ -49,7 +53,22 @@ class AnnuncioMF: AppCompatActivity() {
         val btnApriMappa = findViewById<Button>(R.id.btnApriMappa)
 
         tvDataAnnuncio.text = AnnuncioSelezionato.data
-        tvEmail.text = getString(R.string.proprietario_email_valore, AnnuncioSelezionato.idProprietario) //devo avere 1 metodo che mi recupera la mail di quetso utente ************************
+        // Riceve la email del proprietario dell'annuncio
+        lifecycleScope.launch {
+            val response =
+                NotesApi.retrofitService.getMailFromUsername(AnnuncioSelezionato.idProprietario)
+            if (response.isSuccessful) {
+                val email = response.body()?.message
+                if (email != null) {
+                    tvEmail.text = getString(R.string.proprietario_email_valore, email)
+                } else {
+                    Log.d(
+                        "ComandiAnnunciListView, fun clickMateriale",
+                        "ComandiAnnunciListView, fun clickMateriale: Error: Response from server ${response.message()}"
+                    )
+                }
+            }
+        }
         tvCosto.text = getString(R.string.costo_valore, MaterialeFisicoAssociato.costo)
         tvAnnoMateriale.text = getString(R.string.anno_riferimento_valore, MaterialeFisicoAssociato.annoRiferimento)
         tvDescrMateriale.text = MaterialeFisicoAssociato.descrizioneMateriale
@@ -76,7 +95,5 @@ class AnnuncioMF: AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
-
 
 }

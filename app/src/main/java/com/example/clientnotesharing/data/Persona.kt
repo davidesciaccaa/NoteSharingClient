@@ -2,6 +2,9 @@ package com.example.clientnotesharing.data
 
 import kotlinx.serialization.Serializable
 
+/*
+ * Data class per inviare/ricevere correttamente i dati di registrazione di un utente
+ */
 @Serializable
 class Persona(
     var username: String,

@@ -90,7 +90,22 @@ class AnnuncioMD : AppCompatActivity() {
     // Carica i dati nelle textView
     private fun populateUI(annuncioSelezionato: Annuncio, materialeDigitaleAssociato: MaterialeDigitale) {
         findViewById<TextView>(R.id.tvDataAnnuncio).text = annuncioSelezionato.data
-        findViewById<TextView>(R.id.tvEmailProprietarioMD).text = "TO DO**************"
+        // Riceve la email del proprietario dell'annuncio
+        lifecycleScope.launch {
+            val response =
+                NotesApi.retrofitService.getMailFromUsername(annuncioSelezionato.idProprietario)
+            if (response.isSuccessful) {
+                val email = response.body()?.message
+                if (email != null) {
+                    findViewById<TextView>(R.id.tvEmailProprietarioMD).text = getString(R.string.proprietario_email_valore, email)
+                } else {
+                    Log.d(
+                        "ComandiAnnunciListView, fun clickMateriale",
+                        "ComandiAnnunciListView, fun clickMateriale: Error: Response from server ${response.message()}"
+                    )
+                }
+            }
+        }
         findViewById<TextView>(R.id.tvAnnoRifMD).text = materialeDigitaleAssociato.annoRiferimento.toString()
         findViewById<TextView>(R.id.tvNomeCorsoMD).text = annuncioSelezionato.AreaToString()
         findViewById<TextView>(R.id.tvDescrMaterialeD).text = materialeDigitaleAssociato.descrizioneMateriale

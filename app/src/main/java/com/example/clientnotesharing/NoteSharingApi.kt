@@ -90,5 +90,8 @@ interface NoteSharingApi{
     // Metodo che permette al client di modificare la password
     @POST("CambioPassword")
     suspend fun cambioPsw(@Body dati: CambioPasswordRequest): Response<MessageResponse>
+    // Metodo che restituisce la mail della persona con lo username di input
+    @GET("MailFromUsername")
+    suspend fun getMailFromUsername(@Query("username") username: String): Response<MessageResponse>
 }
 
