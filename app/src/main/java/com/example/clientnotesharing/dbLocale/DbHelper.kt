@@ -58,7 +58,7 @@ class DbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, nu
             data.put(TIPOMATERIALE_ANNUNCIO, if (annuncio.tipoMateriale) 1 else 0)  // Uso un intero perchè sqlite non ha boolean
             data.put(PROPRIETARIO_ANNUNCIO, annuncio.idProprietario)
             data.put(AREA_ANNUNCIO, annuncio.areaAnnuncio)
-            data.put(PREFERITO_ANNUNCIO, if (annuncio.preferito) 1 else 0) // Uso un intero perchè sqlite non ha boolean
+            //data.put(PREFERITO_ANNUNCIO, if (annuncio.preferito) 1 else 0) // Uso un intero perchè sqlite non ha boolean //Rimane vuoto
             db.insertWithOnConflict(TABLE_NAME_ANNUNCIO, null, data, SQLiteDatabase.CONFLICT_IGNORE)
         }
         db.close()
@@ -77,6 +77,19 @@ class DbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, nu
         val db = this.readableDatabase
         val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME_ANNUNCIO WHERE preferito=1", null) //1 sta per true
         return getAnnuncioFromCursor(cursor)
+    }
+    fun isAnnuncioPreferito(idAnnuncio: String): Boolean{
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT $PREFERITO_ANNUNCIO FROM $TABLE_NAME_ANNUNCIO WHERE $ID_ANNUNCIO = ? ", arrayOf(idAnnuncio)) //1 sta per true
+        var preferito = false
+        if (cursor.moveToFirst()) {
+            do {
+                val res = cursor.getInt(cursor.getColumnIndexOrThrow(PREFERITO_ANNUNCIO))
+                if(res == 1) preferito = true else preferito = false
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return preferito
     }
 
     // Metodo che aggiorna l'attributo preferito all'annuncio che prende in input, settandolo a true
@@ -118,8 +131,8 @@ class DbHelper(val context: Context): SQLiteOpenHelper(context, DATABASENAME, nu
                 val tipoM = cursor.getInt(cursor.getColumnIndexOrThrow(TIPOMATERIALE_ANNUNCIO))
                 val proprietario = cursor.getString(cursor.getColumnIndexOrThrow(PROPRIETARIO_ANNUNCIO))
                 val area = cursor.getInt(cursor.getColumnIndexOrThrow(AREA_ANNUNCIO))
-                val preferito = cursor.getInt(cursor.getColumnIndexOrThrow(PREFERITO_ANNUNCIO))
-                lista.add(Annuncio(id, titolo, data, if(tipoM==1) true else false, proprietario, area, if(preferito==1) true else false))
+                //val preferito = cursor.getInt(cursor.getColumnIndexOrThrow(PREFERITO_ANNUNCIO))
+                lista.add(Annuncio(id, titolo, data, if(tipoM==1) true else false, proprietario, area))
             } while (cursor.moveToNext())
         }
         cursor.close()

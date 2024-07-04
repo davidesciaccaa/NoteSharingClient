@@ -87,8 +87,7 @@ class NuovoAnnuncio : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                     LocalDate.now().toString(),
                     if (itemSelez == "Materiale Fisico") true else false,
                     Utility().getUsername(this@NuovoAnnuncio),
-                    spinnerArea.selectedItemPosition,
-                    false
+                    spinnerArea.selectedItemPosition
                 )
                 //apro la corrispondente finestra
                 val intent = if (itemSelez == "Materiale Fisico") {

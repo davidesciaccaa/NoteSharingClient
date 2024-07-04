@@ -16,7 +16,9 @@ import androidx.lifecycle.lifecycleScope
 import com.example.clientnotesharing.NotesApi
 import com.example.clientnotesharing.R
 import com.example.clientnotesharing.data.Annuncio
+import com.example.clientnotesharing.data.Heart
 import com.example.clientnotesharing.dbLocale.DbHelper
+import com.example.clientnotesharing.util.Utility
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -71,7 +73,9 @@ class MyAdapter(private val context: Context, private var filteredAnnunciList: A
         viewHolder.dateTextView.text = annuncio.data
 
         //Gestione del btn preferiti
-        if(annuncio.preferito){
+        // Controllo se l'annuncio è preferito dal db locale, quando viene fatto il refresh viene aggiornato il db locale
+        val db = DbHelper(context)
+        if(db.isAnnuncioPreferito(annuncio.id)){
             //cambio l'icona del btn
             btnPreferiti.setBackgroundResource(R.drawable.favorite_icon)
             notifyDataSetChanged() // Refresh the list to reflect changes
@@ -79,7 +83,7 @@ class MyAdapter(private val context: Context, private var filteredAnnunciList: A
         //il bottone dei preferiti (il cuore)
         btnPreferiti.setOnClickListener {
             //Toast.makeText(context, "Btn clicked", Toast.LENGTH_SHORT).show()
-            if(!annuncio.preferito){
+            if(!db.isAnnuncioPreferito(annuncio.id)){
                 //dico al server di aggiornare l'attributo preferito dell'annuncio
                 (context as? LifecycleOwner)?.lifecycleScope?.launch {
                     setPreferitoBtn(annuncio, btnPreferiti)
@@ -99,15 +103,16 @@ class MyAdapter(private val context: Context, private var filteredAnnunciList: A
     // Modifica l'attributo preferito dell'annuncio (mettendolo a false) e modifica l'icona del heart button
     private suspend fun setNotPreferitoBtn(annuncio: Annuncio, btnPreferiti: Button) {
         try {
-            val responseAnnuncioPreferito = NotesApi.retrofitService.eliminaAnnuncioComePreferito(annuncio.id)
+            // Elimino dal db remoto
+            val responseAnnuncioPreferito = NotesApi.retrofitService.eliminaAnnuncioComePreferito(
+                Heart(Utility().getUsername(context), annuncio.id)
+            )
             if(!responseAnnuncioPreferito.isSuccessful){
                 Toast.makeText(context, "Failed to delete from favourites", Toast.LENGTH_SHORT).show()
             } else {
-                //aggiorno lo stato del db locale
+                // elimino anche dal db locale
                 val db = DbHelper(context)
                 db.setPreferiti(annuncio, false)
-                //aggiorno anche qua lo stato
-                annuncio.preferito = false
                 //cambio l'icona del btn
                 btnPreferiti.setBackgroundResource(R.drawable.heart_plus_icon)
             }
@@ -119,7 +124,9 @@ class MyAdapter(private val context: Context, private var filteredAnnunciList: A
     // Modifica l'attributo preferito dell'annuncio (mettendolo a true) e modifica l'icona del heart button
     private suspend fun setPreferitoBtn(annuncio: Annuncio, btnPreferiti: Button) {
         try {
-            val responseAnnuncioPreferito = NotesApi.retrofitService.salvaAnnuncioComePreferito(annuncio.id)
+            val responseAnnuncioPreferito = NotesApi.retrofitService.salvaAnnuncioComePreferito(
+                Heart(Utility().getUsername(context), annuncio.id)
+            )
             if (!responseAnnuncioPreferito.isSuccessful) {
                 Toast.makeText(context, "Failed to add to favourites", Toast.LENGTH_SHORT).show()
             } else {
@@ -127,7 +134,7 @@ class MyAdapter(private val context: Context, private var filteredAnnunciList: A
                 val db = DbHelper(context)
                 db.setPreferiti(annuncio, true)
                 //aggiorno anche qua lo stato
-                annuncio.preferito = true
+                //annuncio.preferito = true
                 //cambio l'icona del btn
                 btnPreferiti.setBackgroundResource(R.drawable.favorite_icon)
             }

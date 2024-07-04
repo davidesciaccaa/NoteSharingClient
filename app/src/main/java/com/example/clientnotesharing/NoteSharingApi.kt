@@ -3,6 +3,7 @@ package com.example.clientnotesharing
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.data.CambioPasswordRequest
 import com.example.clientnotesharing.data.DatoDigitale
+import com.example.clientnotesharing.data.Heart
 import com.example.clientnotesharing.data.MaterialeDigitale
 import com.example.clientnotesharing.data.MaterialeFisico
 import com.example.clientnotesharing.data.MessageResponse
@@ -57,10 +58,13 @@ interface NoteSharingApi{
     suspend fun uploadMaterialeFisico(@Body annuncio: MaterialeFisico): Response<MessageResponse>
     // Metodo che permette al client di salvare un annuncio come preferito (aggiornando il campo preferito)
     @POST("salvaAnnuncioComePreferito")
-    suspend fun salvaAnnuncioComePreferito(@Body idAnnuncio: String): Response<MessageResponse>
+    suspend fun salvaAnnuncioComePreferito(@Body heart: Heart): Response<MessageResponse>
     // Metodo che permette al client di eliminare un annuncio come preferito (aggiornando il campo preferito)
     @POST("eliminaAnnuncioComePreferito")
-    suspend fun eliminaAnnuncioComePreferito(@Body idAnnuncio: String): Response<MessageResponse>
+    suspend fun eliminaAnnuncioComePreferito(@Body heart: Heart): Response<MessageResponse>
+    // Metodo che restituisce gli annunci preferiti dell'utente
+    @POST("getPrefetitiUtente")
+    suspend fun getPreferitiUtente(@Body username: String): Response<ArrayList<Annuncio>>
     // Metodo che permette al client di eliminare un annuncio
     @POST("eliminaAnnuncio")
     suspend fun eliminaAnnuncio(@Body idAnnuncio: String): Response<MessageResponse>
@@ -70,9 +74,7 @@ interface NoteSharingApi{
     // Metodo che permette al client di ricevere tutti gli annunci creati da lui
     @GET("myAnnunci")
     suspend fun getMyAnnunci(@Query("username") username: String): Response<ArrayList<Annuncio>>
-    // Metodo che permette al client di ricevere tutti gli annunci salvati come preferiti
-    @GET("listaAnnunciSalvati")
-    suspend fun getAnnunciSalvati(@Query("username") username: String): Response<ArrayList<Annuncio>>
+
     // Metodo che permette al client di ricevere i dati del materiale fisico dell'annuncio preso in input
     @GET("materialeFisicoAssociatoAnnuncio")
     suspend fun getMaterialeFisicoAnnuncio(@Query("idAnnuncio") idAnnuncio: String): Response<MaterialeFisico>

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.example.clientnotesharing.NotesApi
 import com.example.clientnotesharing.util.CommandiAnnunciListView
 import com.example.clientnotesharing.adapter.MyAdapter
@@ -13,6 +14,7 @@ import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.databinding.FragmentHomeBinding
 import com.example.clientnotesharing.dbLocale.DbHelper
 import com.example.clientnotesharing.util.Utility
+import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
@@ -84,7 +86,7 @@ class AnnunciSalvatiFragment : Fragment() {
 
     // Metodo con l'operazioni del server che commandiAnnunci.fetchAnnunciFromServer deve eseguire
     private suspend fun opServer(): Response<ArrayList<Annuncio>> {
-        return NotesApi.retrofitService.getAnnunciSalvati(Utility().getUsername(requireContext()))
+        return NotesApi.retrofitService.getPreferitiUtente(Utility().getUsername(requireContext()))
     }
 
     override fun onDestroyView() {
