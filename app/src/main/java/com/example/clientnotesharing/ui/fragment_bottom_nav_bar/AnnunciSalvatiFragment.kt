@@ -45,9 +45,9 @@ class AnnunciSalvatiFragment : Fragment() {
         // SwipeRefreshLayout
         var swipeLayout = binding.swipeLayout
         swipeLayout.setOnRefreshListener {
-            //listaAnnunci = fetchAnnunciPreferitiFromServer(getUsername() ,swipeLayout, listaAnnunci, adapter, dbLocal) // prende i dati dal server e aggiorna la lista
-            listaAnnunci = commandiAnnunci.fetchAnnunciFromServer(swipeLayout, listaAnnunci, ::opDbLocale, ::opServer) // prende i dati dal server e aggiorna la lista
-
+            swipeLayout.isRefreshing = false // Stop l'animazione
+            // Non ci serve il swipe for refresh perchè myAdapter ha accesso al db locale
+            // Visto che stiamo usando lo stesso file xml dobbiamo gestire il swipe
         }
 
         // gestione della listView
@@ -84,10 +84,10 @@ class AnnunciSalvatiFragment : Fragment() {
         adapter.updateData(dbLocal.getAnnunciPreferiti())
     }
 
-    // Metodo con l'operazioni del server che commandiAnnunci.fetchAnnunciFromServer deve eseguire
-    private suspend fun opServer(): Response<ArrayList<Annuncio>> {
-        return NotesApi.retrofitService.getPreferitiUtente(Utility().getUsername(requireContext()))
-    }
+//    // Metodo con l'operazioni del server che commandiAnnunci.fetchAnnunciFromServer deve eseguire
+//    private suspend fun opServer(): Response<ArrayList<Annuncio>> {
+//        return NotesApi.retrofitService.getPreferitiUtente(Utility().getUsername(requireContext()))
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

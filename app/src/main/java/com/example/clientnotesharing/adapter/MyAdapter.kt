@@ -1,7 +1,6 @@
 package com.example.clientnotesharing.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,16 +9,9 @@ import android.widget.Button
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
-import android.widget.Toast
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
-import com.example.clientnotesharing.NotesApi
 import com.example.clientnotesharing.R
 import com.example.clientnotesharing.data.Annuncio
-import com.example.clientnotesharing.data.Heart
 import com.example.clientnotesharing.dbLocale.DbHelper
-import com.example.clientnotesharing.util.Utility
-import kotlinx.coroutines.launch
 import java.util.Locale
 
 /*
@@ -85,14 +77,11 @@ class MyAdapter(private val context: Context, private var filteredAnnunciList: A
             //Toast.makeText(context, "Btn clicked", Toast.LENGTH_SHORT).show()
             if(!db.isAnnuncioPreferito(annuncio.id)){
                 //dico al server di aggiornare l'attributo preferito dell'annuncio
-                (context as? LifecycleOwner)?.lifecycleScope?.launch {
-                    setPreferitoBtn(annuncio, btnPreferiti)
-                }
+                setPreferitoBtn(annuncio, btnPreferiti)
             }else{
                 //dico al server di aggiornare l'attributo preferito dell'annuncio
-                (context as? LifecycleOwner)?.lifecycleScope?.launch {
-                    setNotPreferitoBtn(annuncio, btnPreferiti)
-                }
+                setNotPreferitoBtn(annuncio, btnPreferiti)
+
 
             }
 
@@ -101,46 +90,24 @@ class MyAdapter(private val context: Context, private var filteredAnnunciList: A
     }
 
     // Modifica l'attributo preferito dell'annuncio (mettendolo a false) e modifica l'icona del heart button
-    private suspend fun setNotPreferitoBtn(annuncio: Annuncio, btnPreferiti: Button) {
-        try {
-            // Elimino dal db remoto
-            val responseAnnuncioPreferito = NotesApi.retrofitService.eliminaAnnuncioComePreferito(
-                Heart(Utility().getUsername(context), annuncio.id)
-            )
-            if(!responseAnnuncioPreferito.isSuccessful){
-                Toast.makeText(context, "Failed to delete from favourites", Toast.LENGTH_SHORT).show()
-            } else {
-                // elimino anche dal db locale
-                val db = DbHelper(context)
-                db.setPreferiti(annuncio, false)
-                //cambio l'icona del btn
-                btnPreferiti.setBackgroundResource(R.drawable.heart_plus_icon)
-            }
-        } catch (e: Exception) {
-            Log.d("TAG", "MyAdapter ${e.printStackTrace()}")
-        }
+    private fun setNotPreferitoBtn(annuncio: Annuncio, btnPreferiti: Button) {
+        // elimino anche dal db locale
+        val db = DbHelper(context)
+        db.setPreferiti(annuncio, false)
+        //cambio l'icona del btn
+        btnPreferiti.setBackgroundResource(R.drawable.heart_plus_icon)
     }
 
     // Modifica l'attributo preferito dell'annuncio (mettendolo a true) e modifica l'icona del heart button
-    private suspend fun setPreferitoBtn(annuncio: Annuncio, btnPreferiti: Button) {
-        try {
-            val responseAnnuncioPreferito = NotesApi.retrofitService.salvaAnnuncioComePreferito(
-                Heart(Utility().getUsername(context), annuncio.id)
-            )
-            if (!responseAnnuncioPreferito.isSuccessful) {
-                Toast.makeText(context, "Failed to add to favourites", Toast.LENGTH_SHORT).show()
-            } else {
-                //aggiorno lo stato del dblocale
-                val db = DbHelper(context)
-                db.setPreferiti(annuncio, true)
-                //aggiorno anche qua lo stato
-                //annuncio.preferito = true
-                //cambio l'icona del btn
-                btnPreferiti.setBackgroundResource(R.drawable.favorite_icon)
-            }
-        } catch (e: Exception) {
-            Log.e("TAG", "MyAdapter ${e.printStackTrace()}")
-        }
+    private fun setPreferitoBtn(annuncio: Annuncio, btnPreferiti: Button) {
+        //aggiorno lo stato del dblocale
+        val db = DbHelper(context)
+        db.setPreferiti(annuncio, true)
+        //aggiorno anche qua lo stato
+        //annuncio.preferito = true
+        //cambio l'icona del btn
+        btnPreferiti.setBackgroundResource(R.drawable.favorite_icon)
+
     }
 
     // Implementazione del filtro per la ricerca degli annunci

@@ -3,7 +3,6 @@ package com.example.clientnotesharing
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.data.CambioPasswordRequest
 import com.example.clientnotesharing.data.DatoDigitale
-import com.example.clientnotesharing.data.Heart
 import com.example.clientnotesharing.data.MaterialeDigitale
 import com.example.clientnotesharing.data.MaterialeFisico
 import com.example.clientnotesharing.data.MessageResponse
@@ -20,7 +19,7 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 // Indirizzo IP del server
-const val BASE_URL =  "http://192.168.43.216:8080" // "http://192.168.43.216:8080" // Per l'emulatore: "http://10.0.2.2:8080"
+const val BASE_URL =  "http://192.168.154.168:8080" // "http://192.168.43.216:8080" // Per l'emulatore: "http://10.0.2.2:8080"
 
 // Creazione dell'oggetto Retrofit, connettendosi al server
 private val retrofit = Retrofit.Builder()
@@ -56,15 +55,6 @@ interface NoteSharingApi{
     // Metodo che permette al client di inviare il contenuto di un annuncio di tipo fisico al server
     @POST("uploadMF")
     suspend fun uploadMaterialeFisico(@Body annuncio: MaterialeFisico): Response<MessageResponse>
-    // Metodo che permette al client di salvare un annuncio come preferito (aggiornando il campo preferito)
-    @POST("salvaAnnuncioComePreferito")
-    suspend fun salvaAnnuncioComePreferito(@Body heart: Heart): Response<MessageResponse>
-    // Metodo che permette al client di eliminare un annuncio come preferito (aggiornando il campo preferito)
-    @POST("eliminaAnnuncioComePreferito")
-    suspend fun eliminaAnnuncioComePreferito(@Body heart: Heart): Response<MessageResponse>
-    // Metodo che restituisce gli annunci preferiti dell'utente
-    @POST("getPrefetitiUtente")
-    suspend fun getPreferitiUtente(@Body username: String): Response<ArrayList<Annuncio>>
     // Metodo che permette al client di eliminare un annuncio
     @POST("eliminaAnnuncio")
     suspend fun eliminaAnnuncio(@Body idAnnuncio: String): Response<MessageResponse>
