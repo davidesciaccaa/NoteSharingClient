@@ -36,7 +36,7 @@
     <string name="nuovo_materiale_fisico">Nuovo Materiale Fisico</string>
     <string name="nuovo_annuncio">Nuovo Annuncio</string>
     <string name="proprietario_email_valore">E-mail proprietario: %1$s</string>
-    <string name="costo_valore">Costo: %1$d</string>
+    <string name="costo_valore">Costo: %1$d €</string>
     <string name="anno_riferimento_valore">Anno di riferimento: %1$d</string>
     <string name="pdf_selezionati_valore">PDF selezionati: %1$d</string>
     <string name="corso_riferimento_valore">Corso di riferimento: %1$s</string>

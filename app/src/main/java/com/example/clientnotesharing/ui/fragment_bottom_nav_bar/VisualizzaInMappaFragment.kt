@@ -2,6 +2,7 @@ package com.example.clientnotesharing.ui.fragment_bottom_nav_bar
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.os.HandlerThread
@@ -35,6 +36,7 @@ import kotlin.time.Duration.Companion.milliseconds
 import com.example.clientnotesharing.data.Annuncio
 import com.example.clientnotesharing.dbLocale.DbHelper
 import com.tomtom.sdk.map.display.marker.Marker
+import com.tomtom.sdk.map.display.style.StyleMode
 
 /*
  * Classe per il fragment che contiene la mappa per la visualizzazione della posizione di ritiro
@@ -69,6 +71,13 @@ class VisualizzaInMappaFragment : Fragment() {
             val myMap = childFragmentManager.findFragmentById(binding.mapFragment.id) as? MapFragment
             if (myMap != null) {
                 myMap.getMapAsync { tomtomMap: TomTomMap ->
+                    // Stile mappa
+                    val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+                    if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+                        tomtomMap.setStyleMode(StyleMode.DARK)
+                    } else {
+                        tomtomMap.setStyleMode(StyleMode.MAIN)
+                    }
                     // Ottiene il location provider
                     Utility().setupLocationProvider(tomtomMap, requireContext())
                     // Riceve tutti gli annunci (eccetto i personali)

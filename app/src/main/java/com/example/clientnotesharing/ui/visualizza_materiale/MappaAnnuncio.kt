@@ -3,6 +3,7 @@ package com.example.clientnotesharing.ui.visualizza_materiale
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.os.HandlerThread
@@ -30,6 +31,7 @@ import kotlin.time.Duration.Companion.milliseconds
 import com.example.clientnotesharing.util.Utility
 import com.tomtom.sdk.location.GeoPoint
 import com.tomtom.sdk.location.OnLocationUpdateListener
+import com.tomtom.sdk.map.display.style.StyleMode
 import kotlinx.serialization.json.Json
 
 /*
@@ -75,6 +77,13 @@ class MappaAnnuncio: AppCompatActivity() {
         val myMap = supportFragmentManager.findFragmentById(R.id.map_fragment) as? MapFragment
         if (myMap != null) {
             myMap.getMapAsync { tomtomMap: TomTomMap ->
+                // Stile mappa
+                val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+                if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+                    tomtomMap.setStyleMode(StyleMode.DARK)
+                } else {
+                    tomtomMap.setStyleMode(StyleMode.MAIN)
+                }
                 Utility().setupLocationProvider(tomtomMap, applicationContext)
                 addMarkerToMap(tomtomMap, indirizzoRicevuto)
             }
